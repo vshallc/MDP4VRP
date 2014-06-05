@@ -4,7 +4,7 @@ import org.apache.commons.math3.analysis.polynomials.PolynomialFunction;
 
 public class StochasticPolynomialFunction extends PolynomialFunction{
 	private static final long serialVersionUID = -4912879085296725656L;
-	double sc; // coefficients for the stochastic parameter xi.
+	double sc; // coefficients for the stochastic parameter xi, xi ~ U[-1,1]
 	StochasticPolynomialFunction(double[] c, double sc){
 		super(c);
 		this.sc = sc;
