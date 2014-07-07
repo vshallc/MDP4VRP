@@ -31,4 +31,9 @@ public class PiecewiseStochasticPolynomialFunction {
     public double[] getBounds() {
         return this.bounds;
     }
+
+    public PiecewiseStochasticPolynomialFunction compose(PiecewiseStochasticPolynomialFunction pwStocPolyFunc) {
+
+        return null;
+    }
 }
