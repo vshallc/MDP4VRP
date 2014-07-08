@@ -8,7 +8,7 @@ import org.apache.commons.math3.exception.DimensionMismatchException;
  */
 public class PiecewiseStochasticPolynomialFunction {
     StochasticPolynomialFunction[] stocPolyFuncs;
-    double[] bounds;
+    double[] bounds;    // the overall domain is defined on [0, +inf)
 
     public PiecewiseStochasticPolynomialFunction(StochasticPolynomialFunction[] stocPolyFuncs, double[] bounds) {
         if (stocPolyFuncs.length != bounds.length) {
@@ -32,8 +32,8 @@ public class PiecewiseStochasticPolynomialFunction {
         return this.bounds;
     }
 
-    public PiecewiseStochasticPolynomialFunction compose(PiecewiseStochasticPolynomialFunction pwStocPolyFunc) {
-
-        return null;
-    }
+//    public PiecewiseStochasticPolynomialFunction compose(PiecewiseStochasticPolynomialFunction pwStocPolyFunc) {
+//
+//        return null;
+//    }
 }
