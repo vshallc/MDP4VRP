@@ -1,20 +1,19 @@
 package integration;
 
-import org.apache.commons.math3.analysis.polynomials.PolynomialFunction;
 
 /**
  * Created by Xiaoxi Wang on 7/9/14.
  */
 public class PiecewisePolynomialFunction {
-    PolynomialFunction[] polyFuncs;
+    AdvancedPolynomialFunction[] polyFuncs;
     double[] bounds;    // the overall domain is defined on [0, +inf)
 
-    public PiecewisePolynomialFunction(PolynomialFunction[] polyFuncs, double[] bounds) {
+    public PiecewisePolynomialFunction(AdvancedPolynomialFunction[] polyFuncs, double[] bounds) {
         this.polyFuncs = polyFuncs;
         this.bounds = bounds;
     }
 
-    public PolynomialFunction[] getPolynomialFunctions() {
+    public AdvancedPolynomialFunction[] getPolynomialFunctions() {
         return this.polyFuncs;
     }
 
