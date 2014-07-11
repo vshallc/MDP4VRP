@@ -32,6 +32,10 @@ public class StochasticPolynomialFunction{
         }
     }
 
+    public int degree() {
+        return polyfunCoefs.length - 1;
+    }
+
     public AdvancedPolynomialFunction[] getAdvancedPolynomialFunctionCoefficients() {
         return polyfunCoefs.clone();
     }

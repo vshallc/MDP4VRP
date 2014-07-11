@@ -95,7 +95,40 @@ public class AdvancedPolynomialFunction extends PolynomialFunction {
     }
 
     public StochasticPolynomialFunction compose(StochasticPolynomialFunction spf) {
-        return null;
+        double[] nil = new double[1];
+        nil[0] = 0;
+        AdvancedPolynomialFunction nilPolyFunc = new AdvancedPolynomialFunction(nil);
+
+//        AdvancedPolynomialFunction[] resultPolyFuncCoefs = new AdvancedPolynomialFunction[1];
+//        resultPolyFuncCoefs[0] = nilPolyFunc;
+//        StochasticPolynomialFunction result = new StochasticPolynomialFunction(resultPolyFuncCoefs);
+
+        AdvancedPolynomialFunction[] newPolyFuncCoefs = new AdvancedPolynomialFunction[this.degree() * spf.degree() + 1];
+        Arrays.fill(newPolyFuncCoefs, nilPolyFunc);
+        for (int i = 0; i <= this.degree(); ++i) {
+            System.out.println("i=" + i);
+            AdvancedPolynomialFunction[] tmpPolyFuncCoefs = new AdvancedPolynomialFunction[i * spf.degree() + 1];
+            double[] tmpcoefs = new double[1];
+            tmpcoefs[0] = this.getCoefficients()[i];
+            tmpPolyFuncCoefs[0] = new AdvancedPolynomialFunction(tmpcoefs);
+            Arrays.fill(tmpPolyFuncCoefs, 1, tmpPolyFuncCoefs.length, nilPolyFunc);
+            int tmpMaxDegree = spf.degree();
+            for (int j = 0; j < i; ++j) {
+                for (int d1 = 0; d1 <= tmpMaxDegree; ++d1) {
+                    System.out.println("tmpPolyFuncCoefs's length:" + tmpPolyFuncCoefs.length);
+                    for (int d2 = 0; d2 <= spf.degree(); ++d2) {
+                        System.out.println("d1=" + d1 + " d2=" + d2);
+                        tmpPolyFuncCoefs[d1 * d2] = tmpPolyFuncCoefs[d1 * d2].add(
+                                tmpPolyFuncCoefs[d1].multiply(spf.getAdvancedPolynomialFunctionCoefficients()[d2]));
+                    }
+                }
+                tmpMaxDegree += spf.degree();
+            }
+            for (int j = 0; j < tmpPolyFuncCoefs.length; ++j) {
+                newPolyFuncCoefs[j] = newPolyFuncCoefs[j].add(tmpPolyFuncCoefs[j]);
+            }
+        }
+        return new StochasticPolynomialFunction(newPolyFuncCoefs);
     }
 
     @Override
