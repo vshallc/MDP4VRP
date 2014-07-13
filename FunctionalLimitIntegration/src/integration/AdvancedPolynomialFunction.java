@@ -104,31 +104,49 @@ public class AdvancedPolynomialFunction extends PolynomialFunction {
 //        StochasticPolynomialFunction result = new StochasticPolynomialFunction(resultPolyFuncCoefs);
 
         AdvancedPolynomialFunction[] newPolyFuncCoefs = new AdvancedPolynomialFunction[this.degree() * spf.degree() + 1];
+//        System.out.println("max degree of the result: " + newPolyFuncCoefs.length);
         Arrays.fill(newPolyFuncCoefs, nilPolyFunc);
         for (int i = 0; i <= this.degree(); ++i) {
-            System.out.println("i=" + i);
+//            System.out.println("i=" + i);
             AdvancedPolynomialFunction[] tmpPolyFuncCoefs = new AdvancedPolynomialFunction[i * spf.degree() + 1];
             double[] tmpcoefs = new double[1];
             tmpcoefs[0] = this.getCoefficients()[i];
-            tmpPolyFuncCoefs[0] = new AdvancedPolynomialFunction(tmpcoefs);
-            Arrays.fill(tmpPolyFuncCoefs, 1, tmpPolyFuncCoefs.length, nilPolyFunc);
-            int tmpMaxDegree = spf.degree();
+            for (int j = 0; j < tmpPolyFuncCoefs.length;++j) {
+                tmpPolyFuncCoefs[j] = new AdvancedPolynomialFunction(tmpcoefs);
+            }
+            int tmpMaxDegree = spf.degree();//System.out.println("spf degree: " + tmpMaxDegree);
             for (int j = 0; j < i; ++j) {
+//                for (int k = 0; k < tmpPolyFuncCoefs.length; ++k) {
+//                    System.out.println("tmppoly " + k + ":" + tmpPolyFuncCoefs[k].toString());
+//                }
                 for (int d1 = 0; d1 <= tmpMaxDegree; ++d1) {
-                    System.out.println("tmpPolyFuncCoefs's length:" + tmpPolyFuncCoefs.length);
+//                    System.out.println("tmpPolyFuncCoefs's length:" + tmpPolyFuncCoefs.length);
                     for (int d2 = 0; d2 <= spf.degree(); ++d2) {
-                        System.out.println("d1=" + d1 + " d2=" + d2);
-                        tmpPolyFuncCoefs[d1 * d2] = tmpPolyFuncCoefs[d1 * d2].add(
-                                tmpPolyFuncCoefs[d1].multiply(spf.getAdvancedPolynomialFunctionCoefficients()[d2]));
+//                        System.out.println("d1=" + d1 + " d2=" + d2);
+//                        System.out.println("tmpPolyFunc" + d1 * d2 + ": " + tmpPolyFuncCoefs[d1 * d2].toString());
+                        tmpPolyFuncCoefs[d1 * d2] = tmpPolyFuncCoefs[d1].multiply(
+                                spf.getAdvancedPolynomialFunctionCoefficients()[d2]);
+//                        System.out.println("tmpPolyFunc" + d1 * d2 + ": " + tmpPolyFuncCoefs[d1 * d2].toString());
                     }
                 }
                 tmpMaxDegree += spf.degree();
             }
             for (int j = 0; j < tmpPolyFuncCoefs.length; ++j) {
                 newPolyFuncCoefs[j] = newPolyFuncCoefs[j].add(tmpPolyFuncCoefs[j]);
+//                System.out.println("newpoly " + j + ":" + newPolyFuncCoefs[j].toString());
             }
         }
         return new StochasticPolynomialFunction(newPolyFuncCoefs);
+    }
+
+    public boolean equalsZero() {
+        if (this.getCoefficients().length == 1 && this.getCoefficients()[0] == 0) return true;
+        else return false;
+    }
+
+    public boolean equalsOne() {
+        if (this.getCoefficients().length == 1 && this.getCoefficients()[0] == 1) return true;
+        else return false;
     }
 
     @Override

@@ -10,8 +10,8 @@ import java.util.Random;
 
 public class StochasticPolynomialFunction{
     private final AdvancedPolynomialFunction[] polyfunCoefs;   // polynomial functions as the coefficients
-                                        // for the stochastic parameter xi, xi ~ U[0,1]
-//    double sc; // coefficients for the stochastic parameter xi, xi ~ U[0,1]
+                                        // for the stochastic parameter ξ, ξ ~ U[0,1]
+//    double sc; // coefficients for the stochastic parameter ξ, ξ ~ U[0,1]
     private final Random random = new Random();
     StochasticPolynomialFunction(AdvancedPolynomialFunction[] polyfunCoefs)
             throws NullArgumentException, NoDataException {
@@ -165,4 +165,36 @@ public class StochasticPolynomialFunction{
         return random.nextDouble();
     }
 
+    @Override
+    public String toString() {
+        StringBuilder s = new StringBuilder();
+        if (polyfunCoefs[0].equalsZero()) {
+            if (polyfunCoefs.length == 1) return "0";
+        } else {
+            s.append(polyfunCoefs[0].toString());
+        }
+        for (int i = 1; i < polyfunCoefs.length; ++i) {
+            if (!polyfunCoefs[i].equalsZero()) {
+                if (s.length() > 0) {
+                    s.append(" + ");
+                }
+                if (!polyfunCoefs[i].equalsOne()) {
+                    if (polyfunCoefs[i].degree() == 0) {
+                        s.append(polyfunCoefs[i].toString());
+                    } else {
+                        s.append("(");
+                        s.append(polyfunCoefs[i].toString());
+                        s.append(")");
+                    }
+                }
+                s.append(" ");
+                s.append("ξ");
+                if (i > 1) {
+                    s.append("^");
+                    s.append(Integer.toString(i));
+                }
+            }
+        }
+        return s.toString();
+    }
 }
