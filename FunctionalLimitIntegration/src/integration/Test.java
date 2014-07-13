@@ -7,25 +7,30 @@ package integration;
 public class Test {
 
     public Test() {
-        AdvancedPolynomialFunction[] pf = new AdvancedPolynomialFunction[2];
+        AdvancedPolynomialFunction[] pf = new AdvancedPolynomialFunction[3];
         double[] c = new double[2];
         c[0] = 7;
         c[1] = 1;
         pf[0] = new AdvancedPolynomialFunction(c);  // f1(x)=0
         System.out.println("f1(x) = " + pf[0].toString());
         c = new double[1];
-        c[0] = 5;
-//        c[1] = 400;
-        pf[1] = new AdvancedPolynomialFunction(c);  // f2(x)=1
+        c[0] = 0;
+//        c[1] = 4;
+        pf[1] = new AdvancedPolynomialFunction(c);  // f2(x)=0
         System.out.println("f2(x) = " + pf[1].toString());
+        c = new double[2];
+        c[0] = 5;
+        c[1] = 4;
+        pf[2] = new AdvancedPolynomialFunction(c);  // f3(x)=1
+        System.out.println("f3(x) = " + pf[2].toString());
 
         StochasticPolynomialFunction spf = new StochasticPolynomialFunction(pf);    // g(x,ξ)=ξ
         System.out.println("g(x,ξ) = " + spf.toString());
 
-        c = new double[2];
+        c = new double[3];
         c[0] = 3;
         c[1] = 2;
-//        c[2] = 3;
+        c[2] = 1;
 
         AdvancedPolynomialFunction bigpf = new AdvancedPolynomialFunction(c);   // f(x)=x
         System.out.println("f(x) = " + bigpf.toString());
