@@ -35,13 +35,15 @@ public class Test {
         AdvancedPolynomialFunction bigpf = new AdvancedPolynomialFunction(c);   // f(x)=x
         System.out.println("f(x) = " + bigpf.toString());
 
-        StochasticPolynomialFunction result = bigpf.compose(spf);   // f(g(x,ξ)) should be ξ
+        System.out.println("f'(x) = " + bigpf.polynomialDerivative().toString());
 
-        System.out.println("f(g(x,ξ)) = " + result.toString());
-        System.out.println("result: (x=0, xi=0)" + result.determinedValue(0,0));
-        System.out.println("result: (x=1, xi=0)" + result.determinedValue(1,0));
-        System.out.println("result: (x=0, xi=1)" + result.determinedValue(0,1));
-        System.out.println("result: (x=1, xi=1)" + result.determinedValue(1,1));
+//        StochasticPolynomialFunction result = bigpf.compose(spf);   // f(g(x,ξ)) should be ξ
+//
+//        System.out.println("f(g(x,ξ)) = " + result.toString());
+//        System.out.println("result: (x=0, xi=0)" + result.determinedValue(0,0));
+//        System.out.println("result: (x=1, xi=0)" + result.determinedValue(1,0));
+//        System.out.println("result: (x=0, xi=1)" + result.determinedValue(0,1));
+//        System.out.println("result: (x=1, xi=1)" + result.determinedValue(1,1));
 
 //        System.out.println("pf[0]: " + pf[0].value(1) + " pf[1]: " + pf[1].value(1));
 //        System.out.println("sum: " + pf[0].add(pf[1]).value(1));

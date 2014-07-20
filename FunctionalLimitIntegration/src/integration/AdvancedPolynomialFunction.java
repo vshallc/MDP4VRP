@@ -6,6 +6,7 @@ import org.apache.commons.math3.exception.NullArgumentException;
 import org.apache.commons.math3.util.FastMath;
 
 import java.util.Arrays;
+import java.util.Map;
 
 /**
  * Created by Xiaoxi Wang on 7/11/14.
@@ -25,6 +26,10 @@ public class AdvancedPolynomialFunction extends PolynomialFunction {
      * @throws org.apache.commons.math3.exception.NullArgumentException if {@code c} is {@code null}.
      * @throws org.apache.commons.math3.exception.NoDataException       if {@code c} is empty.
      */
+
+    private boolean isExtremePointCalculated = false;
+    private double[] extremePoints;
+
     public AdvancedPolynomialFunction(double[] c) throws NullArgumentException, NoDataException {
         super(c);
     }
@@ -92,6 +97,47 @@ public class AdvancedPolynomialFunction extends PolynomialFunction {
 
     public AdvancedPolynomialFunction polynomialDerivative() {
         return new AdvancedPolynomialFunction(differentiate(this.getCoefficients()));
+    }
+
+    public double[] calculateExtremePoint() {
+        double[] differentiatedCoefs = differentiate(this.getCoefficients());
+        if (differentiatedCoefs.length == 1) {
+            extremePoints = new double[0];
+            isExtremePointCalculated = true;
+            return extremePoints;
+        }
+        int deg = differentiatedCoefs.length - 1;
+        extremePoints = new double[deg];
+        if (deg == 1) {
+            extremePoints[0] = -differentiatedCoefs[0] / differentiatedCoefs[1];
+        }
+        else if (deg == 2) {
+            double delta = differentiatedCoefs[1] * differentiatedCoefs[1]
+                    - 4 * differentiatedCoefs[2] * differentiatedCoefs[0];
+            if (delta > 0) {
+                extremePoints[0] = (-differentiatedCoefs[1] - Math.sqrt(delta)) / (2 * differentiatedCoefs[2]);
+                extremePoints[1] = (-differentiatedCoefs[1] + Math.sqrt(delta)) / (2 * differentiatedCoefs[2]);
+            } else if (delta == 0) {
+                extremePoints = new double[1];
+                extremePoints[0] = -differentiatedCoefs[1] / (2 * differentiatedCoefs[2]);
+            } else if (delta < 0) {
+                extremePoints = new double[0];
+                isExtremePointCalculated = true;
+                return extremePoints;
+            }
+        } else if (deg == 3) {
+            //
+        } else {
+            // throw exception
+        }
+        isExtremePointCalculated = true;
+        return extremePoints;
+    }
+
+    public double[] extremeValue(double leftBound, double rightBound) {
+        double[] ext = new double[2];
+        double[] differentiatedCoefs = differentiate(this.getCoefficients());
+        return ext;
     }
 
     public StochasticPolynomialFunction compose(StochasticPolynomialFunction spf) {
