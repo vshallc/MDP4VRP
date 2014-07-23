@@ -125,19 +125,46 @@ public class AdvancedPolynomialFunction extends PolynomialFunction {
                 isExtremePointCalculated = true;
                 return extremePoints;
             }
-        } else if (deg == 3) {
-            //
         } else {
-            // throw exception
+            throw new TooHighDegreeException(deg);
         }
         isExtremePointCalculated = true;
         return extremePoints;
     }
 
-    public double[] extremeValue(double leftBound, double rightBound) {
-        double[] ext = new double[2];
-        double[] differentiatedCoefs = differentiate(this.getCoefficients());
-        return ext;
+    public double[] extrema(double leftBound, double rightBound) {
+        try {
+            double[] extPoints = calculateExtremePoint();
+            double[] extrema = new double[2];
+            {
+                double leftValue = this.value(leftBound);
+                double rightValue = this.value(rightBound);
+                if (leftValue < rightValue) {
+                    extrema[0] = leftValue;
+                    extrema[1] = rightValue;
+                } else {
+                    extrema[0] = rightValue;
+                    extrema[1] = leftValue;
+                }
+            }
+            for (double extPoint : extPoints) {
+                if (extPoint >= leftBound && extPoint < rightBound) {
+                    double tmpValue = this.value(extPoint);
+                    if (tmpValue < extrema[0]) {
+                        extrema[0] = tmpValue;
+                    } else if (tmpValue > extrema[1]) {
+                        extrema[1] = tmpValue;
+                    }
+                }
+            }
+            return extrema;
+        } catch (TooHighDegreeException thde) {
+            return searchExtremeValues(leftBound, rightBound);
+        }
+    }
+
+    private double[] searchExtremeValues(double leftBound, double rightBound) {
+        return null;
     }
 
     public StochasticPolynomialFunction compose(StochasticPolynomialFunction spf) {
