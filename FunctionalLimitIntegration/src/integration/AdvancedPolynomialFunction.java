@@ -159,13 +159,40 @@ public class AdvancedPolynomialFunction extends PolynomialFunction {
             }
             return extrema;
         } catch (TooHighDegreeException thde) {
-            return searchExtremeValues(leftBound, rightBound);
+//            return searchExtremeValues(leftBound, rightBound);
+            thde.printStackTrace();
+            return null;
         }
     }
 
-    private double[] searchExtremeValues(double leftBound, double rightBound) {
-        return null;
-    }
+//    private double[] searchExtremeValues(double leftBound, double rightBound) {
+//        AdvancedPolynomialFunction derApf = new AdvancedPolynomialFunction(differentiate(this.getCoefficients()));
+//        double[] extrema = new double[2];
+//        {
+//            double leftValue = this.value(leftBound);
+//            double rightValue = this.value(rightBound);
+//            if (leftValue < rightValue) {
+//                extrema[0] = leftValue;
+//                extrema[1] = rightValue;
+//            } else {
+//                extrema[0] = rightValue;
+//                extrema[1] = leftValue;
+//            }
+//        }
+//        double[] checkingPoints = new double[3];
+//        double interval;
+//        double tmpLeft = leftBound;
+//        double tmpRight = rightBound;
+//        boolean leftFlag = false;
+//        boolean rightFlag = false;
+//        do {
+//            interval = (tmpRight - leftBound) / 16;
+//            checkingPoints[0] = tmpLeft;
+//            checkingPoints[1] = tmpLeft + interval;
+//
+//        } while (interval > 0.01);
+//        return null;
+//    }
 
     public StochasticPolynomialFunction compose(StochasticPolynomialFunction spf) {
         double[] nil = new double[1];
