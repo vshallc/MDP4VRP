@@ -159,40 +159,54 @@ public class AdvancedPolynomialFunction extends PolynomialFunction {
             }
             return extrema;
         } catch (TooHighDegreeException thde) {
-//            return searchExtremeValues(leftBound, rightBound);
             thde.printStackTrace();
-            return null;
+            return searchExtremeValues(leftBound, rightBound);
         }
     }
 
-//    private double[] searchExtremeValues(double leftBound, double rightBound) {
-//        AdvancedPolynomialFunction derApf = new AdvancedPolynomialFunction(differentiate(this.getCoefficients()));
-//        double[] extrema = new double[2];
-//        {
-//            double leftValue = this.value(leftBound);
-//            double rightValue = this.value(rightBound);
-//            if (leftValue < rightValue) {
-//                extrema[0] = leftValue;
-//                extrema[1] = rightValue;
-//            } else {
-//                extrema[0] = rightValue;
-//                extrema[1] = leftValue;
-//            }
-//        }
-//        double[] checkingPoints = new double[3];
-//        double interval;
-//        double tmpLeft = leftBound;
-//        double tmpRight = rightBound;
-//        boolean leftFlag = false;
-//        boolean rightFlag = false;
-//        do {
-//            interval = (tmpRight - leftBound) / 16;
-//            checkingPoints[0] = tmpLeft;
-//            checkingPoints[1] = tmpLeft + interval;
-//
-//        } while (interval > 0.01);
-//        return null;
-//    }
+    private double[] searchExtremeValues(double leftBound, double rightBound) {
+        // This function is NOT accurate!
+        AdvancedPolynomialFunction derApf = new AdvancedPolynomialFunction(differentiate(this.getCoefficients()));
+        double[] extrema = new double[2];
+        {
+            double leftValue = this.value(leftBound);
+            double rightValue = this.value(rightBound);
+            if (leftValue < rightValue) {
+                extrema[0] = leftValue;
+                extrema[1] = rightValue;
+            } else {
+                extrema[0] = rightValue;
+                extrema[1] = leftValue;
+            }
+        }
+        double[] checkingPoints = new double[2];
+        double interval;
+        double tmpLeft = leftBound;
+        double tmpRight = rightBound;
+        boolean leftFlag = false;
+        boolean rightFlag = false;
+        do {
+            interval = (tmpRight - leftBound) / 100;
+            for (int i = 0; i < 100; ++i) {
+                checkingPoints[0] = tmpLeft + interval * i;
+                checkingPoints[1] = tmpLeft + interval * (i + 1);
+                if (checkingPoints[0] * checkingPoints[1] >= 0) {
+                    // Assuming the unimodality is satisified between checkingPoints[0] and checkingPoints[1]
+                    // Using Newton's Method to find extrema
+                    AdvancedPolynomialFunction der2Apf =
+                            new AdvancedPolynomialFunction(differentiate(derApf.getCoefficients()));
+                    if (checkingPoints[0] <= 0) {
+                        double x0 = this.value(checkingPoints[0]);
+                        double x1 = derApf.value(checkingPoints[0]);
+                        double x2 = der2Apf.value(checkingPoints[0]);
+                    } else {
+                        //
+                    }
+                }
+            }
+        } while (interval > 0.01);
+        return null;
+    }
 
     public StochasticPolynomialFunction compose(StochasticPolynomialFunction spf) {
         double[] nil = new double[1];

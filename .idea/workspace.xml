@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="63a100fe-1338-4db6-90c8-f11cfcedbc6a" name="Default" comment="">
+    <list default="true" id="63a100fe-1338-4db6-90c8-f11cfcedbc6a" name="Default" comment="calculate extreme points">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/FunctionalLimitIntegration/src/integration/AdvancedPolynomialFunction.java" afterPath="$PROJECT_DIR$/FunctionalLimitIntegration/src/integration/AdvancedPolynomialFunction.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
@@ -39,8 +39,8 @@
       <file leaf-file-name="AdvancedPolynomialFunction.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/FunctionalLimitIntegration/src/integration/AdvancedPolynomialFunction.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.66034484" vertical-offset="2274" max-vertical-offset="5396">
-              <caret line="162" column="33" selection-start-line="162" selection-start-column="33" selection-end-line="162" selection-end-column="33" />
+            <state vertical-scroll-proportion="0.7258621" vertical-offset="2920" max-vertical-offset="5662">
+              <caret line="200" column="69" selection-start-line="200" selection-start-column="69" selection-end-line="200" selection-end-column="69" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -849,7 +849,11 @@
       <created>1406136733105</created>
       <updated>1406136733105</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="calculate extreme points">
+      <created>1406479561625</created>
+      <updated>1406479561625</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -1322,8 +1326,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/FunctionalLimitIntegration/src/integration/AdvancedPolynomialFunction.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.66034484" vertical-offset="2274" max-vertical-offset="5396">
-          <caret line="162" column="33" selection-start-line="162" selection-start-column="33" selection-end-line="162" selection-end-column="33" />
+        <state vertical-scroll-proportion="0.7258621" vertical-offset="2920" max-vertical-offset="5662">
+          <caret line="200" column="69" selection-start-line="200" selection-start-column="69" selection-end-line="200" selection-end-column="69" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
