@@ -196,9 +196,21 @@ public class AdvancedPolynomialFunction extends PolynomialFunction {
                     AdvancedPolynomialFunction der2Apf =
                             new AdvancedPolynomialFunction(differentiate(derApf.getCoefficients()));
                     if (checkingPoints[0] <= 0) {
-                        double x0 = this.value(checkingPoints[0]);
-                        double x1 = derApf.value(checkingPoints[0]);
-                        double x2 = der2Apf.value(checkingPoints[0]);
+                        // Have a minimum
+                        double x = checkingPoints[0];
+                        double xx;
+                        double fx = this.value(x);
+                        double fxx;
+                        do {
+                            double fd = derApf.value(x);
+                            double fdd = der2Apf.value(x);
+                            if (fdd == 0) {
+                                xx = x;
+                            } else {
+                                xx = x - fd / fdd;
+                            }
+                            fxx = this.value(xx);
+                        } while (x != xx);
                     } else {
                         //
                     }
