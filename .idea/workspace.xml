@@ -39,8 +39,8 @@
       <file leaf-file-name="AdvancedPolynomialFunction.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/FunctionalLimitIntegration/src/integration/AdvancedPolynomialFunction.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.48017243" vertical-offset="3243" max-vertical-offset="5890">
-              <caret line="202" column="35" selection-start-line="202" selection-start-column="35" selection-end-line="202" selection-end-column="35" />
+            <state vertical-scroll-proportion="0.2836207" vertical-offset="3433" max-vertical-offset="5966">
+              <caret line="200" column="136" selection-start-line="200" selection-start-column="136" selection-end-line="200" selection-end-column="136" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -861,7 +861,11 @@
       <created>1406638342474</created>
       <updated>1406638342474</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="calculate extreme points">
+      <created>1406651348690</created>
+      <updated>1406651348690</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -1335,8 +1339,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/FunctionalLimitIntegration/src/integration/AdvancedPolynomialFunction.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.48017243" vertical-offset="3243" max-vertical-offset="5890">
-          <caret line="202" column="35" selection-start-line="202" selection-start-column="35" selection-end-line="202" selection-end-column="35" />
+        <state vertical-scroll-proportion="0.2836207" vertical-offset="3433" max-vertical-offset="5966">
+          <caret line="200" column="136" selection-start-line="200" selection-start-column="136" selection-end-line="200" selection-end-column="136" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

@@ -6,7 +6,9 @@ import org.apache.commons.math3.exception.NullArgumentException;
 import org.apache.commons.math3.util.FastMath;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by Xiaoxi Wang on 7/11/14.
@@ -180,44 +182,46 @@ public class AdvancedPolynomialFunction extends PolynomialFunction {
             }
         }
         double[] checkingPoints = new double[2];
-        double interval;
         double tmpLeft = leftBound;
         double tmpRight = rightBound;
         boolean leftFlag = false;
         boolean rightFlag = false;
-        do {
-            interval = (tmpRight - leftBound) / 100;
-            for (int i = 0; i < 100; ++i) {
-                checkingPoints[0] = tmpLeft + interval * i;
-                checkingPoints[1] = tmpLeft + interval * (i + 1);
-                if (checkingPoints[0] * checkingPoints[1] >= 0) {
-                    // Assuming the unimodality is satisified between checkingPoints[0] and checkingPoints[1]
-                    // Using Newton's Method to find extrema
-                    AdvancedPolynomialFunction der2Apf =
-                            new AdvancedPolynomialFunction(differentiate(derApf.getCoefficients()));
-                    if (checkingPoints[0] <= 0) {
-                        // Have a minimum
-                        double x = checkingPoints[0];
-                        double xx;
-                        double fx = this.value(x);
-                        double fxx;
-                        do {
-                            double fd = derApf.value(x);
-                            double fdd = der2Apf.value(x);
-                            if (fdd == 0) {
-                                xx = x;
-                            } else {
-                                xx = x - fd / fdd;
-                            }
-                            fxx = this.value(xx);
-                        } while (x != xx);
-                    } else {
-                        //
-                    }
+        for (double i = tmpLeft; i < tmpRight; ++i) {
+            checkingPoints[0] = i;
+            checkingPoints[1] = i + 1;
+            if (this.value(checkingPoints[0]) * this.value(checkingPoints[1]) >= 0) {
+                // Assuming the unimodality is satisified between checkingPoints[0] and checkingPoints[1]
+                // Using Newton's Method to find extrema
+                AdvancedPolynomialFunction der2Apf =
+                        new AdvancedPolynomialFunction(differentiate(derApf.getCoefficients()));
+                if (checkingPoints[0] <= 0) {
+                    // Have a minimum
+                    double min = NewtonsMethod(this, derApf, der2Apf, checkingPoints[0], checkingPoints[1]);
+                } else {
+                    double max = -NewtonsMethod(this.negate(), derApf.negate(), der2Apf.negate(), checkingPoints[0], checkingPoints[1]);
                 }
             }
-        } while (interval > 0.01);
+        }
         return null;
+    }
+
+    double NewtonsMethod(AdvancedPolynomialFunction f, AdvancedPolynomialFunction df, AdvancedPolynomialFunction d2f, double leftBound, double rightBound) {
+        // assuming f is a convex function and have a minimum between leftBound and rightBound
+        double x = leftBound;
+        double currentMin = f.value(x);
+        while (true) {
+            double fddx = d2f.value(x);
+            while (fddx == 0) {
+                x += 0.0000001;
+                fddx = d2f.value(x);
+            }
+            double fdx = df.value(x);
+            x = x - fdx / fddx;
+            double fx = f.value(x);
+            if (fx < currentMin) currentMin = fx;
+            else break;
+        }
+        return currentMin;
     }
 
     public StochasticPolynomialFunction compose(StochasticPolynomialFunction spf) {
