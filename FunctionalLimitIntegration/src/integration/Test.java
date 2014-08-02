@@ -29,13 +29,16 @@ public class Test {
 
         c = new double[3];
         c[0] = 3;
-        c[1] = 2;
+        c[1] = -(2.0/3.0);
         c[2] = 1;
 
         AdvancedPolynomialFunction bigpf = new AdvancedPolynomialFunction(c);   // f(x)=x
         System.out.println("f(x) = " + bigpf.toString());
 
         System.out.println("f'(x) = " + bigpf.polynomialDerivative().toString());
+
+//        double min = bigpf.NewtonsMethod(bigpf, bigpf.polynomialDerivative(), bigpf.polynomialDerivative().polynomialDerivative(), -100, 100);
+//        System.out.println("min = " + min);
 
 //        StochasticPolynomialFunction result = bigpf.compose(spf);   // f(g(x,ξ)) should be ξ
 //

@@ -6,9 +6,6 @@ import org.apache.commons.math3.exception.NullArgumentException;
 import org.apache.commons.math3.util.FastMath;
 
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by Xiaoxi Wang on 7/11/14.
@@ -162,11 +159,11 @@ public class AdvancedPolynomialFunction extends PolynomialFunction {
             return extrema;
         } catch (TooHighDegreeException thde) {
             thde.printStackTrace();
-            return searchExtremeValues(leftBound, rightBound);
+            return searchExtrema(leftBound, rightBound);
         }
     }
 
-    private double[] searchExtremeValues(double leftBound, double rightBound) {
+    private double[] searchExtrema(double leftBound, double rightBound) {
         // This function is NOT accurate!
         AdvancedPolynomialFunction derApf = new AdvancedPolynomialFunction(differentiate(this.getCoefficients()));
         double[] extrema = new double[2];
@@ -182,11 +179,7 @@ public class AdvancedPolynomialFunction extends PolynomialFunction {
             }
         }
         double[] checkingPoints = new double[2];
-        double tmpLeft = leftBound;
-        double tmpRight = rightBound;
-        boolean leftFlag = false;
-        boolean rightFlag = false;
-        for (double i = tmpLeft; i < tmpRight; ++i) {
+        for (double i = leftBound; i < rightBound; ++i) {
             checkingPoints[0] = i;
             checkingPoints[1] = i + 1;
             if (this.value(checkingPoints[0]) * this.value(checkingPoints[1]) >= 0) {
@@ -197,15 +190,17 @@ public class AdvancedPolynomialFunction extends PolynomialFunction {
                 if (checkingPoints[0] <= 0) {
                     // Have a minimum
                     double min = NewtonsMethod(this, derApf, der2Apf, checkingPoints[0], checkingPoints[1]);
+                    if (min < extrema[0]) extrema[0] = min;
                 } else {
                     double max = -NewtonsMethod(this.negate(), derApf.negate(), der2Apf.negate(), checkingPoints[0], checkingPoints[1]);
+                    if (max < extrema[1]) extrema[1] = max;
                 }
             }
         }
-        return null;
+        return extrema;
     }
 
-    double NewtonsMethod(AdvancedPolynomialFunction f, AdvancedPolynomialFunction df, AdvancedPolynomialFunction d2f, double leftBound, double rightBound) {
+    private double NewtonsMethod(AdvancedPolynomialFunction f, AdvancedPolynomialFunction df, AdvancedPolynomialFunction d2f, double leftBound, double rightBound) {
         // assuming f is a convex function and have a minimum between leftBound and rightBound
         double x = leftBound;
         double currentMin = f.value(x);
