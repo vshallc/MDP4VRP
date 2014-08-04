@@ -44,10 +44,6 @@ public class StochasticPolynomialFunction{
         return polyfunCoefs[0];
     }
 
-//    public double getXiCoefficient() {
-//        return sc;
-//    }
-
     public StochasticPolynomialFunction add(final StochasticPolynomialFunction spf) {
         final int lowLength = FastMath.min(polyfunCoefs.length, spf.getAdvancedPolynomialFunctionCoefficients().length);
         final int highLength = FastMath.max(polyfunCoefs.length, spf.getAdvancedPolynomialFunctionCoefficients().length);
@@ -136,7 +132,7 @@ public class StochasticPolynomialFunction{
         return new StochasticPolynomialFunction(newPolyFuncCoefs);
     }
 
-    public double randomValue(double x) {
+    public double stochasticValue(double x) {
         double xi = random.nextDouble();
         double result = 0.0;
         for (int i = 0; i < polyfunCoefs.length; ++i) {
@@ -160,6 +156,12 @@ public class StochasticPolynomialFunction{
         }
         return result;
     }
+
+    public double[] getExtremaOnDeterminedPart(double leftBound, double rightBound) {
+        return polyfunCoefs[0].extrema(leftBound, rightBound);
+    }
+
+    public double[] getExtremaOn
 
     private double getRandomXi() {
         return random.nextDouble();

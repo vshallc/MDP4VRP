@@ -8,6 +8,7 @@ import org.apache.commons.math3.exception.DimensionMismatchException;
 public class PiecewiseStochasticPolynomialFunction {
     StochasticPolynomialFunction[] stocPolyFuncs;
     double[] bounds;    // the overall domain is defined on [0, +inf)
+    int pieces;
 
     public PiecewiseStochasticPolynomialFunction(StochasticPolynomialFunction[] stocPolyFuncs, double[] bounds) {
         if (stocPolyFuncs.length != bounds.length) {
@@ -20,6 +21,7 @@ public class PiecewiseStochasticPolynomialFunction {
         }
         this.stocPolyFuncs = stocPolyFuncs;
         this.bounds = bounds;
+        this.pieces = stocPolyFuncs.length;
     }
 
     public StochasticPolynomialFunction getStochasticPolynomialFunction(
@@ -35,4 +37,16 @@ public class PiecewiseStochasticPolynomialFunction {
 //
 //        return null;
 //    }
+
+    public double[][] getExtremaOnEachPiece() {
+        double[][] extrema = new double[pieces][2];
+        for (int i = 0; i < pieces; ++i) {
+            extrema[i] = stocPolyFuncs[i].
+        }
+        return extrema;
+    }
+
+    public int getPieceNum() {
+        return this.pieces;
+    }
 }
