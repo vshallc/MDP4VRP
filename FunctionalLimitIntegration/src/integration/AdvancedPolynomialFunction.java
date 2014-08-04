@@ -98,39 +98,6 @@ public class AdvancedPolynomialFunction extends PolynomialFunction {
         return new AdvancedPolynomialFunction(differentiate(this.getCoefficients()));
     }
 
-    public double[] calculateExtremePoint() {
-        double[] differentiatedCoefs = differentiate(this.getCoefficients());
-        if (differentiatedCoefs.length == 1) {
-            extremePoints = new double[0];
-            isExtremePointCalculated = true;
-            return extremePoints;
-        }
-        int deg = differentiatedCoefs.length - 1;
-        extremePoints = new double[deg];
-        if (deg == 1) {
-            extremePoints[0] = -differentiatedCoefs[0] / differentiatedCoefs[1];
-        }
-        else if (deg == 2) {
-            double delta = differentiatedCoefs[1] * differentiatedCoefs[1]
-                    - 4 * differentiatedCoefs[2] * differentiatedCoefs[0];
-            if (delta > 0) {
-                extremePoints[0] = (-differentiatedCoefs[1] - Math.sqrt(delta)) / (2 * differentiatedCoefs[2]);
-                extremePoints[1] = (-differentiatedCoefs[1] + Math.sqrt(delta)) / (2 * differentiatedCoefs[2]);
-            } else if (delta == 0) {
-                extremePoints = new double[1];
-                extremePoints[0] = -differentiatedCoefs[1] / (2 * differentiatedCoefs[2]);
-            } else if (delta < 0) {
-                extremePoints = new double[0];
-                isExtremePointCalculated = true;
-                return extremePoints;
-            }
-        } else {
-            throw new TooHighDegreeException(deg);
-        }
-        isExtremePointCalculated = true;
-        return extremePoints;
-    }
-
     public double[] extrema(double leftBound, double rightBound) {
         try {
             double[] extPoints = calculateExtremePoint();
@@ -161,6 +128,39 @@ public class AdvancedPolynomialFunction extends PolynomialFunction {
             thde.printStackTrace();
             return searchExtrema(leftBound, rightBound);
         }
+    }
+
+    private double[] calculateExtremePoint() {
+        double[] differentiatedCoefs = differentiate(this.getCoefficients());
+        if (differentiatedCoefs.length == 1) {
+            extremePoints = new double[0];
+            isExtremePointCalculated = true;
+            return extremePoints;
+        }
+        int deg = differentiatedCoefs.length - 1;
+        extremePoints = new double[deg];
+        if (deg == 1) {
+            extremePoints[0] = -differentiatedCoefs[0] / differentiatedCoefs[1];
+        }
+        else if (deg == 2) {
+            double delta = differentiatedCoefs[1] * differentiatedCoefs[1]
+                    - 4 * differentiatedCoefs[2] * differentiatedCoefs[0];
+            if (delta > 0) {
+                extremePoints[0] = (-differentiatedCoefs[1] - Math.sqrt(delta)) / (2 * differentiatedCoefs[2]);
+                extremePoints[1] = (-differentiatedCoefs[1] + Math.sqrt(delta)) / (2 * differentiatedCoefs[2]);
+            } else if (delta == 0) {
+                extremePoints = new double[1];
+                extremePoints[0] = -differentiatedCoefs[1] / (2 * differentiatedCoefs[2]);
+            } else if (delta < 0) {
+                extremePoints = new double[0];
+                isExtremePointCalculated = true;
+                return extremePoints;
+            }
+        } else {
+            throw new TooHighDegreeException(deg);
+        }
+        isExtremePointCalculated = true;
+        return extremePoints;
     }
 
     private double[] searchExtrema(double leftBound, double rightBound) {
@@ -271,13 +271,11 @@ public class AdvancedPolynomialFunction extends PolynomialFunction {
     }
 
     public boolean equalsZero() {
-        if (this.getCoefficients().length == 1 && this.getCoefficients()[0] == 0) return true;
-        else return false;
+        return this.getCoefficients().length == 1 && this.getCoefficients()[0] == 0;
     }
 
     public boolean equalsOne() {
-        if (this.getCoefficients().length == 1 && this.getCoefficients()[0] == 1) return true;
-        else return false;
+        return this.getCoefficients().length == 1 && this.getCoefficients()[0] == 1;
     }
 
     @Override
