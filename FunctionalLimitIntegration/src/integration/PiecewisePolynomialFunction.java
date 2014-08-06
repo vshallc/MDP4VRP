@@ -24,4 +24,15 @@ public class PiecewisePolynomialFunction {
     public PiecewiseStochasticPolynomialFunction compose(PiecewiseStochasticPolynomialFunction pwStocPolyFunc) {
         return null;
     }
+
+    public PiecewisePolynomialFunction integrationOnXiOfComposition(PiecewisePolynomialFunction V, PiecewiseStochasticPolynomialFunction g) {
+        // for calculating: int f(x)*V(t+g(t)) dx; x:0~1; g>0 -> t+g(t)>t
+        double[][] g_ext = g.getDeterminedExtremaOnEachPieceFiniteDomain();
+        double[][] g_xi_rng = g.getStochasticRangeOnEachPieceFiniteDomain();
+        for (int i = 0; i < g.getPieceNum(); ++i) {
+            double min = g_ext[i][0] + g_xi_rng[i][0];
+            double max = g_ext[i][1] + g_xi_rng[i][1];
+        }
+        return null;
+    }
 }

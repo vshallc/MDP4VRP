@@ -161,7 +161,23 @@ public class StochasticPolynomialFunction{
         return polyfunCoefs[0].extrema(leftBound, rightBound);
     }
 
-    public double[] getExtremaOn
+    public double[] getStochasticRange(double leftBound, double rightBound) {
+        int deg = this.degree();
+        if (deg > 1) {
+            throw new TooHighDegreeException(deg);
+        }
+        if (deg == 0) {
+            double[] result = {0, 0};
+            return result;
+        }
+        if (polyfunCoefs[1].degree() > 0) {
+            throw new TooHighDegreeException(polyfunCoefs[1].degree());
+        }
+        double[] result = new double[2];
+        result[0] = 0;
+        result[1] = polyfunCoefs[1].extrema(leftBound, rightBound)[1];
+        return result;
+    }
 
     private double getRandomXi() {
         return random.nextDouble();
