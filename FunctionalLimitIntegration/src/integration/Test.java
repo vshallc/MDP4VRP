@@ -26,22 +26,23 @@ public class Test {
 
         StochasticPolynomialFunction spf = new StochasticPolynomialFunction(pf);    // g(x,ξ)=ξ
         System.out.println("g(x,ξ) = " + spf.toString());
+        System.out.println("int g(x,ξ) = " + spf.integrationOnXi().toString());
 
-        c = new double[3];
-        c[0] = 3;
-        c[1] = -(2.0/3.0);
-        c[2] = 1;
+//        c = new double[3];
+//        c[0] = 3;
+//        c[1] = -(2.0/3.0);
+//        c[2] = 1;
 
-        AdvancedPolynomialFunction bigpf = new AdvancedPolynomialFunction(c);   // f(x)=x
-        System.out.println("f(x) = " + bigpf.toString());
-
-        System.out.println("f'(x) = " + bigpf.polynomialDerivative().toString());
+//        AdvancedPolynomialFunction bigpf = new AdvancedPolynomialFunction(c);   // f(x)=x
+//        System.out.println("f(x) = " + bigpf.toString());
+//
+//        System.out.println("f'(x) = " + bigpf.polynomialDerivative().toString());
 
 //        double min = bigpf.NewtonsMethod(bigpf, bigpf.polynomialDerivative(), bigpf.polynomialDerivative().polynomialDerivative(), -100, 100);
 //        System.out.println("min = " + min);
 
 //        StochasticPolynomialFunction result = bigpf.compose(spf);   // f(g(x,ξ)) should be ξ
-//
+
 //        System.out.println("f(g(x,ξ)) = " + result.toString());
 //        System.out.println("result: (x=0, xi=0)" + result.determinedValue(0,0));
 //        System.out.println("result: (x=1, xi=0)" + result.determinedValue(1,0));

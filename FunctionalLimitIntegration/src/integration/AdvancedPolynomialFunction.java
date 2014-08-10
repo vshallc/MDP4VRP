@@ -278,6 +278,11 @@ public class AdvancedPolynomialFunction extends PolynomialFunction {
         return this.getCoefficients().length == 1 && this.getCoefficients()[0] == 1;
     }
 
+    public static AdvancedPolynomialFunction ZERO() {
+        double[] c = {0};
+        return new AdvancedPolynomialFunction(c);
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;

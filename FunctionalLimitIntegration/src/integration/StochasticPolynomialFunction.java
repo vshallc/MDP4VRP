@@ -157,6 +157,33 @@ public class StochasticPolynomialFunction{
         return result;
     }
 
+    public AdvancedPolynomialFunction determinize(double xi) {
+        AdvancedPolynomialFunction determinizedResult = new AdvancedPolynomialFunction(polyfunCoefs[0].getCoefficients());
+        for (int i = 1; i < polyfunCoefs.length; ++i) {
+            double pow = FastMath.pow(xi, i);
+            double[] tmpcoefs = polyfunCoefs[i].getCoefficients();
+            for (int j = 0; j < tmpcoefs.length; ++j) {
+                tmpcoefs[j] *= pow;
+            }
+            AdvancedPolynomialFunction tmpapf = new AdvancedPolynomialFunction(tmpcoefs);
+            determinizedResult = determinizedResult.add(tmpapf);
+        }
+        return determinizedResult;
+    }
+
+    public StochasticPolynomialFunction integrationOnXi() {
+        AdvancedPolynomialFunction[] intCoefs = new AdvancedPolynomialFunction[polyfunCoefs.length + 1];
+        for (int i = 1; i <= polyfunCoefs.length; ++i) {
+            double[] coefsOfCoef = polyfunCoefs[i - 1].getCoefficients();
+            for (int j=0;j<coefsOfCoef.length;++j) {
+                coefsOfCoef[j] /= i;
+            }
+            intCoefs[i] = new AdvancedPolynomialFunction(coefsOfCoef);
+        }
+        intCoefs[0] = AdvancedPolynomialFunction.ZERO();
+        return new StochasticPolynomialFunction(intCoefs);
+    }
+
     public double[] getExtremaOnDeterminedPart(double leftBound, double rightBound) {
         return polyfunCoefs[0].extrema(leftBound, rightBound);
     }
