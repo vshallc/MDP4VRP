@@ -23,6 +23,10 @@ public class PiecewisePolynomialFunction {
         return this.polyFuncs;
     }
 
+    public AdvancedPolynomialFunction getPolynomialFunction(int piece) {
+        return this.polyFuncs[piece];
+    }
+
     public double[] getBounds() {
         return this.bounds;
     }
@@ -40,16 +44,20 @@ public class PiecewisePolynomialFunction {
         // A(t) arrive time (start on t)
         // A'(t)>=0
         int pieceNum = V.getPieceNum();
+        List<Double> boundsList = new ArrayList<Double>();
         if (pieceNum == 1) {
+            boundsList.add(A.getBounds()[0]);
             for (int i = 0; i < A.getPieceNum(); ++i) {
                 // probability distribution f(x)=1/(1-0)=1
                 // TODO compose then integeration
+                // TODO change bounds (append inf to the end)
+                AdvancedPolynomialFunction integerationOf1 = V.getPolynomialFunction(0).compose(A.getStochasticPolynomialFunction(i)).integrationOnXi().determinize(1);
+                AdvancedPolynomialFunction integerationOf0 = V.getPolynomialFunction(0).compose(A.getStochasticPolynomialFunction(i)).integrationOnXi().determinize(0);
             }
         } else if (pieceNum > 1) {
             double[][] g_ext = A.getDeterminedExtremaOnEachPieceFiniteDomain();
             double[][] g_xi_range = A.getStochasticRangeOnEachPieceFiniteDomain();
 
-            List<Double> boundsList = new ArrayList<Double>();
             boundsList.add(0.0);
             int VNextBoundID = 1;
             for (int i = 0; i < A.getPieceNum(); ++i) {
