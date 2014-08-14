@@ -7,26 +7,46 @@ package integration;
 public class Test {
 
     public Test() {
-        AdvancedPolynomialFunction[] pf = new AdvancedPolynomialFunction[3];
-        double[] c = new double[2];
-        c[0] = 7;
-        c[1] = 1;
+        double[] c;
+        AdvancedPolynomialFunction[] pf = new AdvancedPolynomialFunction[2];
+        StochasticPolynomialFunction[] spfs = new StochasticPolynomialFunction[2];
+        PiecewiseStochasticPolynomialFunction pspf;
+        c = new double[2];
+        c[0] = 50;
+        c[1] = -0.25;
         pf[0] = new AdvancedPolynomialFunction(c);  // f1(x)=0
         System.out.println("f1(x) = " + pf[0].toString());
         c = new double[1];
-        c[0] = 0;
+        c[0] = 20;
 //        c[1] = 4;
         pf[1] = new AdvancedPolynomialFunction(c);  // f2(x)=0
         System.out.println("f2(x) = " + pf[1].toString());
-        c = new double[2];
-        c[0] = 5;
-        c[1] = 4;
-        pf[2] = new AdvancedPolynomialFunction(c);  // f3(x)=1
-        System.out.println("f3(x) = " + pf[2].toString());
+//        c = new double[2];
+//        c[0] = 5;
+//        c[1] = 4;
+//        pf[2] = new AdvancedPolynomialFunction(c);  // f3(x)=1
+//        System.out.println("f3(x) = " + pf[2].toString());
 
-        StochasticPolynomialFunction spf = new StochasticPolynomialFunction(pf);    // g(x,ξ)=ξ
-        System.out.println("g(x,ξ) = " + spf.toString());
-        System.out.println("int g(x,ξ) = " + spf.integrationOnXi().toString());
+        spfs[0] = new StochasticPolynomialFunction(pf);    // g(x,ξ)=ξ
+
+        c = new double[1];
+        c[0] = 25;
+        pf[0] = new AdvancedPolynomialFunction(c);
+        c[0] = 20;
+        pf[1] = new AdvancedPolynomialFunction(c);
+
+        spfs[1] = new StochasticPolynomialFunction(pf);
+
+        double[] bounds = new double[3];
+        bounds[0] = 0;
+        bounds[1] = 100;
+        bounds[2] = Double.POSITIVE_INFINITY;
+        pspf = new PiecewiseStochasticPolynomialFunction(spfs, bounds);
+
+        System.out.println("g(x,ξ) = \n" + pspf.toString());
+//        System.out.println("int g(x,ξ) = " + spf.integrationOnXi().toString());
+
+//        System.out.println("f2(+inf) = " + pf[1].value(Double.POSITIVE_INFINITY));
 
 //        c = new double[3];
 //        c[0] = 3;

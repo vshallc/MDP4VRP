@@ -2,7 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="63a100fe-1338-4db6-90c8-f11cfcedbc6a" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/FunctionalLimitIntegration/src/integration/AdvancedPolynomialFunction.java" afterPath="$PROJECT_DIR$/FunctionalLimitIntegration/src/integration/AdvancedPolynomialFunction.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/FunctionalLimitIntegration/src/integration/PiecewisePolynomialFunction.java" afterPath="$PROJECT_DIR$/FunctionalLimitIntegration/src/integration/PiecewisePolynomialFunction.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/FunctionalLimitIntegration/src/integration/PiecewiseStochasticPolynomialFunction.java" afterPath="$PROJECT_DIR$/FunctionalLimitIntegration/src/integration/PiecewiseStochasticPolynomialFunction.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/FunctionalLimitIntegration/src/integration/StochasticPolynomialFunction.java" afterPath="$PROJECT_DIR$/FunctionalLimitIntegration/src/integration/StochasticPolynomialFunction.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/FunctionalLimitIntegration/src/integration/Test.java" afterPath="$PROJECT_DIR$/FunctionalLimitIntegration/src/integration/Test.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="FunctionalLimitIntegrationForStochasticPolynomialFunction.iws" />
@@ -29,9 +33,14 @@
       <file leaf-file-name="PolynomialFunction.java" pinned="false" current="false" current-in-tab="false">
         <entry file="jar://$PROJECT_DIR$/../../commons-math3-3.2/commons-math3-3.2-sources.jar!/org/apache/commons/math3/analysis/polynomials/PolynomialFunction.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="9.115385" vertical-offset="1092" max-vertical-offset="7258">
-              <caret line="72" column="54" selection-start-line="72" selection-start-column="38" selection-end-line="72" selection-end-column="54" />
-              <folding />
+            <state vertical-scroll-proportion="-11.653846" vertical-offset="1293" max-vertical-offset="7334">
+              <caret line="113" column="20" selection-start-line="113" selection-start-column="20" selection-end-line="113" selection-end-column="20" />
+              <folding>
+                <element signature="e#4148#4149#0" expanded="true" />
+                <element signature="e#4194#4195#0" expanded="true" />
+                <element signature="e#4477#4478#0" expanded="true" />
+                <element signature="e#4520#4521#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -39,8 +48,8 @@
       <file leaf-file-name="AdvancedPolynomialFunction.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/FunctionalLimitIntegration/src/integration/AdvancedPolynomialFunction.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="4784" max-vertical-offset="5757">
-              <caret line="282" column="49" selection-start-line="282" selection-start-column="49" selection-end-line="282" selection-end-column="49" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="224" max-vertical-offset="6194">
+              <caret line="42" column="74" selection-start-line="42" selection-start-column="74" selection-end-line="42" selection-end-column="74" />
               <folding />
             </state>
           </provider>
@@ -49,11 +58,13 @@
       <file leaf-file-name="StochasticPolynomialFunction.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/FunctionalLimitIntegration/src/integration/StochasticPolynomialFunction.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="3042" max-vertical-offset="4541">
-              <caret line="180" column="70" selection-start-line="180" selection-start-column="70" selection-end-line="180" selection-end-column="70" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="3642" max-vertical-offset="4579">
+              <caret line="213" column="30" selection-start-line="213" selection-start-column="30" selection-end-line="214" selection-end-column="46" />
               <folding>
                 <element signature="e#1685#1686#0" expanded="true" />
                 <element signature="e#1731#1732#0" expanded="true" />
+                <element signature="e#1922#1923#0" expanded="true" />
+                <element signature="e#1960#1961#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -62,8 +73,8 @@
       <file leaf-file-name="Test.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/FunctionalLimitIntegration/src/integration/Test.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="287" max-vertical-offset="1425">
-              <caret line="28" column="77" selection-start-line="28" selection-start-column="77" selection-end-line="28" selection-end-column="77" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="78" max-vertical-offset="1805">
+              <caret line="45" column="39" selection-start-line="45" selection-start-column="39" selection-end-line="45" selection-end-column="39" />
               <folding />
             </state>
           </provider>
@@ -72,8 +83,8 @@
       <file leaf-file-name="PiecewiseStochasticPolynomialFunction.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/FunctionalLimitIntegration/src/integration/PiecewiseStochasticPolynomialFunction.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="76" max-vertical-offset="1368">
-              <caret line="13" column="12" selection-start-line="13" selection-start-column="12" selection-end-line="13" selection-end-column="12" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1881">
+              <caret line="96" column="28" selection-start-line="96" selection-start-column="28" selection-end-line="96" selection-end-column="28" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -84,24 +95,15 @@
       <file leaf-file-name="PiecewisePolynomialFunction.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/FunctionalLimitIntegration/src/integration/PiecewisePolynomialFunction.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.6833527" vertical-offset="287" max-vertical-offset="1634">
-              <caret line="52" column="60" selection-start-line="52" selection-start-column="60" selection-end-line="52" selection-end-column="60" />
+            <state vertical-scroll-proportion="0.83549786" vertical-offset="1052" max-vertical-offset="1995">
+              <caret line="102" column="20" selection-start-line="102" selection-start-column="20" selection-end-line="102" selection-end-column="20" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#908#909#0" expanded="true" />
-                <element signature="e#952#953#0" expanded="true" />
-                <element signature="e#1481#1489#0" expanded="true" />
+                <element signature="e#981#982#0" expanded="true" />
+                <element signature="e#1025#1026#0" expanded="true" />
+                <element signature="e#1563#1583#0" expanded="true" />
+                <element signature="e#1634#1642#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="StochasticBoundsPiecewisePolyNomialFunction.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/FunctionalLimitIntegration/src/integration/StochasticBoundsPiecewisePolyNomialFunction.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="342">
-              <caret line="9" column="10" selection-start-line="9" selection-start-column="10" selection-end-line="9" selection-end-column="10" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -124,10 +126,10 @@
         <option value="$PROJECT_DIR$/FunctionalLimitIntegration/src/Test/B.java" />
         <option value="$PROJECT_DIR$/FunctionalLimitIntegration/src/integration/TooHighDegreeException.java" />
         <option value="$PROJECT_DIR$/FunctionalLimitIntegration/src/integration/StochasticBoundsPiecewisePolyNomialFunction.java" />
-        <option value="$PROJECT_DIR$/FunctionalLimitIntegration/src/integration/PiecewiseStochasticPolynomialFunction.java" />
         <option value="$PROJECT_DIR$/FunctionalLimitIntegration/src/integration/AdvancedPolynomialFunction.java" />
         <option value="$PROJECT_DIR$/FunctionalLimitIntegration/src/integration/StochasticPolynomialFunction.java" />
         <option value="$PROJECT_DIR$/FunctionalLimitIntegration/src/integration/Test.java" />
+        <option value="$PROJECT_DIR$/FunctionalLimitIntegration/src/integration/PiecewiseStochasticPolynomialFunction.java" />
         <option value="$PROJECT_DIR$/FunctionalLimitIntegration/src/integration/PiecewisePolynomialFunction.java" />
       </list>
     </option>
@@ -238,6 +240,32 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="stat" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="FunctionalLimitIntegrationForStochasticPolynomialFunction" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="External Libraries" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="commons-math3-3.2" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="commons-math3-3.2.jar" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="math3" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="exception" />
               <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -895,7 +923,11 @@
       <created>1407691401554</created>
       <updated>1407691401554</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="working on integerationOnXiOfComposition_test function&#10;todo: change bounds">
+      <created>1407894530337</created>
+      <updated>1407894530337</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="TodoView" selected-index="4">
@@ -927,22 +959,22 @@
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32935917" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32935917" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32862455" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32935917" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32935917" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.22005445" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.280924" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.280924" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
     </layout>
@@ -999,7 +1031,8 @@
     <MESSAGE value="Now we can find extreme points" />
     <MESSAGE value="Start developing integration part" />
     <MESSAGE value="working on integerationOnXiOfComposition_test function" />
-    <option name="LAST_COMMIT_MESSAGE" value="working on integerationOnXiOfComposition_test function" />
+    <MESSAGE value="working on integerationOnXiOfComposition_test function&#10;todo: change bounds" />
+    <option name="LAST_COMMIT_MESSAGE" value="working on integerationOnXiOfComposition_test function&#10;todo: change bounds" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -1009,17 +1042,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/FunctionalLimitIntegration/src/integration/StochasticPolynomialFunction.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1026" max-vertical-offset="1843">
-          <caret line="56" column="0" selection-start-line="56" selection-start-column="0" selection-end-line="56" selection-end-column="0" />
-          <folding>
-            <element signature="e#1685#1686#0" expanded="true" />
-            <element signature="e#1731#1732#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/FunctionalLimitIntegration/src/integration/PiecewiseStochasticPolynomialFunction.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="399" max-vertical-offset="855">
@@ -1036,9 +1058,10 @@
           <caret line="28" column="0" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#908#909#0" expanded="true" />
-            <element signature="e#952#953#0" expanded="true" />
-            <element signature="e#1481#1489#0" expanded="true" />
+            <element signature="e#981#982#0" expanded="true" />
+            <element signature="e#1025#1026#0" expanded="true" />
+            <element signature="e#1563#1583#0" expanded="true" />
+            <element signature="e#1634#1642#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1047,7 +1070,12 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="6285">
           <caret line="69" column="34" selection-start-line="69" selection-start-column="34" selection-end-line="69" selection-end-column="34" />
-          <folding />
+          <folding>
+            <element signature="e#4148#4149#0" expanded="true" />
+            <element signature="e#4194#4195#0" expanded="true" />
+            <element signature="e#4477#4478#0" expanded="true" />
+            <element signature="e#4520#4521#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1058,6 +1086,8 @@
           <folding>
             <element signature="e#1685#1686#0" expanded="true" />
             <element signature="e#1731#1732#0" expanded="true" />
+            <element signature="e#1922#1923#0" expanded="true" />
+            <element signature="e#1960#1961#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1078,9 +1108,10 @@
           <caret line="28" column="0" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#908#909#0" expanded="true" />
-            <element signature="e#952#953#0" expanded="true" />
-            <element signature="e#1481#1489#0" expanded="true" />
+            <element signature="e#981#982#0" expanded="true" />
+            <element signature="e#1025#1026#0" expanded="true" />
+            <element signature="e#1563#1583#0" expanded="true" />
+            <element signature="e#1634#1642#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1351,45 +1382,60 @@
         </state>
       </provider>
     </entry>
-    <entry file="jar://$PROJECT_DIR$/../../commons-math3-3.2/commons-math3-3.2-sources.jar!/org/apache/commons/math3/analysis/polynomials/PolynomialFunction.java">
+    <entry file="jar://$PROJECT_DIR$/../../commons-math3-3.2/commons-math3-3.2-sources.jar!/org/apache/commons/math3/exception/NumberIsTooLargeException.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="9.115385" vertical-offset="1092" max-vertical-offset="7258">
-          <caret line="72" column="54" selection-start-line="72" selection-start-column="38" selection-end-line="72" selection-end-column="54" />
+        <state vertical-scroll-proportion="0.33260393" vertical-offset="266" max-vertical-offset="1368">
+          <caret line="46" column="11" selection-start-line="46" selection-start-column="11" selection-end-line="46" selection-end-column="11" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/FunctionalLimitIntegration/src/integration/AdvancedPolynomialFunction.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="4784" max-vertical-offset="5757">
-          <caret line="282" column="49" selection-start-line="282" selection-start-column="49" selection-end-line="282" selection-end-column="49" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="224" max-vertical-offset="6194">
+          <caret line="42" column="74" selection-start-line="42" selection-start-column="74" selection-end-line="42" selection-end-column="74" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/../../commons-math3-3.2/commons-math3-3.2-sources.jar!/org/apache/commons/math3/analysis/polynomials/PolynomialFunction.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-11.653846" vertical-offset="1293" max-vertical-offset="7334">
+          <caret line="113" column="20" selection-start-line="113" selection-start-column="20" selection-end-line="113" selection-end-column="20" />
+          <folding>
+            <element signature="e#4148#4149#0" expanded="true" />
+            <element signature="e#4194#4195#0" expanded="true" />
+            <element signature="e#4477#4478#0" expanded="true" />
+            <element signature="e#4520#4521#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/FunctionalLimitIntegration/src/integration/Test.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="287" max-vertical-offset="1425">
-          <caret line="28" column="77" selection-start-line="28" selection-start-column="77" selection-end-line="28" selection-end-column="77" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="78" max-vertical-offset="1805">
+          <caret line="45" column="39" selection-start-line="45" selection-start-column="39" selection-end-line="45" selection-end-column="39" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/FunctionalLimitIntegration/src/integration/StochasticPolynomialFunction.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="3042" max-vertical-offset="4541">
-          <caret line="180" column="70" selection-start-line="180" selection-start-column="70" selection-end-line="180" selection-end-column="70" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="3642" max-vertical-offset="4579">
+          <caret line="213" column="30" selection-start-line="213" selection-start-column="30" selection-end-line="214" selection-end-column="46" />
           <folding>
             <element signature="e#1685#1686#0" expanded="true" />
             <element signature="e#1731#1732#0" expanded="true" />
+            <element signature="e#1922#1923#0" expanded="true" />
+            <element signature="e#1960#1961#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/FunctionalLimitIntegration/src/integration/PiecewiseStochasticPolynomialFunction.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1368">
-          <caret line="13" column="12" selection-start-line="13" selection-start-column="12" selection-end-line="13" selection-end-column="12" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1881">
+          <caret line="96" column="28" selection-start-line="96" selection-start-column="28" selection-end-line="96" selection-end-column="28" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -1406,13 +1452,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/FunctionalLimitIntegration/src/integration/PiecewisePolynomialFunction.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6833527" vertical-offset="287" max-vertical-offset="1634">
-          <caret line="52" column="60" selection-start-line="52" selection-start-column="60" selection-end-line="52" selection-end-column="60" />
+        <state vertical-scroll-proportion="0.83549786" vertical-offset="1052" max-vertical-offset="1995">
+          <caret line="102" column="20" selection-start-line="102" selection-start-column="20" selection-end-line="102" selection-end-column="20" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#908#909#0" expanded="true" />
-            <element signature="e#952#953#0" expanded="true" />
-            <element signature="e#1481#1489#0" expanded="true" />
+            <element signature="e#981#982#0" expanded="true" />
+            <element signature="e#1025#1026#0" expanded="true" />
+            <element signature="e#1563#1583#0" expanded="true" />
+            <element signature="e#1634#1642#0" expanded="true" />
           </folding>
         </state>
       </provider>

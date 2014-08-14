@@ -3,6 +3,7 @@ package integration;
 import org.apache.commons.math3.analysis.polynomials.PolynomialFunction;
 import org.apache.commons.math3.exception.NoDataException;
 import org.apache.commons.math3.exception.NullArgumentException;
+import org.apache.commons.math3.exception.NumberIsTooLargeException;
 import org.apache.commons.math3.util.FastMath;
 
 import java.util.Arrays;
@@ -99,34 +100,53 @@ public class AdvancedPolynomialFunction extends PolynomialFunction {
     }
 
     public double[] extrema(double leftBound, double rightBound) {
-        try {
-            double[] extPoints = calculateExtremePoint();
+        int degree = this.degree();
+        if (degree == 0) {
+            double c0 = this.getCoefficients()[0];
+            double[] extrema = {c0, c0};
+            return extrema;
+        } else if (degree == 1) {
+            double c1 = this.getCoefficients()[1];
             double[] extrema = new double[2];
-            {
-                double leftValue = this.value(leftBound);
-                double rightValue = this.value(rightBound);
-                if (leftValue < rightValue) {
-                    extrema[0] = leftValue;
-                    extrema[1] = rightValue;
-                } else {
-                    extrema[0] = rightValue;
-                    extrema[1] = leftValue;
-                }
-            }
-            for (double extPoint : extPoints) {
-                if (extPoint >= leftBound && extPoint < rightBound) {
-                    double tmpValue = this.value(extPoint);
-                    if (tmpValue < extrema[0]) {
-                        extrema[0] = tmpValue;
-                    } else if (tmpValue > extrema[1]) {
-                        extrema[1] = tmpValue;
-                    }
-                }
+            if (c1 > 0) {
+                extrema[0] = this.value(leftBound);
+                extrema[1] = this.value(rightBound);
+            } else {
+                extrema[0] = this.value(rightBound);
+                extrema[1] = this.value(leftBound);
             }
             return extrema;
-        } catch (TooHighDegreeException thde) {
-            thde.printStackTrace();
-            return searchExtrema(leftBound, rightBound);
+        } else {
+            // TODO optimize following codes.
+            try {
+                double[] extPoints = calculateExtremePoint();
+                double[] extrema = new double[2];
+                {
+                    double leftValue = this.value(leftBound);
+                    double rightValue = this.value(rightBound);
+                    if (leftValue < rightValue) {
+                        extrema[0] = leftValue;
+                        extrema[1] = rightValue;
+                    } else {
+                        extrema[0] = rightValue;
+                        extrema[1] = leftValue;
+                    }
+                }
+                for (double extPoint : extPoints) {
+                    if (extPoint >= leftBound && extPoint < rightBound) {
+                        double tmpValue = this.value(extPoint);
+                        if (tmpValue < extrema[0]) {
+                            extrema[0] = tmpValue;
+                        } else if (tmpValue > extrema[1]) {
+                            extrema[1] = tmpValue;
+                        }
+                    }
+                }
+                return extrema;
+            } catch (TooHighDegreeException thde) {
+                thde.printStackTrace();
+                return searchExtrema(leftBound, rightBound);
+            }
         }
     }
 
@@ -137,12 +157,12 @@ public class AdvancedPolynomialFunction extends PolynomialFunction {
             isExtremePointCalculated = true;
             return extremePoints;
         }
-        int deg = differentiatedCoefs.length - 1;
-        extremePoints = new double[deg];
-        if (deg == 1) {
+        int degree = differentiatedCoefs.length - 1;
+        extremePoints = new double[degree];
+        if (degree == 1) {
             extremePoints[0] = -differentiatedCoefs[0] / differentiatedCoefs[1];
         }
-        else if (deg == 2) {
+        else if (degree == 2) {
             double delta = differentiatedCoefs[1] * differentiatedCoefs[1]
                     - 4 * differentiatedCoefs[2] * differentiatedCoefs[0];
             if (delta > 0) {
@@ -157,13 +177,16 @@ public class AdvancedPolynomialFunction extends PolynomialFunction {
                 return extremePoints;
             }
         } else {
-            throw new TooHighDegreeException(deg);
+            throw new TooHighDegreeException(degree);
         }
         isExtremePointCalculated = true;
         return extremePoints;
     }
 
     private double[] searchExtrema(double leftBound, double rightBound) {
+        if (rightBound == Double.POSITIVE_INFINITY) { // right bound cannot be +inf
+            throw new NumberIsTooLargeException(Double.POSITIVE_INFINITY, Double.MAX_VALUE, true);
+        }
         // This function is NOT accurate!
         AdvancedPolynomialFunction derApf = new AdvancedPolynomialFunction(differentiate(this.getCoefficients()));
         double[] extrema = new double[2];
@@ -179,7 +202,7 @@ public class AdvancedPolynomialFunction extends PolynomialFunction {
             }
         }
         double[] checkingPoints = new double[2];
-        for (double i = leftBound; i < rightBound; ++i) {
+        for (double i = leftBound; i < rightBound; ++i) { // interval = 1
             checkingPoints[0] = i;
             checkingPoints[1] = i + 1;
             if (this.value(checkingPoints[0]) * this.value(checkingPoints[1]) >= 0) {
@@ -192,6 +215,7 @@ public class AdvancedPolynomialFunction extends PolynomialFunction {
                     double min = NewtonsMethod(this, derApf, der2Apf, checkingPoints[0], checkingPoints[1]);
                     if (min < extrema[0]) extrema[0] = min;
                 } else {
+                    // Have a maximum
                     double max = -NewtonsMethod(this.negate(), derApf.negate(), der2Apf.negate(), checkingPoints[0], checkingPoints[1]);
                     if (max < extrema[1]) extrema[1] = max;
                 }
