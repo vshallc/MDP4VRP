@@ -1,4 +1,4 @@
-package integration;
+package functional;
 
 import org.apache.commons.math3.analysis.polynomials.PolynomialFunction;
 import org.apache.commons.math3.exception.NoDataException;
@@ -241,6 +241,33 @@ public class AdvancedPolynomialFunction extends PolynomialFunction {
             else break;
         }
         return currentMin;
+    }
+
+    public double[] solve() {
+        // Solve roots for f(x)=0
+        int degree = this.degree();
+        double[] roots = new double[degree];
+        if (degree == 0) return roots;
+        else if (degree == 1) {
+            roots[0] = -getCoefficients()[0] / getCoefficients()[1];
+            return roots;
+        } else if (degree == 2) {
+            double delta = getCoefficients()[1] * getCoefficients()[1] - 4 * getCoefficients()[2] * getCoefficients()[0];
+            if (delta > 0) {
+                roots[0] = (-getCoefficients()[1] - Math.sqrt(delta)) / (2 * getCoefficients()[2]);
+                roots[1] = (-getCoefficients()[1] + Math.sqrt(delta)) / (2 * getCoefficients()[2]);
+                return roots;
+            } else if (delta == 0) {
+                roots = new double[1];
+                roots[0] = (-getCoefficients()[1]) / (2 * getCoefficients()[2]);
+                return roots;
+            } else {
+                roots = new double[0];
+                return roots;
+            }
+        } else if (degree > 2) {
+            //
+        } else throw new IllegalArgumentException();
     }
 
     public StochasticPolynomialFunction compose(StochasticPolynomialFunction spf) {

@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/FunctionalLimitIntegration/FunctionalLimitIntegrationForStochasticPolynomialFunction.iml" filepath="$PROJECT_DIR$/FunctionalLimitIntegration/FunctionalLimitIntegrationForStochasticPolynomialFunction.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MDP4VRP/MDP4VRP.iml" filepath="$PROJECT_DIR$/MDP4VRP/MDP4VRP.iml" />
     </modules>
   </component>
 </project>

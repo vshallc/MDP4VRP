@@ -1,9 +1,5 @@
-package integration;
+package functional;
 
-
-import org.apache.commons.math3.analysis.polynomials.PolynomialFunction;
-import org.apache.commons.math3.exception.MathIllegalArgumentException;
-import org.apache.commons.math3.exception.util.LocalizedFormats;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +36,7 @@ public class PiecewisePolynomialFunction {
         return null;
     }
 
-    public PiecewisePolynomialFunction integrationOnXiOfComposition_test(PiecewisePolynomialFunction V, PiecewiseStochasticPolynomialFunction A) {
+    public static PiecewisePolynomialFunction integrationOnXiOfComposition_test(PiecewisePolynomialFunction V, PiecewiseStochasticPolynomialFunction A) {
         // only for calculating: int f(x)*V(A(t)) dx; x:0~1; A(t)=t+g(t); g>0 -> t+g(t)>t
         // A(t) arrive time (start on t)
         // A'(t)>=0
@@ -52,14 +48,26 @@ public class PiecewisePolynomialFunction {
         double[][] AExtrema = A.getDeterminedExtremaOnEachPiece();
         double[][] AStocRange = A.getStochasticRangeOnEachPiece();
         for (int i = 0; i < A.getPieceNum(); ++i) {
-            for (; startPiece < V.getPieceNum(); ++startPiece) {
-                if (V.getBounds()[startPiece] <= AExtrema[i][0] + AStocRange[i][0]) break;
+            if (A.getStochasticPolynomialFunction(i).degree() == 1) {
+                for (; startPiece < V.getPieceNum(); ++startPiece) {
+                    if (V.getBounds()[startPiece] <= AExtrema[i][0] + AStocRange[i][0]) break;
+                }
+                for (endPiece = startPiece; endPiece < V.getPieceNum(); ++endPiece) {
+                    if (V.getBounds()[endPiece] > AExtrema[i][1] + AStocRange[i][1]) break;
+                }
+
+                if (V.getBounds()[startPiece + 1] > AExtrema[i][1]) {
+                    //
+                } else {
+                    //
+                }
+                AdvancedPolynomialFunction result = integrationForVOfAOnPieces(V, A.getStochasticPolynomialFunction(i), startPiece, endPiece);
+                pfsList.add(result);
+            } else if (A.getStochasticPolynomialFunction(i).degree() == 0) {
+                //
+            } else {
+                throw new TooHighDegreeException(A.getStochasticPolynomialFunction(i).degree());
             }
-            for (endPiece = startPiece; endPiece < V.getPieceNum(); ++endPiece) {
-                if (V.getBounds()[endPiece] > AExtrema[i][1] + AStocRange[i][1]) break;
-            }
-            AdvancedPolynomialFunction result = integrationForVOfAOnPieces(A.getStochasticPolynomialFunction(i), V, startPiece, endPiece);
-            pfsList.add(result);
         }
 //        if (pieceNum == 1) {
 //            boundsList.add(A.getBounds()[0]);
@@ -103,8 +111,21 @@ public class PiecewisePolynomialFunction {
         return result;
     }
 
-    private AdvancedPolynomialFunction integrationForVOfAOnPieces(StochasticPolynomialFunction A, PiecewisePolynomialFunction V, int startPiece, int endPiece) {
+    private static AdvancedPolynomialFunction integrationForVOfAOnPieces(PiecewisePolynomialFunction V, StochasticPolynomialFunction A, double leftBound, double rightBound) {
         // TODO Complete this function
+
         return null;
+    }
+
+    private static double[] separateBounds(StochasticPolynomialFunction g, double[] gExtrema, double[] gStocRanges double[] domain, double[] range_domains) {
+        // separate domain into pieces to fit range domains
+        if (bounds.length == 2) return bounds;
+        List<Double> result = new ArrayList<Double>();
+        result.add(leftBound);
+        //
+        result.add(rightBound);
+        double[] result_primitive = new double[result.size()];
+        for (int i = 0; i < result.size(); ++i) result_primitive[i] = result.get(i);
+        return result_primitive;
     }
 }

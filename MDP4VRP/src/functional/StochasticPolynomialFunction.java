@@ -1,4 +1,4 @@
-package integration;
+package functional;
 
 import org.apache.commons.math3.exception.NoDataException;
 import org.apache.commons.math3.exception.NullArgumentException;

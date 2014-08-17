@@ -1,4 +1,4 @@
-package integration;
+package functional;
 
 /**
  * Created by Xiaoxi Wang on 8/7/14.

@@ -1,4 +1,4 @@
-package integration;
+package functional;
 
 public class FunctionalLimitIntegration {
 
