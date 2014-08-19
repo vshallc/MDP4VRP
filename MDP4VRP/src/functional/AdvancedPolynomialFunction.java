@@ -1,9 +1,11 @@
 package functional;
 
 import org.apache.commons.math3.analysis.polynomials.PolynomialFunction;
+import org.apache.commons.math3.analysis.solvers.NewtonRaphsonSolver;
 import org.apache.commons.math3.exception.NoDataException;
 import org.apache.commons.math3.exception.NullArgumentException;
 import org.apache.commons.math3.exception.NumberIsTooLargeException;
+import org.apache.commons.math3.exception.TooManyEvaluationsException;
 import org.apache.commons.math3.util.FastMath;
 
 import java.util.Arrays;
@@ -26,6 +28,9 @@ public class AdvancedPolynomialFunction extends PolynomialFunction {
      * @throws org.apache.commons.math3.exception.NullArgumentException if {@code c} is {@code null}.
      * @throws org.apache.commons.math3.exception.NoDataException       if {@code c} is empty.
      */
+
+    private static final double DEFAULT_ABSOLUTE_ACCURACY = 1e-6;
+    private static final int DEFAULT_MAX_EVAL = 100;
 
     private boolean isExtremePointCalculated = false;
     private double[] extremePoints;
@@ -243,31 +248,75 @@ public class AdvancedPolynomialFunction extends PolynomialFunction {
         return currentMin;
     }
 
-    public double[] solve() {
+    public double[] solve(final double min, final double max) {
         // Solve roots for f(x)=0
         int degree = this.degree();
-        double[] roots = new double[degree];
-        if (degree == 0) return roots;
+        if (degree == 0) return new double[0];
         else if (degree == 1) {
+            double[] roots = new double[1];
             roots[0] = -getCoefficients()[0] / getCoefficients()[1];
             return roots;
         } else if (degree == 2) {
             double delta = getCoefficients()[1] * getCoefficients()[1] - 4 * getCoefficients()[2] * getCoefficients()[0];
             if (delta > 0) {
+                double[] roots = new double[2];
                 roots[0] = (-getCoefficients()[1] - Math.sqrt(delta)) / (2 * getCoefficients()[2]);
                 roots[1] = (-getCoefficients()[1] + Math.sqrt(delta)) / (2 * getCoefficients()[2]);
                 return roots;
             } else if (delta == 0) {
-                roots = new double[1];
+                double[] roots = new double[1];
                 roots[0] = (-getCoefficients()[1]) / (2 * getCoefficients()[2]);
                 return roots;
             } else {
-                roots = new double[0];
-                return roots;
+                return new double[0];
             }
         } else if (degree > 2) {
-            //
+            double[] roots;// = new double[degree];
+            int rootNum = 0;
+            if (min > max) throw new NumberIsTooLargeException(min, max, true);
+            if (this.value(min) == 0) {
+                if (max != min && this.value(max) == 0) {
+                    roots = new double[2];
+                    roots[0] = min;
+                    roots[1] = max;
+                } else {
+                    roots = new double[1];
+                    roots[0] = min;
+                }
+            } else if (this.value(max) == 0) {
+                roots = new double[1];
+                roots[0] = max;
+            } else roots = new double[0];
+            NewtonRaphsonSolver nrs = new NewtonRaphsonSolver(DEFAULT_ABSOLUTE_ACCURACY);
+            roots = NewtonRaphsonSolverIterator(nrs, min, max, roots);
+            return roots;
         } else throw new IllegalArgumentException();
+    }
+
+    private double[] NewtonRaphsonSolverIterator(NewtonRaphsonSolver nrs, double min, double max, double[] roots) {
+        try {
+            double newRoot = nrs.solve(DEFAULT_MAX_EVAL, this, min, max);
+            int id = roots.length;
+            for (int j = 0; j < roots.length; ++j) {
+                if (Math.abs(newRoot - roots[j]) <= DEFAULT_ABSOLUTE_ACCURACY) return roots; // duplicated root
+                else if (newRoot < roots[j]) {
+                    id = j;
+                    break;
+                }
+            }
+            double[] tmp = new double[roots.length + 1];
+            System.arraycopy(roots, 0, tmp, 0, id);
+            tmp[id] = newRoot;
+            System.arraycopy(roots, id, tmp, id + 1, roots.length - id);
+            if (newRoot > min && newRoot < max) {
+                tmp = NewtonRaphsonSolverIterator(nrs, min, newRoot, tmp);
+                tmp = NewtonRaphsonSolverIterator(nrs, newRoot, max, tmp);
+            }
+            roots = tmp;
+        } catch (TooManyEvaluationsException e) {
+            return roots;
+        }
+        return roots;
     }
 
     public StochasticPolynomialFunction compose(StochasticPolynomialFunction spf) {

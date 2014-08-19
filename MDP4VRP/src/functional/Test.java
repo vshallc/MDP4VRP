@@ -1,6 +1,9 @@
 package functional;
 
 
+import org.apache.commons.math3.analysis.polynomials.PolynomialFunction;
+import org.apache.commons.math3.analysis.solvers.NewtonRaphsonSolver;
+
 /**
  * Created by Xiaoxi Wang on 7/10/14.
  */
@@ -44,6 +47,21 @@ public class Test {
         pspf = new PiecewiseStochasticPolynomialFunction(spfs, bounds);
 
         System.out.println("g(x,ξ) = \n" + pspf.toString());
+
+        c = new double[4];
+        c[0] = -10;
+        c[1] = 17;
+        c[2] = -8;
+        c[3] = 1;
+        AdvancedPolynomialFunction pft = new AdvancedPolynomialFunction(c);
+        double[] roots = pft.solve(0, 10);
+        System.out.print("roots=");
+        for (double r : roots) {
+            System.out.print(r + ", ");
+        }
+        System.out.println();
+
+
 //        System.out.println("int g(x,ξ) = " + spf.integrationOnXi().toString());
 
 //        System.out.println("f2(+inf) = " + pf[1].value(Double.POSITIVE_INFINITY));

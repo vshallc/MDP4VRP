@@ -117,13 +117,10 @@ public class PiecewisePolynomialFunction {
         return null;
     }
 
-    private static double[] separateBounds(StochasticPolynomialFunction g, double[] gExtrema, double[] gStocRanges double[] domain, double[] range_domains) {
+    private static double[] separateBounds(StochasticPolynomialFunction g, double[] gExtrema, double[] gStocRanges, double[] domain, double[] range_domains) {
         // separate domain into pieces to fit range domains
-        if (bounds.length == 2) return bounds;
+//        if (bounds.length == 2) return bounds;
         List<Double> result = new ArrayList<Double>();
-        result.add(leftBound);
-        //
-        result.add(rightBound);
         double[] result_primitive = new double[result.size()];
         for (int i = 0; i < result.size(); ++i) result_primitive[i] = result.get(i);
         return result_primitive;
