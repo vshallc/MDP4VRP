@@ -106,147 +106,186 @@ public class AdvancedPolynomialFunction extends PolynomialFunction {
 
     public double[] extrema(double leftBound, double rightBound) {
         int degree = this.degree();
+        double[] coefs = this.getCoefficients();
         if (degree == 0) {
-            double c0 = this.getCoefficients()[0];
-            double[] extrema = {c0, c0};
-            return extrema;
+            double c0 = coefs[0];
+            return new double[]{c0, c0};
         } else if (degree == 1) {
-            double c1 = this.getCoefficients()[1];
-            double[] extrema = new double[2];
-            if (c1 > 0) {
-                extrema[0] = this.value(leftBound);
-                extrema[1] = this.value(rightBound);
+            if (coefs[1] > 0) {
+                return new double[]{this.value(leftBound), this.value(rightBound)};
             } else {
-                extrema[0] = this.value(rightBound);
-                extrema[1] = this.value(leftBound);
+                return new double[]{this.value(rightBound), this.value(leftBound)};
+            }
+        } else if (degree == 2) {
+            double extPoint = -coefs[1] / (2 * coefs[2]);
+            if (extPoint < leftBound) {
+                if (coefs[2] > 0) {
+                    return new double[]{this.value(leftBound), this.value(rightBound)};
+                } else {
+                    return new double[]{this.value(rightBound), this.value(leftBound)};
+                }
+            } else if (extPoint > rightBound) {
+                if (coefs[2] > 0) {
+                    return new double[]{this.value(rightBound), this.value(leftBound)};
+                } else {
+                    return new double[]{this.value(leftBound), this.value(rightBound)};
+                }
+            } else {
+                if (coefs[2] > 0) {
+                    return new double[]{this.value(extPoint), Math.max(this.value(leftBound), this.value(rightBound))};
+                } else {
+                    return new double[]{Math.min(this.value(leftBound), this.value(rightBound)), this.value(extPoint)};
+                }
+            }
+        } else {
+            AdvancedPolynomialFunction derApf = new AdvancedPolynomialFunction(differentiate(this.getCoefficients()));
+            double[] extPoints = derApf.solve(leftBound, rightBound);
+            double[] extrema = new double[2];
+            {
+                double leftValue = this.value(leftBound);
+                double rightValue = this.value(rightBound);
+                if (leftValue < rightValue) {
+                    extrema[0] = leftValue;
+                    extrema[1] = rightValue;
+                } else {
+                    extrema[0] = rightValue;
+                    extrema[1] = leftValue;
+                }
+            }
+            int i = 0;
+            while(extPoints[i] < leftBound) ++i;
+            for (; i < extPoints.length; ++i) {
+                if (extPoints[i] > rightBound) break;
+                double v = this.value(extPoints[i]);
+                if (v < extrema[0]) extrema[0] = v;
+                if (v > extrema[1]) extrema[1] = v;
             }
             return extrema;
-        } else {
-            // TODO optimize following codes.
-            try {
-                double[] extPoints = calculateExtremePoint();
-                double[] extrema = new double[2];
-                {
-                    double leftValue = this.value(leftBound);
-                    double rightValue = this.value(rightBound);
-                    if (leftValue < rightValue) {
-                        extrema[0] = leftValue;
-                        extrema[1] = rightValue;
-                    } else {
-                        extrema[0] = rightValue;
-                        extrema[1] = leftValue;
-                    }
-                }
-                for (double extPoint : extPoints) {
-                    if (extPoint >= leftBound && extPoint < rightBound) {
-                        double tmpValue = this.value(extPoint);
-                        if (tmpValue < extrema[0]) {
-                            extrema[0] = tmpValue;
-                        } else if (tmpValue > extrema[1]) {
-                            extrema[1] = tmpValue;
-                        }
-                    }
-                }
-                return extrema;
-            } catch (TooHighDegreeException thde) {
-                thde.printStackTrace();
-                return searchExtrema(leftBound, rightBound);
-            }
+//            // TODO optimize following codes.
+//            try {
+//                double[] extPoints = calculateExtremePoint();
+//                double[] extrema = new double[2];
+//                {
+//                    double leftValue = this.value(leftBound);
+//                    double rightValue = this.value(rightBound);
+//                    if (leftValue < rightValue) {
+//                        extrema[0] = leftValue;
+//                        extrema[1] = rightValue;
+//                    } else {
+//                        extrema[0] = rightValue;
+//                        extrema[1] = leftValue;
+//                    }
+//                }
+//                for (double extPoint : extPoints) {
+//                    if (extPoint >= leftBound && extPoint < rightBound) {
+//                        double tmpValue = this.value(extPoint);
+//                        if (tmpValue < extrema[0]) {
+//                            extrema[0] = tmpValue;
+//                        } else if (tmpValue > extrema[1]) {
+//                            extrema[1] = tmpValue;
+//                        }
+//                    }
+//                }
+//                return extrema;
+//            } catch (TooHighDegreeException thde) {
+//                thde.printStackTrace();
+//                return searchExtrema(leftBound, rightBound);
+//            }
         }
     }
 
-    private double[] calculateExtremePoint() {
-        double[] differentiatedCoefs = differentiate(this.getCoefficients());
-        if (differentiatedCoefs.length == 1) {
-            extremePoints = new double[0];
-            isExtremePointCalculated = true;
-            return extremePoints;
-        }
-        int degree = differentiatedCoefs.length - 1;
-        extremePoints = new double[degree];
-        if (degree == 1) {
-            extremePoints[0] = -differentiatedCoefs[0] / differentiatedCoefs[1];
-        }
-        else if (degree == 2) {
-            double delta = differentiatedCoefs[1] * differentiatedCoefs[1]
-                    - 4 * differentiatedCoefs[2] * differentiatedCoefs[0];
-            if (delta > 0) {
-                extremePoints[0] = (-differentiatedCoefs[1] - Math.sqrt(delta)) / (2 * differentiatedCoefs[2]);
-                extremePoints[1] = (-differentiatedCoefs[1] + Math.sqrt(delta)) / (2 * differentiatedCoefs[2]);
-            } else if (delta == 0) {
-                extremePoints = new double[1];
-                extremePoints[0] = -differentiatedCoefs[1] / (2 * differentiatedCoefs[2]);
-            } else if (delta < 0) {
-                extremePoints = new double[0];
-                isExtremePointCalculated = true;
-                return extremePoints;
-            }
-        } else {
-            throw new TooHighDegreeException(degree);
-        }
-        isExtremePointCalculated = true;
-        return extremePoints;
-    }
-
-    private double[] searchExtrema(double leftBound, double rightBound) {
-        if (rightBound == Double.POSITIVE_INFINITY) { // right bound cannot be +inf
-            throw new NumberIsTooLargeException(Double.POSITIVE_INFINITY, Double.MAX_VALUE, true);
-        }
-        // This function is NOT accurate!
-        AdvancedPolynomialFunction derApf = new AdvancedPolynomialFunction(differentiate(this.getCoefficients()));
-        double[] extrema = new double[2];
-        {
-            double leftValue = this.value(leftBound);
-            double rightValue = this.value(rightBound);
-            if (leftValue < rightValue) {
-                extrema[0] = leftValue;
-                extrema[1] = rightValue;
-            } else {
-                extrema[0] = rightValue;
-                extrema[1] = leftValue;
-            }
-        }
-        double[] checkingPoints = new double[2];
-        for (double i = leftBound; i < rightBound; ++i) { // interval = 1
-            checkingPoints[0] = i;
-            checkingPoints[1] = i + 1;
-            if (this.value(checkingPoints[0]) * this.value(checkingPoints[1]) >= 0) {
-                // Assuming the unimodality is satisified between checkingPoints[0] and checkingPoints[1]
-                // Using Newton's Method to find extrema
-                AdvancedPolynomialFunction der2Apf =
-                        new AdvancedPolynomialFunction(differentiate(derApf.getCoefficients()));
-                if (checkingPoints[0] <= 0) {
-                    // Have a minimum
-                    double min = NewtonsMethod(this, derApf, der2Apf, checkingPoints[0], checkingPoints[1]);
-                    if (min < extrema[0]) extrema[0] = min;
-                } else {
-                    // Have a maximum
-                    double max = -NewtonsMethod(this.negate(), derApf.negate(), der2Apf.negate(), checkingPoints[0], checkingPoints[1]);
-                    if (max < extrema[1]) extrema[1] = max;
-                }
-            }
-        }
-        return extrema;
-    }
-
-    private double NewtonsMethod(AdvancedPolynomialFunction f, AdvancedPolynomialFunction df, AdvancedPolynomialFunction d2f, double leftBound, double rightBound) {
-        // assuming f is a convex function and have a minimum between leftBound and rightBound
-        double x = leftBound;
-        double currentMin = f.value(x);
-        while (true) {
-            double fddx = d2f.value(x);
-            while (fddx == 0) {
-                x += 0.0000001;
-                fddx = d2f.value(x);
-            }
-            double fdx = df.value(x);
-            x = x - fdx / fddx;
-            double fx = f.value(x);
-            if (fx < currentMin) currentMin = fx;
-            else break;
-        }
-        return currentMin;
-    }
+//    private double[] calculateExtremePoint() {
+//        double[] differentiatedCoefs = differentiate(this.getCoefficients());
+//        if (differentiatedCoefs.length == 1) {
+//            extremePoints = new double[0];
+//            isExtremePointCalculated = true;
+//            return extremePoints;
+//        }
+//        int degree = differentiatedCoefs.length - 1;
+//        extremePoints = new double[degree];
+//        if (degree == 1) {
+//            extremePoints[0] = -differentiatedCoefs[0] / differentiatedCoefs[1];
+//        }
+//        else if (degree == 2) {
+//            double delta = differentiatedCoefs[1] * differentiatedCoefs[1]
+//                    - 4 * differentiatedCoefs[2] * differentiatedCoefs[0];
+//            if (delta > 0) {
+//                extremePoints[0] = (-differentiatedCoefs[1] - Math.sqrt(delta)) / (2 * differentiatedCoefs[2]);
+//                extremePoints[1] = (-differentiatedCoefs[1] + Math.sqrt(delta)) / (2 * differentiatedCoefs[2]);
+//            } else if (delta == 0) {
+//                extremePoints = new double[1];
+//                extremePoints[0] = -differentiatedCoefs[1] / (2 * differentiatedCoefs[2]);
+//            } else if (delta < 0) {
+//                extremePoints = new double[0];
+//                isExtremePointCalculated = true;
+//                return extremePoints;
+//            }
+//        } else {
+//            throw new TooHighDegreeException(degree);
+//        }
+//        isExtremePointCalculated = true;
+//        return extremePoints;
+//    }
+//
+//    private double[] searchExtrema(double leftBound, double rightBound) {
+//        if (rightBound == Double.POSITIVE_INFINITY) { // right bound cannot be +inf
+//            throw new NumberIsTooLargeException(Double.POSITIVE_INFINITY, Double.MAX_VALUE, true);
+//        }
+//        // This function is NOT accurate!
+//        AdvancedPolynomialFunction derApf = new AdvancedPolynomialFunction(differentiate(this.getCoefficients()));
+//        double[] extrema = new double[2];
+//        {
+//            double leftValue = this.value(leftBound);
+//            double rightValue = this.value(rightBound);
+//            if (leftValue < rightValue) {
+//                extrema[0] = leftValue;
+//                extrema[1] = rightValue;
+//            } else {
+//                extrema[0] = rightValue;
+//                extrema[1] = leftValue;
+//            }
+//        }
+//        double[] checkingPoints = new double[2];
+//        for (double i = leftBound; i < rightBound; ++i) { // interval = 1
+//            checkingPoints[0] = i;
+//            checkingPoints[1] = i + 1;
+//            if (this.value(checkingPoints[0]) * this.value(checkingPoints[1]) >= 0) {
+//                // Assuming the unimodality is satisified between checkingPoints[0] and checkingPoints[1]
+//                // Using Newton's Method to find extrema
+//                AdvancedPolynomialFunction der2Apf =
+//                        new AdvancedPolynomialFunction(differentiate(derApf.getCoefficients()));
+//                if (checkingPoints[0] <= 0) {
+//                    // Have a minimum
+//                    double min = NewtonsMethod(this, derApf, der2Apf, checkingPoints[0], checkingPoints[1]);
+//                    if (min < extrema[0]) extrema[0] = min;
+//                } else {
+//                    // Have a maximum
+//                    double max = -NewtonsMethod(this.negate(), derApf.negate(), der2Apf.negate(), checkingPoints[0], checkingPoints[1]);
+//                    if (max < extrema[1]) extrema[1] = max;
+//                }
+//            }
+//        }
+//        return extrema;
+//    }
+//
+//    private double NewtonsMethod(AdvancedPolynomialFunction f, AdvancedPolynomialFunction df, AdvancedPolynomialFunction d2f, double leftBound, double rightBound) {
+//        // assuming f is a convex function and have a minimum between leftBound and rightBound
+//        double x = leftBound;
+//        double currentMin = f.value(x);
+//        while (true) {
+//            double fddx = d2f.value(x);
+//            while (fddx == 0) {
+//                x += 0.0000001;
+//                fddx = d2f.value(x);
+//            }
+//            double fdx = df.value(x);
+//            x = x - fdx / fddx;
+//            double fx = f.value(x);
+//            if (fx < currentMin) currentMin = fx;
+//            else break;
+//        }
+//        return currentMin;
+//    }
 
     public double[] solve(final double min, final double max) {
         // Solve roots for f(x)=0
@@ -272,7 +311,6 @@ public class AdvancedPolynomialFunction extends PolynomialFunction {
             }
         } else if (degree > 2) {
             double[] roots;// = new double[degree];
-            int rootNum = 0;
             if (min > max) throw new NumberIsTooLargeException(min, max, true);
             if (this.value(min) == 0) {
                 if (max != min && this.value(max) == 0) {
