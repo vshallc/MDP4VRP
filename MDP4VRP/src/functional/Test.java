@@ -60,6 +60,9 @@ public class Test {
             System.out.print(r + ", ");
         }
         System.out.println();
+        double[] ext = new double[2];
+        ext = pft.extrema(0, 5);
+        System.out.println("min=" + ext[0] + "max=" + ext[1]);
 
 
 //        System.out.println("int g(x,ξ) = " + spf.integrationOnXi().toString());

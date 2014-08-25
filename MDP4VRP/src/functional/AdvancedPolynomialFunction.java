@@ -153,7 +153,7 @@ public class AdvancedPolynomialFunction extends PolynomialFunction {
                 }
             }
             int i = 0;
-            while(extPoints[i] < leftBound) ++i;
+            while(i < extPoints.length && extPoints[i] < leftBound) ++i;
             for (; i < extPoints.length; ++i) {
                 if (extPoints[i] > rightBound) break;
                 double v = this.value(extPoints[i]);
