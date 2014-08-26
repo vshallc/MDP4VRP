@@ -61,7 +61,8 @@ public class PiecewisePolynomialFunction {
                 } else {
                     //
                 }
-                AdvancedPolynomialFunction result = integrationForVOfAOnPieces(V, A.getStochasticPolynomialFunction(i), startPiece, endPiece);
+                double leftDomain, rightDomain;
+                AdvancedPolynomialFunction result = integrationForVOfAOnPieces(V, A.getStochasticPolynomialFunction(i), leftDomain, rightDomain);
                 pfsList.add(result);
             } else if (A.getStochasticPolynomialFunction(i).degree() == 0) {
                 //
@@ -111,7 +112,8 @@ public class PiecewisePolynomialFunction {
         return result;
     }
 
-    private static AdvancedPolynomialFunction integrationForVOfAOnPieces(PiecewisePolynomialFunction V, StochasticPolynomialFunction A, double leftBound, double rightBound) {
+    private static AdvancedPolynomialFunction integrationForVOfAOnPieces(PiecewisePolynomialFunction V, StochasticPolynomialFunction A, double leftDomain, double rightDomain) {
+
         // TODO Complete this function
 
         return null;
