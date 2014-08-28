@@ -3,17 +3,20 @@ package functional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeSet;
 
 /**
  * Created by Xiaoxi Wang on 7/9/14.
  */
 public class PiecewisePolynomialFunction {
     AdvancedPolynomialFunction[] polyFuncs;
-    double[] bounds;    // the overall domain is defined on [0, +inf)
+    private double[] bounds;    // the overall domain is defined on [0, +inf)
+    private int pieces;
 
     public PiecewisePolynomialFunction(AdvancedPolynomialFunction[] polyFuncs, double[] bounds) {
         this.polyFuncs = polyFuncs;
         this.bounds = bounds;
+        pieces = polyFuncs.length;
     }
 
     public AdvancedPolynomialFunction[] getPolynomialFunctions() {
@@ -62,8 +65,8 @@ public class PiecewisePolynomialFunction {
                     //
                 }
                 double leftDomain, rightDomain;
-                AdvancedPolynomialFunction result = integrationForVOfAOnPieces(V, A.getStochasticPolynomialFunction(i), leftDomain, rightDomain);
-                pfsList.add(result);
+//                AdvancedPolynomialFunction result = integrationForVOfAOnPieces(V, A.getStochasticPolynomialFunction(i), leftDomain, rightDomain);
+//                pfsList.add(result);
             } else if (A.getStochasticPolynomialFunction(i).degree() == 0) {
                 //
             } else {
@@ -112,19 +115,60 @@ public class PiecewisePolynomialFunction {
         return result;
     }
 
-    private static AdvancedPolynomialFunction integrationForVOfAOnPieces(PiecewisePolynomialFunction V, StochasticPolynomialFunction A, double leftDomain, double rightDomain) {
-
+    public static double[] integrationForVOfAOnPieces(PiecewisePolynomialFunction V, StochasticPolynomialFunction g, double leftDomain, double rightDomain) {
+        // xi ~ [0,1]
         // TODO Complete this function
-
-        return null;
+        AdvancedPolynomialFunction gmin = g.determinize(0);
+        AdvancedPolynomialFunction gmax = g.determinize(1);
+        TreeSet<Double> innerBounds = new TreeSet<Double>();
+        innerBounds.add(leftDomain);
+        innerBounds.add(rightDomain);
+        {
+            double[] roots;
+            for (int i = 1; i < V.getPieceNum(); ++i) {
+                roots = gmin.solve(V.getBounds()[i], leftDomain, rightDomain);
+                for (double r : roots) {
+                    if (r > leftDomain && r < rightDomain) innerBounds.add(r);
+                }
+                roots = gmax.solve(V.getBounds()[i], leftDomain, rightDomain);
+                for (double r : roots) {
+                    if (r > leftDomain && r < rightDomain) innerBounds.add(r);
+                }
+            }
+        }
+        double[] primaryBounds = new double[innerBounds.size()];
+        int i = 0;
+        for (double d : innerBounds) {
+            primaryBounds[i] = d;
+            ++i;
+        }
+        return primaryBounds;
     }
 
-    private static double[] separateBounds(StochasticPolynomialFunction g, double[] gExtrema, double[] gStocRanges, double[] domain, double[] range_domains) {
+//    private static AdvancedPolynomialFunction basicIntegrationOnPieces(AdvancedPolynomialFunction[] functions, )
+
+    private static double[] separateBounds(StochasticPolynomialFunction g, double[] gExtrema, double[] gStocRanges, double[] domain, double[] rangeBounds) {
         // separate domain into pieces to fit range domains
+        // g is a increasing function
 //        if (bounds.length == 2) return bounds;
         List<Double> result = new ArrayList<Double>();
         double[] result_primitive = new double[result.size()];
         for (int i = 0; i < result.size(); ++i) result_primitive[i] = result.get(i);
         return result_primitive;
+    }
+
+    public String toString() {
+        StringBuilder s = new StringBuilder();
+        for (int i = 0; i < pieces; ++i) {
+            s.append("[");
+            s.append(bounds[i]);
+            s.append(",");
+            s.append(bounds[i + 1]);
+            s.append(")\t");
+            s.append(polyFuncs[i].toString());
+            s.append("\n");
+        }
+        s.deleteCharAt(s.length() - 1);
+        return s.toString();
     }
 }

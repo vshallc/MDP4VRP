@@ -21,7 +21,7 @@ public class PiecewiseStochasticPolynomialFunction {
             }
         }
         this.stocPolyFuncs = stocPolyFuncs;
-        this.bounds = bounds;
+        this.bounds = bounds.clone();
         this.pieces = stocPolyFuncs.length;
 //        if (leftDomain != bounds[0] || rightDomain < bounds[bounds.length - 1]) {
 //            throw new MathIllegalArgumentException(LocalizedFormats.ARGUMENT_OUTSIDE_DOMAIN, bounds);

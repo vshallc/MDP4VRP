@@ -16,7 +16,7 @@ public class Test {
         PiecewiseStochasticPolynomialFunction pspf;
         c = new double[2];
         c[0] = 50;
-        c[1] = -0.25;
+        c[1] = -0.25 + 1;
         pf[0] = new AdvancedPolynomialFunction(c);  // f1(x)=0
         System.out.println("f1(x) = " + pf[0].toString());
         c = new double[1];
@@ -32,9 +32,11 @@ public class Test {
 
         spfs[0] = new StochasticPolynomialFunction(pf);    // g(x,ξ)=ξ
 
-        c = new double[1];
+        c = new double[2];
         c[0] = 25;
+        c[1] = 0 + 1;
         pf[0] = new AdvancedPolynomialFunction(c);
+        c = new double[1];
         c[0] = 20;
         pf[1] = new AdvancedPolynomialFunction(c);
 
@@ -48,21 +50,40 @@ public class Test {
 
         System.out.println("g(x,ξ) = \n" + pspf.toString());
 
-        c = new double[4];
-        c[0] = -10;
-        c[1] = 17;
-        c[2] = -8;
-        c[3] = 1;
-        AdvancedPolynomialFunction pft = new AdvancedPolynomialFunction(c);
-        double[] roots = pft.solve(0, 10);
-        System.out.print("roots=");
-        for (double r : roots) {
-            System.out.print(r + ", ");
+        AdvancedPolynomialFunction[] vpf = new AdvancedPolynomialFunction[2];
+        c = new double[1];
+        c[0] = 0;
+        vpf[0] = new AdvancedPolynomialFunction(c);
+        c[0] = -1000;
+        vpf[1] = new AdvancedPolynomialFunction(c);
+        bounds = new double[3];
+        bounds[0] = 0;
+        bounds[1] = 300;
+        bounds[2] = Double.POSITIVE_INFINITY;
+        PiecewisePolynomialFunction ppf = new PiecewisePolynomialFunction(vpf, bounds);
+        System.out.println("V(t) = \n" + ppf.toString());
+
+        double[] prb = PiecewisePolynomialFunction.integrationForVOfAOnPieces(ppf, spfs[1], 100, Double.POSITIVE_INFINITY);
+        System.out.println("test results:");
+        for (double d : prb) {
+            System.out.println(d);
         }
-        System.out.println();
-        double[] ext = new double[2];
-        ext = pft.extrema(0, 5);
-        System.out.println("min=" + ext[0] + "max=" + ext[1]);
+
+//        c = new double[4];
+//        c[0] = -10;
+//        c[1] = 17;
+//        c[2] = -8;
+//        c[3] = 1;
+//        AdvancedPolynomialFunction pft = new AdvancedPolynomialFunction(c);
+//        double[] roots = pft.solve(0, 10);
+//        System.out.print("roots=");
+//        for (double r : roots) {
+//            System.out.print(r + ", ");
+//        }
+//        System.out.println();
+//        double[] ext = new double[2];
+//        ext = pft.extrema(0, 5);
+//        System.out.println("min=" + ext[0] + "max=" + ext[1]);
 
 
 //        System.out.println("int g(x,ξ) = " + spf.integrationOnXi().toString());

@@ -331,6 +331,12 @@ public class AdvancedPolynomialFunction extends PolynomialFunction {
         } else throw new IllegalArgumentException();
     }
 
+    public double[] solve(double value, final double min, final double max) {
+        double[] c = this.getCoefficients();
+        c[0] -= value;
+        return new AdvancedPolynomialFunction(c).solve(min, max);
+    }
+
     private double[] NewtonRaphsonSolverIterator(NewtonRaphsonSolver nrs, double min, double max, double[] roots) {
         try {
             double newRoot = nrs.solve(DEFAULT_MAX_EVAL, this, min, max);
