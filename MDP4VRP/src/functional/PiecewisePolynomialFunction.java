@@ -115,7 +115,7 @@ public class PiecewisePolynomialFunction {
         return result;
     }
 
-    public static double[] integrationForVOfAOnPieces(PiecewisePolynomialFunction V, StochasticPolynomialFunction g, double leftDomain, double rightDomain) {
+    private static PolynomialFunctionPiece[] integrationForVOfAOnPieces(PiecewisePolynomialFunction V, StochasticPolynomialFunction g, double leftDomain, double rightDomain) {
         // xi ~ [0,1]
         // TODO Complete this function
         AdvancedPolynomialFunction gmin = g.determinize(0);
@@ -137,26 +137,39 @@ public class PiecewisePolynomialFunction {
             }
         }
         double[] primaryBounds = new double[innerBounds.size()];
-        int i = 0;
-        for (double d : innerBounds) {
-            primaryBounds[i] = d;
-            ++i;
+        {
+            int i = 0;
+            for (double d : innerBounds) {
+                primaryBounds[i] = d;
+                ++i;
+            }
         }
-        return primaryBounds;
+        PolynomialFunctionPiece[] results = new PolynomialFunctionPiece[primaryBounds.length - 1];
+        for (int i = 0; i < primaryBounds.length - 1; ++i) {
+
+        }
+        return results;
     }
 
-//    private static AdvancedPolynomialFunction basicIntegrationOnPieces(AdvancedPolynomialFunction[] functions, )
+    private class PolynomialFunctionPiece {
+        private AdvancedPolynomialFunction polyFunc;
+        private double[] bounds =new double[2];
+        public PolynomialFunctionPiece(AdvancedPolynomialFunction polyFunc, double leftBound, double rightBound) {
+            this.polyFunc = polyFunc;
+            this.bounds[0] = leftBound;
+            this.bounds[1] = rightBound;
+        }
 
-    private static double[] separateBounds(StochasticPolynomialFunction g, double[] gExtrema, double[] gStocRanges, double[] domain, double[] rangeBounds) {
-        // separate domain into pieces to fit range domains
-        // g is a increasing function
-//        if (bounds.length == 2) return bounds;
-        List<Double> result = new ArrayList<Double>();
-        double[] result_primitive = new double[result.size()];
-        for (int i = 0; i < result.size(); ++i) result_primitive[i] = result.get(i);
-        return result_primitive;
+        public AdvancedPolynomialFunction getPolynomialFunction() {
+            return this.polyFunc;
+        }
+
+        public double[] getBounds() {
+            return bounds;
+        }
     }
 
+    @Override
     public String toString() {
         StringBuilder s = new StringBuilder();
         for (int i = 0; i < pieces; ++i) {

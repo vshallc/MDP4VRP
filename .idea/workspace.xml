@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="63a100fe-1338-4db6-90c8-f11cfcedbc6a" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MDP4VRP/src/functional/AdvancedPolynomialFunction.java" afterPath="$PROJECT_DIR$/MDP4VRP/src/functional/AdvancedPolynomialFunction.java" />
+    <list default="true" id="63a100fe-1338-4db6-90c8-f11cfcedbc6a" name="Default" comment="changed the extrema function&#10;&#10;testing done">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MDP4VRP/src/functional/PiecewisePolynomialFunction.java" afterPath="$PROJECT_DIR$/MDP4VRP/src/functional/PiecewisePolynomialFunction.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MDP4VRP/src/functional/PiecewiseStochasticPolynomialFunction.java" afterPath="$PROJECT_DIR$/MDP4VRP/src/functional/PiecewiseStochasticPolynomialFunction.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MDP4VRP/src/functional/Test.java" afterPath="$PROJECT_DIR$/MDP4VRP/src/functional/Test.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="FunctionalLimitIntegrationForStochasticPolynomialFunction.iws" />
@@ -42,12 +40,9 @@
       <file leaf-file-name="AdvancedPolynomialFunction.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/MDP4VRP/src/functional/AdvancedPolynomialFunction.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="2809" max-vertical-offset="6156">
+            <state vertical-scroll-proportion="0.0" vertical-offset="6384" max-vertical-offset="8702">
               <caret line="336" column="65" selection-start-line="336" selection-start-column="65" selection-end-line="336" selection-end-column="65" />
-              <folding>
-                <element signature="e#7277#7324#0" expanded="false" />
-                <element signature="e#8657#8705#0" expanded="false" />
-              </folding>
+              <folding />
             </state>
           </provider>
         </entry>
@@ -55,21 +50,20 @@
       <file leaf-file-name="StochasticPolynomialFunction.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/MDP4VRP/src/functional/StochasticPolynomialFunction.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="1805" max-vertical-offset="4503">
+            <state vertical-scroll-proportion="0.0" vertical-offset="209" max-vertical-offset="4503">
               <caret line="10" column="13" selection-start-line="10" selection-start-column="13" selection-end-line="10" selection-end-column="13" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Test.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="Test.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/MDP4VRP/src/functional/Test.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.5741729" vertical-offset="678" max-vertical-offset="2622">
-              <caret line="65" column="121" selection-start-line="65" selection-start-column="121" selection-end-line="65" selection-end-column="121" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="92" max-vertical-offset="1539">
+              <caret line="71" column="0" selection-start-line="71" selection-start-column="0" selection-end-line="71" selection-end-column="0" />
               <folding>
-                <element signature="e#4871#4872#0" expanded="true" />
-                <element signature="e#4897#4898#0" expanded="true" />
+                <element signature="e#2447#2475#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -78,22 +72,23 @@
       <file leaf-file-name="PiecewiseStochasticPolynomialFunction.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/MDP4VRP/src/functional/PiecewiseStochasticPolynomialFunction.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1843">
-              <caret line="82" column="4" selection-start-line="82" selection-start-column="4" selection-end-line="95" selection-end-column="5" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="548" max-vertical-offset="1862">
+              <caret line="83" column="30" selection-start-line="83" selection-start-column="30" selection-end-line="83" selection-end-column="30" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="PiecewisePolynomialFunction.java" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="PiecewisePolynomialFunction.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/MDP4VRP/src/functional/PiecewisePolynomialFunction.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="1248" max-vertical-offset="2565">
-              <caret line="167" column="46" selection-start-line="167" selection-start-column="46" selection-end-line="167" selection-end-column="46" />
+            <state vertical-scroll-proportion="0.5951294" vertical-offset="1935" max-vertical-offset="3477">
+              <caret line="153" column="36" selection-start-line="153" selection-start-column="4" selection-end-line="153" selection-end-column="41" />
               <folding>
-                <element signature="e#2895#2925#0" expanded="false" />
-                <element signature="e#5356#5364#0" expanded="true" />
-                <element signature="e#6679#6687#0" expanded="true" />
+                <element signature="e#6895#6896#0" expanded="true" />
+                <element signature="e#6939#6940#0" expanded="true" />
+                <element signature="e#6978#6979#0" expanded="true" />
+                <element signature="e#7015#7016#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -124,9 +119,9 @@
         <option value="$PROJECT_DIR$/FunctionalLimitIntegration/src/integration/PiecewisePolynomialFunction.java" />
         <option value="$PROJECT_DIR$/MDP4VRP/src/integration/PiecewisePolynomialFunction.java" />
         <option value="$PROJECT_DIR$/MDP4VRP/src/functional/AdvancedPolynomialFunction.java" />
+        <option value="$PROJECT_DIR$/MDP4VRP/src/functional/Test.java" />
         <option value="$PROJECT_DIR$/MDP4VRP/src/functional/PiecewiseStochasticPolynomialFunction.java" />
         <option value="$PROJECT_DIR$/MDP4VRP/src/functional/PiecewisePolynomialFunction.java" />
-        <option value="$PROJECT_DIR$/MDP4VRP/src/functional/Test.java" />
       </list>
     </option>
   </component>
@@ -630,19 +625,6 @@
       <option name="PORT" value="5005" />
       <method />
     </configuration>
-    <configuration default="true" type="Applet" factoryName="Applet">
-      <module name="" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="HTML_FILE_NAME" />
-      <option name="HTML_USED" value="false" />
-      <option name="WIDTH" value="400" />
-      <option name="HEIGHT" value="300" />
-      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
-      <option name="VM_PARAMETERS" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <method />
-    </configuration>
     <configuration default="true" type="TestNG" factoryName="TestNG">
       <module name="" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
@@ -668,6 +650,19 @@
       <envs />
       <properties />
       <listeners />
+      <method />
+    </configuration>
+    <configuration default="true" type="Applet" factoryName="Applet">
+      <module name="" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="HTML_FILE_NAME" />
+      <option name="HTML_USED" value="false" />
+      <option name="WIDTH" value="400" />
+      <option name="HEIGHT" value="300" />
+      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+      <option name="VM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
       <method />
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
@@ -883,7 +878,11 @@
       <created>1409074201148</created>
       <updated>1409074201148</updated>
     </task>
-    <option name="localTasksCounter" value="28" />
+    <task id="LOCAL-00028" summary="changed the extrema function&#10;&#10;testing done">
+      <created>1409242860629</created>
+      <updated>1409242860629</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
     <servers />
   </component>
   <component name="TodoView" selected-index="4">
@@ -915,24 +914,24 @@
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32935917" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32935917" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32786885" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32935917" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.20735358" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.280924" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.280924" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32935917" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32786885" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -951,13 +950,13 @@
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32862455" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2330146" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.4289963" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.4289963" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
     </layout-to-restore>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -1224,7 +1223,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.3328209" vertical-offset="6559" max-vertical-offset="72884">
           <caret line="383" column="25" selection-start-line="383" selection-start-column="25" selection-end-line="383" selection-end-column="25" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1302,7 +1300,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.3329776" vertical-offset="258" max-vertical-offset="1368">
           <caret line="46" column="11" selection-start-line="46" selection-start-column="11" selection-end-line="46" selection-end-column="11" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1325,6 +1322,13 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.8964992" vertical-offset="0" max-vertical-offset="1463">
           <caret line="84" column="67" selection-start-line="84" selection-start-column="67" selection-end-line="84" selection-end-column="67" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MDP4VRP/src/functional/AdvancedPolynomialFunction.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="2809" max-vertical-offset="6156">
+          <caret line="336" column="65" selection-start-line="336" selection-start-column="65" selection-end-line="336" selection-end-column="65" />
           <folding />
         </state>
       </provider>
@@ -1337,44 +1341,33 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/MDP4VRP/src/functional/AdvancedPolynomialFunction.java">
+    <entry file="file://$PROJECT_DIR$/MDP4VRP/src/functional/Test.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="2809" max-vertical-offset="6156">
-          <caret line="336" column="65" selection-start-line="336" selection-start-column="65" selection-end-line="336" selection-end-column="65" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="92" max-vertical-offset="1539">
+          <caret line="71" column="0" selection-start-line="71" selection-start-column="0" selection-end-line="71" selection-end-column="0" />
           <folding>
-            <element signature="e#7277#7324#0" expanded="false" />
-            <element signature="e#8657#8705#0" expanded="false" />
+            <element signature="e#2447#2475#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/MDP4VRP/src/functional/PiecewiseStochasticPolynomialFunction.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="906" max-vertical-offset="1843">
-          <caret line="82" column="4" selection-start-line="82" selection-start-column="4" selection-end-line="95" selection-end-column="5" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="548" max-vertical-offset="1862">
+          <caret line="83" column="30" selection-start-line="83" selection-start-column="30" selection-end-line="83" selection-end-column="30" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/MDP4VRP/src/functional/PiecewisePolynomialFunction.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1628" max-vertical-offset="2565">
-          <caret line="167" column="46" selection-start-line="167" selection-start-column="46" selection-end-line="167" selection-end-column="46" />
+        <state vertical-scroll-proportion="0.5951294" vertical-offset="1935" max-vertical-offset="3477">
+          <caret line="153" column="36" selection-start-line="153" selection-start-column="4" selection-end-line="153" selection-end-column="41" />
           <folding>
-            <element signature="e#2895#2925#0" expanded="false" />
-            <element signature="e#5356#5364#0" expanded="true" />
-            <element signature="e#6679#6687#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/MDP4VRP/src/functional/Test.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5741729" vertical-offset="678" max-vertical-offset="2622">
-          <caret line="65" column="121" selection-start-line="65" selection-start-column="121" selection-end-line="65" selection-end-column="121" />
-          <folding>
-            <element signature="e#4871#4872#0" expanded="true" />
-            <element signature="e#4897#4898#0" expanded="true" />
+            <element signature="e#6895#6896#0" expanded="true" />
+            <element signature="e#6939#6940#0" expanded="true" />
+            <element signature="e#6978#6979#0" expanded="true" />
+            <element signature="e#7015#7016#0" expanded="true" />
           </folding>
         </state>
       </provider>
