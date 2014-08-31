@@ -32,8 +32,8 @@ public class AdvancedPolynomialFunction extends PolynomialFunction {
     private static final double DEFAULT_ABSOLUTE_ACCURACY = 1e-6;
     private static final int DEFAULT_MAX_EVAL = 100;
 
-    private boolean isExtremePointCalculated = false;
-    private double[] extremePoints;
+//    private boolean isExtremePointCalculated = false;
+//    private double[] extremePoints;
 
     public AdvancedPolynomialFunction(double[] c) throws NullArgumentException, NoDataException {
         super(c);
@@ -179,36 +179,6 @@ public class AdvancedPolynomialFunction extends PolynomialFunction {
                 if (v > extrema[1]) extrema[1] = v;
             }
             return extrema;
-//            // TODO optimize following codes.
-//            try {
-//                double[] extPoints = calculateExtremePoint();
-//                double[] extrema = new double[2];
-//                {
-//                    double leftValue = this.value(leftBound);
-//                    double rightValue = this.value(rightBound);
-//                    if (leftValue < rightValue) {
-//                        extrema[0] = leftValue;
-//                        extrema[1] = rightValue;
-//                    } else {
-//                        extrema[0] = rightValue;
-//                        extrema[1] = leftValue;
-//                    }
-//                }
-//                for (double extPoint : extPoints) {
-//                    if (extPoint >= leftBound && extPoint < rightBound) {
-//                        double tmpValue = this.value(extPoint);
-//                        if (tmpValue < extrema[0]) {
-//                            extrema[0] = tmpValue;
-//                        } else if (tmpValue > extrema[1]) {
-//                            extrema[1] = tmpValue;
-//                        }
-//                    }
-//                }
-//                return extrema;
-//            } catch (TooHighDegreeException thde) {
-//                thde.printStackTrace();
-//                return searchExtrema(leftBound, rightBound);
-//            }
         }
     }
 
@@ -425,11 +395,11 @@ public class AdvancedPolynomialFunction extends PolynomialFunction {
                 for (int d1 = 0; d1 < multiplierPolyFuncCoefs.length; ++d1) {
 //                    System.out.println("tmpPolyFuncCoefs's length:" + tmpPolyFuncCoefs.length);
                     for (int d2 = 0; d2 <= spf.degree(); ++d2) {
-                        System.out.println("d1=" + d1 + " d2=" + d2);
-                        System.out.println("tmpPolyFunc" + (d1 + d2) + ": " + tmpPolyFuncCoefs[d1 + d2].toString());
+//                        System.out.println("d1=" + d1 + " d2=" + d2);
+//                        System.out.println("tmpPolyFunc" + (d1 + d2) + ": " + tmpPolyFuncCoefs[d1 + d2].toString());
                         tmpPolyFuncCoefs[d1 + d2] = multiplierPolyFuncCoefs[d1].multiply(
                                 spf.getAdvancedPolynomialFunctionCoefficients()[d2]);
-                        System.out.println("tmpPolyFunc" + (d1 + d2) + ": " + tmpPolyFuncCoefs[d1 + d2].toString());
+//                        System.out.println("tmpPolyFunc" + (d1 + d2) + ": " + tmpPolyFuncCoefs[d1 + d2].toString());
                     }
                 }
             }

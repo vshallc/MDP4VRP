@@ -1,9 +1,6 @@
 package functional;
 
 
-import org.apache.commons.math3.analysis.polynomials.PolynomialFunction;
-import org.apache.commons.math3.analysis.solvers.NewtonRaphsonSolver;
-
 /**
  * Created by Xiaoxi Wang on 7/10/14.
  */
