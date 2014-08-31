@@ -13,7 +13,7 @@ public class Test {
         double[] c;
         AdvancedPolynomialFunction[] pf = new AdvancedPolynomialFunction[2];
         StochasticPolynomialFunction[] spfs = new StochasticPolynomialFunction[2];
-        PiecewiseStochasticPolynomialFunction pspf;
+        PiecewiseStochasticPolynomialFunction A;
         c = new double[2];
         c[0] = 50;
         c[1] = -0.25 + 1;
@@ -46,9 +46,9 @@ public class Test {
         bounds[0] = 0;
         bounds[1] = 100;
         bounds[2] = Double.POSITIVE_INFINITY;
-        pspf = new PiecewiseStochasticPolynomialFunction(spfs, bounds);
+        A = new PiecewiseStochasticPolynomialFunction(spfs, bounds);
 
-        System.out.println("g(x,ξ) = \n" + pspf.toString());
+        System.out.println("g(x,ξ) = \n" + A.toString());
 
         AdvancedPolynomialFunction[] vpf = new AdvancedPolynomialFunction[2];
         c = new double[1];
@@ -60,14 +60,17 @@ public class Test {
         bounds[0] = 0;
         bounds[1] = 300;
         bounds[2] = Double.POSITIVE_INFINITY;
-        PiecewisePolynomialFunction ppf = new PiecewisePolynomialFunction(vpf, bounds);
-        System.out.println("V(t) = \n" + ppf.toString());
+        PiecewisePolynomialFunction V = new PiecewisePolynomialFunction(vpf, bounds);
+        System.out.println("V(t) = \n" + V.toString());
 
-        double[] prb = PiecewisePolynomialFunction.integrationForVOfAOnPieces(ppf, spfs[1], 100, Double.POSITIVE_INFINITY);
-        System.out.println("test results:");
-        for (double d : prb) {
-            System.out.println(d);
-        }
+        PiecewisePolynomialFunction V2 = PiecewisePolynomialFunction.integrationOnXiOfComposition_test(V, A);
+        System.out.println("V2(t) = \n" + V2.toString());
+
+//        PiecewisePolynomialFunction.PolynomialFunctionPiece[] prb = PiecewisePolynomialFunction.integrationForVOfAOnPieces(V, spfs[1], 100, Double.POSITIVE_INFINITY);
+//        System.out.println("test results:");
+//        for (PiecewisePolynomialFunction.PolynomialFunctionPiece d : prb) {
+//            System.out.println(d.getPolynomialFunction().toString());
+//        }
 
 //        c = new double[4];
 //        c[0] = -10;

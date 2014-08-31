@@ -100,6 +100,24 @@ public class AdvancedPolynomialFunction extends PolynomialFunction {
         return new AdvancedPolynomialFunction(newCoefficients);
     }
 
+    public AdvancedPolynomialFunction scale(final double factor) {
+        double[] newCoefficients = this.getCoefficients();
+        for (int i = 0; i < newCoefficients.length; ++i) {
+            newCoefficients[i] *= factor;
+        }
+        return new AdvancedPolynomialFunction(newCoefficients);
+    }
+
+    public AdvancedPolynomialFunction integrate() {
+        double[] newCoefficients = new double[this.getCoefficients().length + 1];
+        newCoefficients[0] = 0;
+        System.arraycopy(this.getCoefficients(), 0, newCoefficients, 1, this.getCoefficients().length);
+        for (int i = 1; i < newCoefficients.length; ++i) {
+            newCoefficients[i] /= i;
+        }
+        return new AdvancedPolynomialFunction(newCoefficients);
+    }
+
     public AdvancedPolynomialFunction polynomialDerivative() {
         return new AdvancedPolynomialFunction(differentiate(this.getCoefficients()));
     }
@@ -363,6 +381,18 @@ public class AdvancedPolynomialFunction extends PolynomialFunction {
         return roots;
     }
 
+    public AdvancedPolynomialFunction compose(AdvancedPolynomialFunction apf) {
+        double[] newCoefficients = new double[this.degree() * apf.degree() + 1];
+        Arrays.fill(newCoefficients, 0);
+        newCoefficients[0] = this.getCoefficients()[0];
+        for (int i = 1; i < this.getCoefficients().length; ++i) {
+            for (int j = 0; j < apf.getCoefficients().length; ++j) {
+                newCoefficients[i * j] += this.getCoefficients()[i] * Math.pow(apf.getCoefficients()[j], i);
+            }
+        }
+        return new AdvancedPolynomialFunction(newCoefficients);
+    }
+
     public StochasticPolynomialFunction compose(StochasticPolynomialFunction spf) {
         double[] nil = new double[1];
         nil[0] = 0;
@@ -388,9 +418,6 @@ public class AdvancedPolynomialFunction extends PolynomialFunction {
                 tmpPolyFuncCoefs[d2] = multiplierPolyFuncCoefs[0].multiply(
                         spf.getAdvancedPolynomialFunctionCoefficients()[d2]);
             }
-//            for (int j = 0; j < tmpPolyFuncCoefs.length; ++j) {
-//                System.out.println("tmpPolyFunc" + j + ": " + tmpPolyFuncCoefs[j].toString());
-//            }
             for (int j = 1; j < i; ++j) {
                 multiplierPolyFuncCoefs = tmpPolyFuncCoefs;
                 tmpPolyFuncCoefs = new AdvancedPolynomialFunction[(j + 1) * spf.degree() + 1];
@@ -408,7 +435,6 @@ public class AdvancedPolynomialFunction extends PolynomialFunction {
             }
             for (int j = 0; j < tmpPolyFuncCoefs.length; ++j) {
                 resPolyFuncCoefs[j] = resPolyFuncCoefs[j].add(tmpPolyFuncCoefs[j]);
-//                System.out.println("newpoly " + j + ":" + resPolyFuncCoefs[j].toString());
             }
         }
         return new StochasticPolynomialFunction(resPolyFuncCoefs);
@@ -424,6 +450,11 @@ public class AdvancedPolynomialFunction extends PolynomialFunction {
 
     public static AdvancedPolynomialFunction ZERO() {
         double[] c = {0};
+        return new AdvancedPolynomialFunction(c);
+    }
+
+    public static AdvancedPolynomialFunction ONE() {
+        double[] c = {1};
         return new AdvancedPolynomialFunction(c);
     }
 
