@@ -438,16 +438,9 @@ public class AdvancedPolynomialFunction extends PolynomialFunction {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (!(obj instanceof AdvancedPolynomialFunction)) {
-            return false;
-        }
+        if (this == obj) return true;
+        if (!(obj instanceof AdvancedPolynomialFunction)) return false;
         AdvancedPolynomialFunction other = (AdvancedPolynomialFunction) obj;
-        if (!Arrays.equals(this.getCoefficients(), other.getCoefficients())) {
-            return false;
-        }
-        return true;
+        return Arrays.equals(this.getCoefficients(), other.getCoefficients());
     }
 }
