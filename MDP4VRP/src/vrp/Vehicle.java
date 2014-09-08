@@ -28,4 +28,6 @@ public class Vehicle implements Agent{
     public void setTrafficMap(TrafficMap map) {
         this.map = map;
     }
+
+
 }

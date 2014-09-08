@@ -18,8 +18,11 @@ public class State {
         this.taskSet = taskSet;
     }
 
-//    @Override
-//    public int hashCode() {
-//        return ;
-//    }
+    public Node getLocation() {
+        return location;
+    }
+
+    public Set<Task> getTaskSet() {
+        return taskSet;
+    }
 }
