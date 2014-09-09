@@ -1,5 +1,8 @@
 package mdp;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Created by Xiaoxi Wang on 9/5/14.
  */
@@ -11,5 +14,14 @@ public class MDP {
     public MDP(State startState, State endState) {
         this.startState = startState;
         this.endState = endState;
+    }
+
+    private void buildGraph() {
+        Set<State> checkedStates = new HashSet<State>();
+        expendState(startState, endState, checkedStates);
+    }
+
+    private void expendState(State startState, State endState, Set<State> checkedStates) {
+
     }
 }
