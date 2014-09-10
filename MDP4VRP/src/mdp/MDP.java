@@ -21,7 +21,9 @@ public class MDP {
         expendState(startState, endState, checkedStates);
     }
 
-    private void expendState(State startState, State endState, Set<State> checkedStates) {
-
+    private void expendState(State currentState, State endState, Set<State> checkedStates) {
+        for (Action a : currentState.getPossibleActions()) {
+            State nextPossibleState = a.perform(currentState);
+        }
     }
 }

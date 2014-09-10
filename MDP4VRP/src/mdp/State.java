@@ -1,5 +1,6 @@
 package mdp;
 
+import vrp.Edge;
 import vrp.Node;
 import vrp.Task;
 
@@ -16,9 +17,22 @@ public class State {
     private Set<Arc> incomingArcs = new HashSet<Arc>();
     private Set<Arc> outgoingArcs = new HashSet<Arc>();
 
+    private Set<Action> possibleActions = new HashSet<Action>();
+
     public State(Node location, Set<Task> taskSet) {
         this.location = location;
         this.taskSet = taskSet;
+        // Add possible actions
+        // Move
+        for (Edge e : this.location.getOutgoingEdges()) possibleActions.add(new Move(e.getStartNode(), e.getEndNode()));
+        // Execute
+        for (Task t : this.location.getTasks()) possibleActions.add(new Execute(t));
+        // Abandon
+        for (Task t : this.taskSet) possibleActions.add(new Abandon(t));
+    }
+
+    public Set<Action> getPossibleActions() {
+        return this.possibleActions;
     }
 
     public void addIncomingArc(Arc arc) {
