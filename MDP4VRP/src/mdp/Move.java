@@ -15,9 +15,9 @@ public class Move implements Action{
         this.to = to;
     }
     @Override
-    public State perform(State state) {
-        if (state.getLocation().equals(from) && state.getLocation().getOutgoingEdges().contains(to)) {
-            return new State(to, state.getTaskSet());
-        } else return null;
+    public BasicState perform(BasicState state) {
+        if (state.getLocation().equals(from) && state.getLocation().getOutgoingEdges().contains(to))
+            return new BasicState(to, state.getTaskSet());
+        else return null;
     }
 }

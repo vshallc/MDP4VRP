@@ -1,6 +1,8 @@
 package mdp;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -17,13 +19,23 @@ public class MDP {
     }
 
     private void buildGraph() {
-        Set<State> checkedStates = new HashSet<State>();
+        Map<BasicState, State> checkedStates = new HashMap<BasicState, State>();
         expendState(startState, endState, checkedStates);
     }
 
-    private void expendState(State currentState, State endState, Set<State> checkedStates) {
+    private void expendState(State currentState, State endState, Map<BasicState, State> checkedStates) {
+        checkedStates.put(new BasicState(currentState.getLocation(), currentState.getTaskSet()), currentState);
+        if (currentState.toBasicState().equals(endState.toBasicState())) return;
         for (Action a : currentState.getPossibleActions()) {
-            State nextPossibleState = a.perform(currentState);
+            BasicState nextPossibleState = a.perform(currentState);
+            if (checkedStates.containsKey(nextPossibleState)) {
+                State next = checkedStates.get(nextPossibleState);
+                Arc arc = new Arc(currentState, next, a);
+                next.addIncomingArc(arc);
+                currentState.addOutgoingArc(arc);
+            } else {
+                //
+            }
         }
     }
 }

@@ -21,7 +21,7 @@ public class Vehicle implements Agent{
     }
 
     public void init() {
-        state = new State(map.getStartNode(), taskSet);
+//        state = new State(map.getStartNode(), taskSet);
         currentTime = 0;
     }
 

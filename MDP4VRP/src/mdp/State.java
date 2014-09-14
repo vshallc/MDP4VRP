@@ -10,68 +10,67 @@ import java.util.Set;
 /**
  * Created by Xiaoxi Wang on 9/3/14.
  */
-public class State {
-    private Node location;
-    private Set<Task> taskSet = new HashSet<Task>();
+public class State extends BasicState{
 
-//    private Set<Arc> incomingArcs = new HashSet<Arc>();
-//    private Set<Arc> outgoingArcs = new HashSet<Arc>();
+    private Set<Arc> incomingArcs = new HashSet<Arc>();
+    private Set<Arc> outgoingArcs = new HashSet<Arc>();
+
+    private Set<Action> possibleActions = new HashSet<Action>();
+//    private boolean isActionsAssigned = false;
+
+    public State(BasicState basicState) {
+        super(basicState.getLocation(), basicState.getTaskSet());
+        // Add possible actions
+        // Move
+        for (Edge e : getLocation().getOutgoingEdges()) possibleActions.add(new Move(e.getStartNode(), e.getEndNode()));
+        // Execute
+        for (Task t : getLocation().getTasks()) possibleActions.add(new Execute(t));
+        // Abandon
+        for (Task t : getTaskSet()) possibleActions.add(new Abandon(t));
+    }
 //
-//    private Set<Action> possibleActions = new HashSet<Action>();
+//    private Set<Action> assignPossibleActions() {
+//        isActionsAssigned = true;
+//        return possibleActions;
+//    }
 
-    public State(Node location, Set<Task> taskSet) {
-        this.location = location;
-        this.taskSet = taskSet;
+    protected BasicState toBasicState() {
+        return new BasicState(super.getLocation(), super.getTaskSet());
     }
 
     public Set<Action> getPossibleActions() {
-        Set<Action> possibleActions = new HashSet<Action>();
-        // Add possible actions
-        // Move
-        for (Edge e : this.location.getOutgoingEdges()) possibleActions.add(new Move(e.getStartNode(), e.getEndNode()));
-        // Execute
-        for (Task t : this.location.getTasks()) possibleActions.add(new Execute(t));
-        // Abandon
-        for (Task t : this.taskSet) possibleActions.add(new Abandon(t));
-
-        return possibleActions;
+//        if (isActionsAssigned)
+        return this.possibleActions;
+//        else return assignPossibleActions();
     }
 
-//    public Set<Action> getPossibleActions() {
-//        return this.possibleActions;
-//    }
-
-//    public void addIncomingArc(Arc arc) {
-//        incomingArcs.add(arc);
-//    }
-//
-//    public void addOutgoingArc(Arc arc) {
-//        outgoingArcs.add(arc);
-//    }
-//
-//    public Set<Arc> getIncomingArcs() {
-//        return incomingArcs;
-//    }
-//
-//    public Set<Arc> getOutgoingArcs() {
-//        return outgoingArcs;
-//    }
-
-    public Node getLocation() {
-        return location;
+    public void addIncomingArc(Arc arc) {
+        if (arc.getEndState().equals(this)) {
+            incomingArcs.add(arc);
+        }
     }
 
-    public Set<Task> getTaskSet() {
-        Set<Task> result = new HashSet<Task>();
-        result.addAll(taskSet);
-        return result;
+    public void addOutgoingArc(Arc arc) {
+        if (arc.getStartState().equals(this)) {
+            outgoingArcs.add(arc);
+        }
+    }
+
+    public Set<Arc> getIncomingArcs() {
+        return incomingArcs;
+    }
+
+    public Set<Arc> getOutgoingArcs() {
+        return outgoingArcs;
     }
 
     @Override
     public int hashCode() {
         int result = 1;
-        result = result * 13 + location.hashCode();
-        result = result * 31 + taskSet.hashCode();
+        result = result * 37 + incomingArcs.hashCode();
+        result = result * 31 + outgoingArcs.hashCode();
+        result = result * 31 + possibleActions.hashCode();
+        result = result * 17 + super.hashCode();
         return result;
     }
 
@@ -84,6 +83,8 @@ public class State {
             return false;
         }
         State other = (State) obj;
-        return location.equals(other.getLocation()) && taskSet.equals(other.getTaskSet());
+        return getLocation().equals(other.getLocation()) && getTaskSet().equals(other.getTaskSet()) &&
+                incomingArcs.equals(other.incomingArcs) && outgoingArcs.equals(other.outgoingArcs) &&
+                possibleActions.equals(other.possibleActions);
     }
 }
