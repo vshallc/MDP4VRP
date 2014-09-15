@@ -2,16 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="63a100fe-1338-4db6-90c8-f11cfcedbc6a" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/MDP4VRP/src/mdp/BasicState.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MDP4VRP/src/mdp/Abandon.java" afterPath="$PROJECT_DIR$/MDP4VRP/src/mdp/Abandon.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MDP4VRP/src/mdp/Action.java" afterPath="$PROJECT_DIR$/MDP4VRP/src/mdp/Action.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MDP4VRP/src/mdp/Arc.java" afterPath="$PROJECT_DIR$/MDP4VRP/src/mdp/Arc.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MDP4VRP/src/mdp/Execute.java" afterPath="$PROJECT_DIR$/MDP4VRP/src/mdp/Execute.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MDP4VRP/src/mdp/MDP.java" afterPath="$PROJECT_DIR$/MDP4VRP/src/mdp/MDP.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MDP4VRP/src/mdp/Move.java" afterPath="$PROJECT_DIR$/MDP4VRP/src/mdp/Move.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MDP4VRP/src/mdp/State.java" afterPath="$PROJECT_DIR$/MDP4VRP/src/mdp/State.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MDP4VRP/src/Test/Test.java" afterPath="$PROJECT_DIR$/MDP4VRP/src/Test/Test.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MDP4VRP/src/vrp/Vehicle.java" afterPath="$PROJECT_DIR$/MDP4VRP/src/vrp/Vehicle.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="FunctionalLimitIntegrationForStochasticPolynomialFunction.iws" />
@@ -38,7 +29,7 @@
       <file leaf-file-name="State.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/MDP4VRP/src/mdp/State.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="304" max-vertical-offset="1729">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1729">
               <caret line="54" column="34" selection-start-line="54" selection-start-column="34" selection-end-line="54" selection-end-column="34" />
               <folding>
                 <element signature="e#366#374#0" expanded="true" />
@@ -101,10 +92,11 @@
       <file leaf-file-name="MDP.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/MDP4VRP/src/mdp/MDP.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.090692125" vertical-offset="0" max-vertical-offset="838">
-              <caret line="7" column="3" selection-start-line="7" selection-start-column="3" selection-end-line="7" selection-end-column="3" />
+            <state vertical-scroll-proportion="0.36515513" vertical-offset="93" max-vertical-offset="931">
+              <caret line="21" column="18" selection-start-line="21" selection-start-column="18" selection-end-line="21" selection-end-column="18" />
               <folding>
-                <element signature="e#455#474#0" expanded="true" />
+                <element signature="e#372#379#0" expanded="true" />
+                <element signature="e#441#460#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -1014,7 +1006,11 @@
       <created>1410452263328</created>
       <updated>1410452263328</updated>
     </task>
-    <option name="localTasksCounter" value="38" />
+    <task id="LOCAL-00038" summary="start coding actions">
+      <created>1410715631779</created>
+      <updated>1410715631779</updated>
+    </task>
+    <option name="localTasksCounter" value="39" />
     <servers />
   </component>
   <component name="TodoView" selected-index="4">
@@ -1471,14 +1467,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="jar://$PROJECT_DIR$/../../commons-math3-3.2/commons-math3-3.2-sources.jar!/org/apache/commons/math3/analysis/polynomials/PolynomialFunction.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="5945" max-vertical-offset="7258">
-          <caret line="40" column="13" selection-start-line="40" selection-start-column="13" selection-end-line="40" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.7.0_45.jdk/Contents/Home/src.zip!/java/lang/Object.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.1515513" vertical-offset="2248" max-vertical-offset="10089">
@@ -1524,12 +1512,21 @@
         </state>
       </provider>
     </entry>
+    <entry file="jar://$PROJECT_DIR$/../../commons-math3-3.2/commons-math3-3.2-sources.jar!/org/apache/commons/math3/analysis/polynomials/PolynomialFunction.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="5945" max-vertical-offset="7258">
+          <caret line="40" column="13" selection-start-line="40" selection-start-column="13" selection-end-line="40" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/MDP4VRP/src/mdp/MDP.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.090692125" vertical-offset="0" max-vertical-offset="838">
-          <caret line="7" column="3" selection-start-line="7" selection-start-column="3" selection-end-line="7" selection-end-column="3" />
+        <state vertical-scroll-proportion="0.36515513" vertical-offset="93" max-vertical-offset="931">
+          <caret line="21" column="18" selection-start-line="21" selection-start-column="18" selection-end-line="21" selection-end-column="18" />
           <folding>
-            <element signature="e#455#474#0" expanded="true" />
+            <element signature="e#372#379#0" expanded="true" />
+            <element signature="e#441#460#0" expanded="true" />
           </folding>
         </state>
       </provider>
