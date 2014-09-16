@@ -1,7 +1,6 @@
 package Test;
 
 import mdp.Arc;
-import mdp.BasicState;
 import mdp.Move;
 import mdp.State;
 import vrp.Node;
@@ -36,19 +35,19 @@ public class Test {
         ts2.addAll(ts1);
         System.out.println("ts: " + ts1.equals(ts2));
         System.out.println(ts1.hashCode() + " " + ts2.hashCode());
-        Map<BasicState, State> basicStateStateMap = new HashMap<BasicState, State>();
-        BasicState bs1 = new BasicState(n1, ts1);
-        BasicState bs2 = new BasicState(n1, ts1);
-        BasicState bs3 = new BasicState(n2, ts2);
-        System.out.println(bs1.equals(bs2));
-        State s1 = new State(bs1);
-        State s2 = new State(bs2);
-        State s3 = new State(bs3);
-        basicStateStateMap.put(bs1, s1);
-        basicStateStateMap.put(bs2, s2);
-        basicStateStateMap.put(bs3, s3);
-        System.out.println(basicStateStateMap.size());
-        Arc arc = new Arc(s1, s2, new Move(n1, n2));
+//        Map<BasicState, State> basicStateStateMap = new HashMap<BasicState, State>();
+//        BasicState bs1 = new BasicState(n1, ts1);
+//        BasicState bs2 = new BasicState(n1, ts1);
+//        BasicState bs3 = new BasicState(n2, ts2);
+//        System.out.println(bs1.equals(bs2));
+        State s1 = new State(n1, ts1);
+        State s2 = new State(n1, ts1);
+        State s3 = new State(n2, ts2);
+//        basicStateStateMap.put(bs1, s1);
+//        basicStateStateMap.put(bs2, s2);
+//        basicStateStateMap.put(bs3, s3);
+//        System.out.println(basicStateStateMap.size());
+//        Arc arc = new Arc(s1, s2, new Move(n1, n2));
         System.out.println("hc: " + s3.hashCode());
 
     }

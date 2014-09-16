@@ -10,14 +10,20 @@ public class Move implements Action{
     private Node from, to;
     private PiecewiseStochasticPolynomialFunction costFunc;
 
-    public Move(Node from, Node to) {
+    public Move(Node from, Node to, PiecewiseStochasticPolynomialFunction costFunc) {
         this.from = from;
         this.to = to;
+        this.costFunc = costFunc;
     }
     @Override
-    public BasicState perform(BasicState state) {
+    public State perform(State state) {
         if (state.getLocation().equals(from) && state.getLocation().getOutgoingEdges().contains(to))
-            return new BasicState(to, state.getTaskSet());
-        else return null;
+            return new State(to, state.getTaskSet());
+        else return state;
+    }
+
+    @Override
+    public PiecewiseStochasticPolynomialFunction getCostFunction() {
+        return costFunc;
     }
 }

@@ -28,23 +28,23 @@ public class BasicState {
         return result;
     }
 
-    @Override
-    public int hashCode() {
-        int result = 1;
-        result = result * 13 + location.hashCode();
-        result = result * 31 + taskSet.hashCode();
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (!(obj instanceof BasicState)) {
-            return false;
-        }
-        BasicState other = (BasicState) obj;
-        return location.equals(other.location) && taskSet.equals(other.taskSet);
-    }
+//    @Override
+//    public int hashCode() {
+//        int result = 1;
+//        result = result * 13 + location.hashCode();
+//        result = result * 31 + taskSet.hashCode();
+//        return result;
+//    }
+//
+//    @Override
+//    public boolean equals(Object obj) {
+//        if (this == obj) {
+//            return true;
+//        }
+//        if (!(obj instanceof BasicState)) {
+//            return false;
+//        }
+//        BasicState other = (BasicState) obj;
+//        return location.equals(other.location) && taskSet.equals(other.taskSet);
+//    }
 }

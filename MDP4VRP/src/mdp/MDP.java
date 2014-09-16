@@ -1,6 +1,8 @@
 package mdp;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * Created by Xiaoxi Wang on 9/5/14.
@@ -8,34 +10,43 @@ import java.util.*;
 public class MDP {
     private State startState;
     private State endState;
-
+    private ConcurrentMap<State, List<Arc>> incomingArcs = new ConcurrentHashMap<State, List<Arc>>();
+    private ConcurrentMap<State, List<Arc>> outgoingArcs = new ConcurrentHashMap<State, List<Arc>>();
+    private ConcurrentMap<State, List<Action>> possibleActions = new ConcurrentHashMap<State, List<Action>>();
 
     public MDP(State startState, State endState) {
         this.startState = startState;
         this.endState = endState;
+        incomingArcs.putIfAbsent(startState, new ArrayList<Arc>());
+        outgoingArcs.putIfAbsent(startState, new ArrayList<Arc>());
+        possibleActions.putIfAbsent(startState, new ArrayList<Action>());
+        incomingArcs.putIfAbsent(endState, new ArrayList<Arc>());
+        outgoingArcs.putIfAbsent(endState, new ArrayList<Arc>());
+        possibleActions.putIfAbsent(endState, new ArrayList<Action>());
     }
 
     private void buildGraph() {
         Queue<State> checkingQueue = new LinkedList<State>();
-        Map<BasicState, State> checkedStates = new HashMap<BasicState, State>();
+        Set<State> checkedStates = new HashSet<State>();
         checkingQueue.add(startState);
         while (!checkingQueue.isEmpty()) {
             State currentState = checkingQueue.poll();
-            if (currentState.toBasicState().equals(endState.toBasicState())) continue;
-            for (Action a : currentState.getPossibleActions()) {
-                BasicState nextPossibleState = a.perform(currentState);
-                if (checkedStates.containsKey(nextPossibleState)) {
-                    State nextState = checkedStates.get(nextPossibleState);
+            possibleActions.putIfAbsent(currentState, new ArrayList<Action>());
+            if (currentState.equals(endState)) continue;
+            for (Action a : possibleActions.get(currentState)) {
+                State nextState = a.perform(currentState);
+                if (checkedStates.contains(nextState)) {
                     Arc arc = new Arc(currentState, nextState, a);
-                    nextState.addIncomingArc(arc);
-                    currentState.addOutgoingArc(arc);
+                    incomingArcs.get(nextState).add(arc);
+                    outgoingArcs.get(currentState).add(arc);
                 } else {
-                    State nextState = new State(nextPossibleState);
                     Arc arc = new Arc(currentState, nextState, a);
-                    nextState.addIncomingArc(arc);
-                    currentState.addOutgoingArc(arc);
+                    incomingArcs.putIfAbsent(nextState, new ArrayList<Arc>());
+                    outgoingArcs.putIfAbsent(nextState, new ArrayList<Arc>());
+                    incomingArcs.get(nextState).add(arc);
+                    outgoingArcs.get(currentState).add(arc);
                     checkingQueue.add(nextState);
-                    checkedStates.put(nextPossibleState, nextState);
+                    checkedStates.add(nextState);
                 }
             }
         }
