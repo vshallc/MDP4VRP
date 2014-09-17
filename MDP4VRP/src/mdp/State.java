@@ -30,7 +30,7 @@ public class State {
         List<Action> possibleActions = new ArrayList<Action>();
         // Add possible actions
         // Move
-        for (Edge e : location.getOutgoingEdges()) possibleActions.add(new Move(e.getStartNode(), e.getEndNode()));
+        for (Edge e : location.getOutgoingEdges()) possibleActions.add(new Move(e));
         // Execute
         for (Task t : location.getTasks()) possibleActions.add(new Execute(t));
         // Abandon

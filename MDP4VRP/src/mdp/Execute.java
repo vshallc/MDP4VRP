@@ -1,5 +1,6 @@
 package mdp;
 
+import functional.PiecewisePolynomialFunction;
 import functional.PiecewiseStochasticPolynomialFunction;
 import vrp.Task;
 
@@ -11,11 +12,9 @@ import java.util.Set;
  */
 public class Execute implements Action{
     private Task task;
-    private PiecewiseStochasticPolynomialFunction costFunc;
 
-    public Execute(Task task, PiecewiseStochasticPolynomialFunction costFunc) {
+    public Execute(Task task) {
         this.task = task;
-        this.costFunc = costFunc;
     }
 
     @Override
@@ -28,7 +27,7 @@ public class Execute implements Action{
     }
 
     @Override
-    public PiecewiseStochasticPolynomialFunction getCostFunction() {
-        return costFunc;
+    public PiecewisePolynomialFunction nextValueFunc(PiecewisePolynomialFunction currentValueFunc) {
+        return null;
     }
 }

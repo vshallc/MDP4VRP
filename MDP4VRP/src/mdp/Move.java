@@ -1,29 +1,28 @@
 package mdp;
 
+import functional.PiecewisePolynomialFunction;
 import functional.PiecewiseStochasticPolynomialFunction;
+import vrp.Edge;
 import vrp.Node;
 
 /**
  * Created by Xiaoxi Wang on 9/3/14.
  */
 public class Move implements Action{
-    private Node from, to;
-    private PiecewiseStochasticPolynomialFunction costFunc;
+    private Edge edge;
 
-    public Move(Node from, Node to, PiecewiseStochasticPolynomialFunction costFunc) {
-        this.from = from;
-        this.to = to;
-        this.costFunc = costFunc;
+    public Move(Edge edge) {
+        this.edge = edge;
     }
     @Override
     public State perform(State state) {
-        if (state.getLocation().equals(from) && state.getLocation().getOutgoingEdges().contains(to))
-            return new State(to, state.getTaskSet());
+        if (state.getLocation().equals(edge.getStartNode()))
+            return new State(edge.getEndNode(), state.getTaskSet());
         else return state;
     }
 
     @Override
-    public PiecewiseStochasticPolynomialFunction getCostFunction() {
-        return costFunc;
+    public PiecewisePolynomialFunction nextValueFunc(PiecewisePolynomialFunction currentValueFunc) {
+        return null;
     }
 }
