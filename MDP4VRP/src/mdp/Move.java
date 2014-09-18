@@ -23,6 +23,6 @@ public class Move implements Action{
 
     @Override
     public PiecewisePolynomialFunction nextValueFunc(PiecewisePolynomialFunction currentValueFunc) {
-        return null;
+        return MDP.integrationOnXiOfComposition_test(currentValueFunc, edge.getTimeCostFunction());
     }
 }

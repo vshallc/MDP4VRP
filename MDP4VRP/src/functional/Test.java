@@ -1,6 +1,8 @@
 package functional;
 
 
+import mdp.MDP;
+
 /**
  * Created by Xiaoxi Wang on 7/10/14.
  */
@@ -60,7 +62,7 @@ public class Test {
         PiecewisePolynomialFunction V = new PiecewisePolynomialFunction(vpf, bounds);
         System.out.println("V(t) = \n" + V.toString());
 
-        PiecewisePolynomialFunction V2 = PiecewisePolynomialFunction.integrationOnXiOfComposition_test(V, A);
+        PiecewisePolynomialFunction V2 = MDP.integrationOnXiOfComposition_test(V, A);
         System.out.println("V2(t) = \n" + V2.toString());
 
 //        PiecewisePolynomialFunction.PolynomialFunctionPiece[] prb = PiecewisePolynomialFunction.integrationForVOfAOnPieces(V, spfs[1], 100, Double.POSITIVE_INFINITY);
