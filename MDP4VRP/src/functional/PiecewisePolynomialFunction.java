@@ -41,13 +41,30 @@ public class PiecewisePolynomialFunction {
             System.arraycopy(tmpBounds, 0, newBounds, 0, n);
             newPieceNum = n - 1; // bounds [0, +inf)
         }
-        AdvancedPolynomialFunction[] pf = new AdvancedPolynomialFunction[newPieceNum];
+        AdvancedPolynomialFunction[] pfs = new AdvancedPolynomialFunction[newPieceNum];
         for (n = 0, i = 0, j = 0; n < newPieceNum; ++n) {
-            pf[n] = polyFuncs[i].add(ppf.polyFuncs[j]);
+            pfs[n] = polyFuncs[i].add(ppf.polyFuncs[j]);
             if (newBounds[n] >= bounds[i]) ++i;
             if (newBounds[n] >= ppf.bounds[j]) ++j;
         }
-        return new PiecewisePolynomialFunction(pf, newBounds);
+        return new PiecewisePolynomialFunction(pfs, newBounds);
+    }
+
+    public PiecewisePolynomialFunction add(final double c) {
+        AdvancedPolynomialFunction[] pfs = new AdvancedPolynomialFunction[pieces];
+        for (int i = 0; i < pieces; ++i) {
+            pfs[i] = polyFuncs[i].add(c);
+        }
+        return new PiecewisePolynomialFunction(pfs, bounds.clone());
+    }
+
+    public PiecewisePolynomialFunction shift(final double t) {
+        // V(t) -> V(t + t')
+        AdvancedPolynomialFunction[] pfs = new AdvancedPolynomialFunction[pieces];
+        for (int i = 0; i < pieces; ++i) {
+            pfs[i] = polyFuncs[i].shift(t);
+        }
+        return new PiecewisePolynomialFunction(pfs, bounds.clone());
     }
 
     public AdvancedPolynomialFunction[] getPolynomialFunctions() {
@@ -59,7 +76,7 @@ public class PiecewisePolynomialFunction {
     }
 
     public double[] getBounds() {
-        return this.bounds;
+        return this.bounds.clone();
     }
 
     public int getPieceNum() {

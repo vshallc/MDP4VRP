@@ -28,6 +28,7 @@ public class Abandon implements Action{
 
     @Override
     public PiecewisePolynomialFunction nextValueFunc(PiecewisePolynomialFunction currentValueFunc) {
-        return null;
+        // V'(t) = V(t) + p, p < 0
+        return currentValueFunc.add(task.getPenalty());
     }
 }

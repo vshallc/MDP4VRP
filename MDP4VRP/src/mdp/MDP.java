@@ -96,17 +96,18 @@ public class MDP {
         // xi ~ [0,1]
         AdvancedPolynomialFunction gmin = a.determinize(0);
         AdvancedPolynomialFunction gmax = a.determinize(1);
+        double[] vBounds = V.getBounds();
         TreeSet<Double> innerBounds = new TreeSet<Double>();
         innerBounds.add(leftDomain);
         innerBounds.add(rightDomain);
         {
             double[] roots;
             for (int i = 1; i < V.getPieceNum(); ++i) {
-                roots = gmin.solve(V.getBounds()[i], leftDomain, rightDomain);
+                roots = gmin.solve(vBounds[i], leftDomain, rightDomain);
                 for (double r : roots) {
                     if (r > leftDomain && r < rightDomain) innerBounds.add(r);
                 }
-                roots = gmax.solve(V.getBounds()[i], leftDomain, rightDomain);
+                roots = gmax.solve(vBounds[i], leftDomain, rightDomain);
                 for (double r : roots) {
                     if (r > leftDomain && r < rightDomain) innerBounds.add(r);
                 }
@@ -128,10 +129,10 @@ public class MDP {
 //            System.out.println("primary bound i: " + primaryBounds[i] + " primary bound i+1: " + primaryBounds[i+1] + " min: " + min + " max: " + max);
             int VStart, VEnd;
             for (VStart = 0; VStart < V.getPieceNum(); ++VStart) {
-                if (min >= V.getBounds()[VStart] && min < V.getBounds()[VStart + 1]) break;
+                if (min >= vBounds[VStart] && min < vBounds[VStart + 1]) break;
             }
             for (VEnd = V.getPieceNum() - 1; VEnd >= VStart ; --VEnd) {
-                if (max > V.getBounds()[VEnd] && max <= V.getBounds()[VEnd + 1]) break;
+                if (max > vBounds[VEnd] && max <= vBounds[VEnd + 1]) break;
             }
             results[i] = simpleIntegration(V, VStart, VEnd, a, primaryBounds[i], primaryBounds[i + 1]);
         }
@@ -142,9 +143,10 @@ public class MDP {
         AdvancedPolynomialFunction apf = AdvancedPolynomialFunction.ZERO();
         AdvancedPolynomialFunction upperBound, lowerBound, uc, lc;
         lowerBound = AdvancedPolynomialFunction.ZERO();
+        double[] vBounds = V.getBounds();
         for (int i = VStart; i < VEnd; ++i) {
             double[] coefs = a.getDeterminedPart().getCoefficients();
-            coefs[0] -= V.getBounds()[i + 1];
+            coefs[0] -= vBounds[i + 1];
             for (int j = 0; j < coefs.length; ++j) {
                 coefs[j] /= -a.getAdvancedPolynomialFunctionCoefficients()[1].getCoefficients()[0]; // we assume that a(t,xi) = f(t) + b*xi, and here the divider is -b;
             }

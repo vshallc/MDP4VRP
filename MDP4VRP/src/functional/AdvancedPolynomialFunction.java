@@ -40,15 +40,16 @@ public class AdvancedPolynomialFunction extends PolynomialFunction {
     }
 
     public AdvancedPolynomialFunction add(final AdvancedPolynomialFunction apf) {
-        final int lowLength  = FastMath.min(this.getCoefficients().length, apf.getCoefficients().length);
-        final int highLength = FastMath.max(this.getCoefficients().length, apf.getCoefficients().length);
+        double[] c = this.getCoefficients();
+        double[] apfc = apf.getCoefficients();
+        final int lowLength  = FastMath.min(c.length, apfc.length);
+        final int highLength = FastMath.max(c.length, apfc.length);
 
         double[] newCoefficients = new double[highLength];
         for (int i = 0; i < lowLength; ++i) {
-            newCoefficients[i] = this.getCoefficients()[i] + apf.getCoefficients()[i];
+            newCoefficients[i] = c[i] + apfc[i];
         }
-        System.arraycopy((this.getCoefficients().length < apf.getCoefficients().length) ?
-                        apf.getCoefficients() : this.getCoefficients(),
+        System.arraycopy((c.length < apfc.length) ? apfc : c,
                 lowLength,
                 newCoefficients, lowLength,
                 highLength - lowLength);
@@ -56,44 +57,59 @@ public class AdvancedPolynomialFunction extends PolynomialFunction {
         return new AdvancedPolynomialFunction(newCoefficients);
     }
 
+    public AdvancedPolynomialFunction add(final double c) {
+        double[] newCoefficients = this.getCoefficients();
+        newCoefficients[0] += c;
+        return new AdvancedPolynomialFunction(newCoefficients);
+    }
+
     public AdvancedPolynomialFunction subtract(final AdvancedPolynomialFunction apf) {
-        int lowLength  = FastMath.min(this.getCoefficients().length, apf.getCoefficients().length);
-        int highLength = FastMath.max(this.getCoefficients().length, apf.getCoefficients().length);
+        double[] c = this.getCoefficients();
+        double[] apfc = apf.getCoefficients();
+        int lowLength  = FastMath.min(c.length, apfc.length);
+        int highLength = FastMath.max(c.length, apfc.length);
 
         // build the coefficients array
         double[] newCoefficients = new double[highLength];
         for (int i = 0; i < lowLength; ++i) {
-            newCoefficients[i] = this.getCoefficients()[i] - apf.getCoefficients()[i];
+            newCoefficients[i] = c[i] - apfc[i];
         }
-        if (this.getCoefficients().length < apf.getCoefficients().length) {
+        if (c.length < apfc.length) {
             for (int i = lowLength; i < highLength; ++i) {
-                newCoefficients[i] = -apf.getCoefficients()[i];
+                newCoefficients[i] = -apfc[i];
             }
         } else {
-            System.arraycopy(this.getCoefficients(), lowLength, newCoefficients, lowLength,
+            System.arraycopy(c, lowLength, newCoefficients, lowLength,
                     highLength - lowLength);
         }
 
         return new AdvancedPolynomialFunction(newCoefficients);
     }
 
+    public AdvancedPolynomialFunction subtract(final double c) {
+        double[] newCoefficients = this.getCoefficients();
+        newCoefficients[0] -= c;
+        return new AdvancedPolynomialFunction(newCoefficients);
+    }
+
     public AdvancedPolynomialFunction negate() {
-        double[] newCoefficients = new double[this.getCoefficients().length];
-        for (int i = 0; i < this.getCoefficients().length; ++i) {
-            newCoefficients[i] = -this.getCoefficients()[i];
+        double[] newCoefficients = this.getCoefficients();
+        for (int i = 0; i < newCoefficients.length; ++i) {
+            newCoefficients[i] = -newCoefficients[i];
         }
         return new AdvancedPolynomialFunction(newCoefficients);
     }
 
     public AdvancedPolynomialFunction multiply(final AdvancedPolynomialFunction apf) {
-        double[] newCoefficients = new double[this.getCoefficients().length + apf.getCoefficients().length - 1];
+        double[] thisCoefficients = this.getCoefficients();
+        double[] newCoefficients = new double[thisCoefficients.length + apf.getCoefficients().length - 1];
 
         for (int i = 0; i < newCoefficients.length; ++i) {
             newCoefficients[i] = 0.0;
             for (int j = FastMath.max(0, i + 1 - apf.getCoefficients().length);
-                 j < FastMath.min(this.getCoefficients().length, i + 1);
+                 j < FastMath.min(thisCoefficients.length, i + 1);
                  ++j) {
-                newCoefficients[i] += this.getCoefficients()[j] * apf.getCoefficients()[i-j];
+                newCoefficients[i] += thisCoefficients[j] * apf.getCoefficients()[i-j];
             }
         }
 
@@ -108,10 +124,35 @@ public class AdvancedPolynomialFunction extends PolynomialFunction {
         return new AdvancedPolynomialFunction(newCoefficients);
     }
 
+    public AdvancedPolynomialFunction shift(final double t) {
+        // p(t) -> p(t + t')
+        double[] c = this.getCoefficients();
+        double[] newCoefficients = new double[c.length];
+        Arrays.fill(newCoefficients, 0);
+        newCoefficients[0] = c[0];
+        for (int i = 1; i < c.length; ++i) {
+            double[] m = {1, t}, p;
+            for (int j = 1; j < i; ++j) {
+                p = new double[m.length + 1];
+                Arrays.fill(p, 0);
+                for (int k = 0; k < m.length; ++k) {
+                    p[k] += m[k];
+                    p[k + 1] += m[k] * t;
+                }
+                m = p.clone();
+            }
+            for (int j = 0; j < m.length; ++j) {
+                newCoefficients[j] += m[j] * c[i];
+            }
+        }
+        return new AdvancedPolynomialFunction(newCoefficients);
+    }
+
     public AdvancedPolynomialFunction integrate() {
-        double[] newCoefficients = new double[this.getCoefficients().length + 1];
+        double[] c = this.getCoefficients();
+        double[] newCoefficients = new double[c.length + 1];
         newCoefficients[0] = 0;
-        System.arraycopy(this.getCoefficients(), 0, newCoefficients, 1, this.getCoefficients().length);
+        System.arraycopy(c, 0, newCoefficients, 1, c.length);
         for (int i = 1; i < newCoefficients.length; ++i) {
             newCoefficients[i] /= i;
         }
@@ -156,7 +197,7 @@ public class AdvancedPolynomialFunction extends PolynomialFunction {
                 }
             }
         } else {
-            AdvancedPolynomialFunction derApf = new AdvancedPolynomialFunction(differentiate(this.getCoefficients()));
+            AdvancedPolynomialFunction derApf = new AdvancedPolynomialFunction(differentiate(coefs));
             double[] extPoints = derApf.solve(leftBound, rightBound);
             double[] extrema = new double[2];
             {
@@ -277,22 +318,23 @@ public class AdvancedPolynomialFunction extends PolynomialFunction {
 
     public double[] solve(final double min, final double max) {
         // Solve roots for f(x)=0
+        double[] c = this.getCoefficients();
         int degree = this.degree();
         if (degree == 0) return new double[0];
         else if (degree == 1) {
             double[] roots = new double[1];
-            roots[0] = -getCoefficients()[0] / getCoefficients()[1];
+            roots[0] = -c[0] / c[1];
             return roots;
         } else if (degree == 2) {
-            double delta = getCoefficients()[1] * getCoefficients()[1] - 4 * getCoefficients()[2] * getCoefficients()[0];
+            double delta = c[1] * c[1] - 4 * c[2] * c[0];
             if (delta > 0) {
                 double[] roots = new double[2];
-                roots[0] = (-getCoefficients()[1] - Math.sqrt(delta)) / (2 * getCoefficients()[2]);
-                roots[1] = (-getCoefficients()[1] + Math.sqrt(delta)) / (2 * getCoefficients()[2]);
+                roots[0] = (-c[1] - Math.sqrt(delta)) / (2 * c[2]);
+                roots[1] = (-c[1] + Math.sqrt(delta)) / (2 * c[2]);
                 return roots;
             } else if (delta == 0) {
                 double[] roots = new double[1];
-                roots[0] = (-getCoefficients()[1]) / (2 * getCoefficients()[2]);
+                roots[0] = (-c[1]) / (2 * c[2]);
                 return roots;
             } else {
                 return new double[0];
@@ -352,18 +394,32 @@ public class AdvancedPolynomialFunction extends PolynomialFunction {
     }
 
     public AdvancedPolynomialFunction compose(AdvancedPolynomialFunction apf) {
+        double[] c = this.getCoefficients();
+        double[] apfc = apf.getCoefficients();
         double[] newCoefficients = new double[this.degree() * apf.degree() + 1];
         Arrays.fill(newCoefficients, 0);
-        newCoefficients[0] = this.getCoefficients()[0];
-        for (int i = 1; i < this.getCoefficients().length; ++i) {
-            for (int j = 0; j < apf.getCoefficients().length; ++j) {
-                newCoefficients[i * j] += this.getCoefficients()[i] * Math.pow(apf.getCoefficients()[j], i);
+        newCoefficients[0] = c[0];
+        for (int i = 1; i < c.length; ++i) {
+            double[] m = apfc.clone(), p;
+            for (int j = 1; j < i; ++j) {
+                p = new double[apfc.length + m.length - 1];
+                Arrays.fill(p, 0);
+                for (int k = 0; k < m.length; ++k) {
+                    for (int l = 0; l < apfc.length; ++l) {
+                        p[k + l] += m[k] * apfc[l];
+                    }
+                }
+                m = p.clone();
+            }
+            for (int j = 0; j < m.length; ++j) {
+                newCoefficients[j] += m[j] * c[i];
             }
         }
         return new AdvancedPolynomialFunction(newCoefficients);
     }
 
     public StochasticPolynomialFunction compose(StochasticPolynomialFunction spf) {
+        double[] c = this.getCoefficients();
         double[] nil = new double[1];
         nil[0] = 0;
         AdvancedPolynomialFunction nilPolyFunc = new AdvancedPolynomialFunction(nil);
@@ -372,14 +428,14 @@ public class AdvancedPolynomialFunction extends PolynomialFunction {
         Arrays.fill(resPolyFuncCoefs, nilPolyFunc);
         {
             double[] tmpCoefs = new double[1];
-            tmpCoefs[0] = this.getCoefficients()[0];
+            tmpCoefs[0] = c[0];
             resPolyFuncCoefs[0] = new AdvancedPolynomialFunction(tmpCoefs);
         }
         for (int i = 1; i <= this.degree(); ++i) {
             System.out.println("i=" + i);
             AdvancedPolynomialFunction[] multiplierPolyFuncCoefs = new AdvancedPolynomialFunction[1];
             double[] tmpCoefs = new double[1];
-            tmpCoefs[0] = this.getCoefficients()[i];
+            tmpCoefs[0] = c[i];
             multiplierPolyFuncCoefs[0] = new AdvancedPolynomialFunction(tmpCoefs);
             System.out.println("Multiplier: " + multiplierPolyFuncCoefs[0].toString());
             AdvancedPolynomialFunction[] tmpPolyFuncCoefs = new AdvancedPolynomialFunction[spf.degree() + 1];
@@ -393,13 +449,9 @@ public class AdvancedPolynomialFunction extends PolynomialFunction {
                 tmpPolyFuncCoefs = new AdvancedPolynomialFunction[(j + 1) * spf.degree() + 1];
                 Arrays.fill(tmpPolyFuncCoefs, nilPolyFunc);
                 for (int d1 = 0; d1 < multiplierPolyFuncCoefs.length; ++d1) {
-//                    System.out.println("tmpPolyFuncCoefs's length:" + tmpPolyFuncCoefs.length);
                     for (int d2 = 0; d2 <= spf.degree(); ++d2) {
-//                        System.out.println("d1=" + d1 + " d2=" + d2);
-//                        System.out.println("tmpPolyFunc" + (d1 + d2) + ": " + tmpPolyFuncCoefs[d1 + d2].toString());
                         tmpPolyFuncCoefs[d1 + d2] = multiplierPolyFuncCoefs[d1].multiply(
                                 spf.getAdvancedPolynomialFunctionCoefficients()[d2]);
-//                        System.out.println("tmpPolyFunc" + (d1 + d2) + ": " + tmpPolyFuncCoefs[d1 + d2].toString());
                     }
                 }
             }
