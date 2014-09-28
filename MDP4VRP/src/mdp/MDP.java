@@ -15,13 +15,15 @@ import java.util.concurrent.ConcurrentMap;
 public class MDP {
     private State startState;
     private State endState;
+    private PiecewisePolynomialFunction terminatedValueFunction;
     private ConcurrentMap<State, List<Arc>> incomingArcs = new ConcurrentHashMap<State, List<Arc>>();
     private ConcurrentMap<State, List<Arc>> outgoingArcs = new ConcurrentHashMap<State, List<Arc>>();
     private ConcurrentMap<State, List<Action>> possibleActions = new ConcurrentHashMap<State, List<Action>>();
 
-    public MDP(State startState, State endState) {
+    public MDP(State startState, State endState, PiecewisePolynomialFunction terminatedValueFunction) {
         this.startState = startState;
         this.endState = endState;
+        this.terminatedValueFunction = terminatedValueFunction;
         incomingArcs.putIfAbsent(startState, new ArrayList<Arc>());
         outgoingArcs.putIfAbsent(startState, new ArrayList<Arc>());
         possibleActions.putIfAbsent(startState, new ArrayList<Action>());
@@ -30,7 +32,7 @@ public class MDP {
         possibleActions.putIfAbsent(endState, new ArrayList<Action>());
     }
 
-    private void buildGraph() {
+    public void buildGraph() {
         Queue<State> checkingQueue = new LinkedList<State>();
         Set<State> checkedStates = new HashSet<State>();
         checkingQueue.add(startState);
@@ -54,6 +56,20 @@ public class MDP {
                     checkedStates.add(nextState);
                 }
             }
+        }
+    }
+
+    public void assignValueFunction() {
+        Queue<State> checkingQueue = new LinkedList<State>();
+        Set<State> checkedStates = new HashSet<State>();
+        checkingQueue.add(endState);
+        Map<State, Set<Arc>> checkedArcs = new HashMap<State, Set<Arc>>();
+        Map<State, PiecewisePolynomialFunction> currentBestValueFunction = new HashMap<State, PiecewisePolynomialFunction>();
+        checkedArcs.put(endState, new HashSet<Arc>());
+        currentBestValueFunction.put(endState, terminatedValueFunction);
+
+        while (!checkingQueue.isEmpty()) {
+            //
         }
     }
 

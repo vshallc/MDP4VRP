@@ -318,6 +318,7 @@ public class AdvancedPolynomialFunction extends PolynomialFunction {
 
     public double[] solve(final double min, final double max) {
         // Solve roots for f(x)=0
+        // the roots are sorted, but may be out of [min, max]
         double[] c = this.getCoefficients();
         int degree = this.degree();
         if (degree == 0) return new double[0];

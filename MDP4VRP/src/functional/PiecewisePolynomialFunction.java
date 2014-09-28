@@ -2,6 +2,7 @@ package functional;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.TreeSet;
 
@@ -14,7 +15,7 @@ public class PiecewisePolynomialFunction {
     private int pieces;
 
     public PiecewisePolynomialFunction(AdvancedPolynomialFunction[] polyFuncs, double[] bounds) {
-        this.polyFuncs = polyFuncs;
+        this.polyFuncs = Arrays.copyOf(polyFuncs, polyFuncs.length);
         this.bounds = bounds;
         pieces = polyFuncs.length;
     }
@@ -26,12 +27,12 @@ public class PiecewisePolynomialFunction {
         {
             double[] tmpBounds = new double[pieces + ppf.pieces - 1];
             tmpBounds[0] = bounds[0];
-            n = 0;
+            n = 1;
             i = 1;
             j = 1;
             while (i < pieces && j < ppf.pieces) {
                 if (bounds[i] < ppf.bounds[j]) tmpBounds[n++] = bounds[i++];
-                else if (ppf.bounds[j] < bounds[i]) tmpBounds[n++] = bounds[i++];
+                else if (ppf.bounds[j] < bounds[i]) tmpBounds[n++] = ppf.bounds[j++];
                 else {
                     tmpBounds[n++] = bounds[i++];
                     ++j;
@@ -65,6 +66,88 @@ public class PiecewisePolynomialFunction {
             pfs[i] = polyFuncs[i].shift(t);
         }
         return new PiecewisePolynomialFunction(pfs, bounds.clone());
+    }
+
+    public PiecewisePolynomialFunction max(PiecewisePolynomialFunction ppf) {
+        double[] newBounds;
+        int newPiece;
+        int n, i, j, k, l;
+        List<Double> tmpBounds = new ArrayList<Double>();
+//        tmpBounds.add(bounds[0]);
+        n = 0; i = 0; j = 0;
+        double lastBound = bounds[0], nextBound;
+        double[] roots;
+        double v;
+        while (i < pieces && j < ppf.pieces) {System.out.println("<");
+            tmpBounds.add(lastBound);
+            if (bounds[i + 1] < ppf.bounds[j + 1]) {
+                nextBound = bounds[i + 1];
+                roots = polyFuncs[i].subtract(ppf.getPolynomialFunction(j)).solve(tmpBounds.get(n), nextBound);
+                ++i;
+            }
+            else if (ppf.bounds[j + 1] < bounds[i + 1]) {System.out.println(">");
+                nextBound = ppf.bounds[j + 1];
+                roots = polyFuncs[i].subtract(ppf.getPolynomialFunction(j)).solve(tmpBounds.get(n), nextBound);
+                ++j;
+            } else {System.out.println("=");
+                nextBound = bounds[i + 1];
+                roots = polyFuncs[i].subtract(ppf.getPolynomialFunction(j)).solve(tmpBounds.get(n), nextBound);
+                ++i;
+                ++j;
+            }
+            for (double r : roots) {
+                if (r > lastBound && r < nextBound) {
+                    tmpBounds.add(r);
+                    ++n;
+                }
+            }
+            lastBound = nextBound;
+            ++n;
+        }
+        System.out.println(n);
+        newPiece = n;
+        newBounds = new double[n + 1];
+        AdvancedPolynomialFunction[] pfs = new AdvancedPolynomialFunction[newPiece];
+        for (n = 0; n < newPiece; ++n) {
+            // TODO
+        }
+
+
+
+        newBounds[0] = tmpBounds.get(0);
+        for (i = 1; i < newPiece; ++i) {
+            newBounds[i] = tmpBounds.get(i);
+//            j = i - 1;
+//            v = (newBounds[j] + newBounds[i]) / 2;
+//            pfs[j] = polyFuncs[j].value(v) > ppf.polyFuncs[j].value(v) ?
+//                    new AdvancedPolynomialFunction(polyFuncs[j].getCoefficients()) :
+//                    new AdvancedPolynomialFunction(ppf.polyFuncs[j].getCoefficients());
+        }
+        j = newPiece - 1;
+        pfs[j] = polyFuncs[j].value(newBounds[j] + 1) > ppf.polyFuncs[j].value(newBounds[j] + 1) ?
+                new AdvancedPolynomialFunction(polyFuncs[j].getCoefficients()) :
+                new AdvancedPolynomialFunction(ppf.polyFuncs[j].getCoefficients());
+        newBounds[newPiece] = Double.POSITIVE_INFINITY; // bounds [0, +inf)
+
+
+        //
+
+        for (k = 0; k < roots.length; ++k) {
+            if (roots[k] > lastBound) break;
+        }
+        for (l = k; l < roots.length; ++l) {
+            if (roots[l] >= nextBound) break;
+            v = (lastBound + roots[l]) / 2;
+            pfs[n] = polyFuncs[i].value(v) > ppf.polyFuncs[j].value(v) ?
+                    new AdvancedPolynomialFunction(polyFuncs[i].getCoefficients()) :
+                    new AdvancedPolynomialFunction(ppf.polyFuncs[j].getCoefficients());
+            lastBound = roots[l];
+            tmpBounds.add(lastBound);
+            ++n;
+        }
+        //
+
+        return new PiecewisePolynomialFunction(pfs, newBounds);
     }
 
     public AdvancedPolynomialFunction[] getPolynomialFunctions() {
