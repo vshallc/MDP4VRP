@@ -69,7 +69,11 @@ public class MDP {
         currentBestValueFunction.put(endState, terminatedValueFunction);
 
         while (!checkingQueue.isEmpty()) {
-            //
+            State currentState = checkingQueue.poll();
+            for (Arc arc : incomingArcs.get(currentState)) {
+                State preState = arc.getStartState();
+
+            }
         }
     }
 

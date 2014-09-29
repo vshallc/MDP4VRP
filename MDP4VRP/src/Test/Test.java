@@ -31,7 +31,7 @@ public class Test {
 //        State s3 = new State(n2, ts2);
 //        System.out.println("hc: " + s3.hashCode());
 
-        double[] c = new double[2];
+        double[] c = new double[3];
         AdvancedPolynomialFunction[] apf = new AdvancedPolynomialFunction[1];
         double[] b = new double[2];
 //        // f(x) = 5 + 4x + 3x^2 + 2x^3
@@ -50,15 +50,17 @@ public class Test {
 //        System.out.println(apf_shift.value(0));
 //        System.out.println(s2.value(0));
 
-        c[0] = 0;
-        c[1] = 1;
+        c[0] = 5;
+        c[1] = -4;
+        c[2] = 1;
         apf[0] = new AdvancedPolynomialFunction(c);
         b[0] = 0;
         b[1] = Double.POSITIVE_INFINITY;
         PiecewisePolynomialFunction ppf1 = new PiecewisePolynomialFunction(apf, b);
 
-        c[0] = 20;
-        c[1] = -1;
+        c[0] = 0;
+        c[1] = 4;
+        c[2] = -1;
         apf[0] = new AdvancedPolynomialFunction(c);
         PiecewisePolynomialFunction ppf2 = new PiecewisePolynomialFunction(apf, b);
 

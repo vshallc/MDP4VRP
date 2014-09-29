@@ -27,7 +27,7 @@ public class Execute implements Action{
     }
 
     @Override
-    public PiecewisePolynomialFunction nextValueFunc(PiecewisePolynomialFunction currentValueFunc) {
+    public PiecewisePolynomialFunction preValueFunc(PiecewisePolynomialFunction currentValueFunc) {
         // V'(t) = V(t + t') + R(t)
         return currentValueFunc.shift(task.getTimeCost()).add(task.getRewardFunc());
     }

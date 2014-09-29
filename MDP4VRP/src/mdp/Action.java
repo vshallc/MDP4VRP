@@ -8,5 +8,5 @@ import functional.PiecewiseStochasticPolynomialFunction;
  */
 public interface Action {
     public State perform(State state);
-    public PiecewisePolynomialFunction nextValueFunc(PiecewisePolynomialFunction currentValueFunc);
+    public PiecewisePolynomialFunction preValueFunc(PiecewisePolynomialFunction currentValueFunc);
 }
