@@ -9,61 +9,66 @@ import mdp.MDP;
 public class Test {
 
     public Test() {
-        double[] c;
-        AdvancedPolynomialFunction[] pf = new AdvancedPolynomialFunction[2];
-        StochasticPolynomialFunction[] spfs = new StochasticPolynomialFunction[2];
-        PiecewiseStochasticPolynomialFunction A;
-        c = new double[2];
-        c[0] = 50;
-        c[1] = -0.25 + 1;
-        pf[0] = new AdvancedPolynomialFunction(c);  // f1(x)=0
-        System.out.println("f1(x) = " + pf[0].toString());
-        c = new double[1];
-        c[0] = 20;
-//        c[1] = 4;
-        pf[1] = new AdvancedPolynomialFunction(c);  // f2(x)=0
-        System.out.println("f2(x) = " + pf[1].toString());
+        int[] id = {1, 2, 34, 5};
+        arrayTest(id);
+        for (int i = 0; i < id.length; ++i) {
+            System.out.println(id[i]);
+        }
+//        double[] c;
+//        AdvancedPolynomialFunction[] pf = new AdvancedPolynomialFunction[2];
+//        StochasticPolynomialFunction[] spfs = new StochasticPolynomialFunction[2];
+//        PiecewiseStochasticPolynomialFunction A;
 //        c = new double[2];
-//        c[0] = 5;
-//        c[1] = 4;
-//        pf[2] = new AdvancedPolynomialFunction(c);  // f3(x)=1
-//        System.out.println("f3(x) = " + pf[2].toString());
-
-        spfs[0] = new StochasticPolynomialFunction(pf);    // g(x,ξ)=ξ
-
-        c = new double[2];
-        c[0] = 25;
-        c[1] = 0 + 1;
-        pf[0] = new AdvancedPolynomialFunction(c);
-        c = new double[1];
-        c[0] = 20;
-        pf[1] = new AdvancedPolynomialFunction(c);
-
-        spfs[1] = new StochasticPolynomialFunction(pf);
-
-        double[] bounds = new double[3];
-        bounds[0] = 0;
-        bounds[1] = 100;
-        bounds[2] = Double.POSITIVE_INFINITY;
-        A = new PiecewiseStochasticPolynomialFunction(spfs, bounds);
-
-        System.out.println("g(x,ξ) = \n" + A.toString());
-
-        AdvancedPolynomialFunction[] vpf = new AdvancedPolynomialFunction[2];
-        c = new double[1];
-        c[0] = 0;
-        vpf[0] = new AdvancedPolynomialFunction(c);
-        c[0] = -1000;
-        vpf[1] = new AdvancedPolynomialFunction(c);
-        bounds = new double[3];
-        bounds[0] = 0;
-        bounds[1] = 300;
-        bounds[2] = Double.POSITIVE_INFINITY;
-        PiecewisePolynomialFunction V = new PiecewisePolynomialFunction(vpf, bounds);
-        System.out.println("V(t) = \n" + V.toString());
-
-        PiecewisePolynomialFunction V2 = MDP.integrationOnXiOfComposition_test(V, A);
-        System.out.println("V2(t) = \n" + V2.toString());
+//        c[0] = 50;
+//        c[1] = -0.25 + 1;
+//        pf[0] = new AdvancedPolynomialFunction(c);  // f1(x)=0
+//        System.out.println("f1(x) = " + pf[0].toString());
+//        c = new double[1];
+//        c[0] = 20;
+////        c[1] = 4;
+//        pf[1] = new AdvancedPolynomialFunction(c);  // f2(x)=0
+//        System.out.println("f2(x) = " + pf[1].toString());
+////        c = new double[2];
+////        c[0] = 5;
+////        c[1] = 4;
+////        pf[2] = new AdvancedPolynomialFunction(c);  // f3(x)=1
+////        System.out.println("f3(x) = " + pf[2].toString());
+//
+//        spfs[0] = new StochasticPolynomialFunction(pf);    // g(x,ξ)=ξ
+//
+//        c = new double[2];
+//        c[0] = 25;
+//        c[1] = 0 + 1;
+//        pf[0] = new AdvancedPolynomialFunction(c);
+//        c = new double[1];
+//        c[0] = 20;
+//        pf[1] = new AdvancedPolynomialFunction(c);
+//
+//        spfs[1] = new StochasticPolynomialFunction(pf);
+//
+//        double[] bounds = new double[3];
+//        bounds[0] = 0;
+//        bounds[1] = 100;
+//        bounds[2] = Double.POSITIVE_INFINITY;
+//        A = new PiecewiseStochasticPolynomialFunction(spfs, bounds);
+//
+//        System.out.println("g(x,ξ) = \n" + A.toString());
+//
+//        AdvancedPolynomialFunction[] vpf = new AdvancedPolynomialFunction[2];
+//        c = new double[1];
+//        c[0] = 0;
+//        vpf[0] = new AdvancedPolynomialFunction(c);
+//        c[0] = -1000;
+//        vpf[1] = new AdvancedPolynomialFunction(c);
+//        bounds = new double[3];
+//        bounds[0] = 0;
+//        bounds[1] = 300;
+//        bounds[2] = Double.POSITIVE_INFINITY;
+//        PiecewisePolynomialFunction V = new PiecewisePolynomialFunction(vpf, bounds);
+//        System.out.println("V(t) = \n" + V.toString());
+//
+//        PiecewisePolynomialFunction V2 = MDP.integrationOnXiOfComposition_test(V, A);
+//        System.out.println("V2(t) = \n" + V2.toString());
 
 //        PiecewisePolynomialFunction.PolynomialFunctionPiece[] prb = PiecewisePolynomialFunction.integrationForVOfAOnPieces(V, spfs[1], 100, Double.POSITIVE_INFINITY);
 //        System.out.println("test results:");
@@ -127,6 +132,13 @@ public class Test {
 //
 //        System.out.println("spf x=1 xi=0: " + spf.determinedValue(1, 0));
 //        System.out.println("spf x=1 xi=1: " + spf.determinedValue(1, 1));
+    }
+
+    public void arrayTest(int[] id) {
+        id = new int[5];
+        for (int i = 0; i < id.length; ++i) {
+            id[i] = i * 2;
+        }
     }
 
     public static void main(String[] args) {

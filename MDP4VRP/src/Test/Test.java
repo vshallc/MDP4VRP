@@ -63,8 +63,8 @@ public class Test {
         c[2] = -1;
         apf[0] = new AdvancedPolynomialFunction(c);
         PiecewisePolynomialFunction ppf2 = new PiecewisePolynomialFunction(apf, b);
-
-        PiecewisePolynomialFunction result = ppf1.max(ppf2);
+        int[] ids = null;
+        PiecewisePolynomialFunction result = ppf1.max(ppf2, ids);
 
         System.out.println("f1(x)=" + ppf1.toString());
         System.out.println("f2(x)=" + ppf2.toString());

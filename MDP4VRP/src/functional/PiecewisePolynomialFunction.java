@@ -68,7 +68,7 @@ public class PiecewisePolynomialFunction {
         return new PiecewisePolynomialFunction(pfs, bounds.clone());
     }
 
-    public PiecewisePolynomialFunction max(PiecewisePolynomialFunction ppf) {
+    public PiecewisePolynomialFunction max(PiecewisePolynomialFunction ppf, int[] selectedID) {
         if (bounds[0] != ppf.bounds[0] || bounds[pieces] != ppf.bounds[ppf.pieces])
             throw new IllegalArgumentException();
         double[] newBounds;
@@ -115,20 +115,31 @@ public class PiecewisePolynomialFunction {
         newBounds[0] = tmpBounds.get(0);
         newBounds[newPiece] = bounds[pieces]; // 'cause bounds[pieces] = ppf.bounds[ppf.pieces]
         AdvancedPolynomialFunction[] pfs = new AdvancedPolynomialFunction[newPiece];
+        selectedID = new int[newPiece];
         i = 0; j = 0;
         for (n = 1; n < newPiece; ++n) {
             newBounds[n] = tmpBounds.get(n);
             v = (newBounds[n - 1] + tmpBounds.get(n)) / 2;
-            pfs[n - 1] = polyFuncs[i].value(v) > ppf.polyFuncs[j].value(v) ?
-                    new AdvancedPolynomialFunction(polyFuncs[i].getCoefficients()) :
-                    new AdvancedPolynomialFunction(ppf.polyFuncs[j].getCoefficients());
+            if (polyFuncs[i].value(v) > ppf.polyFuncs[j].value(v)) {
+                pfs[n - 1] = new AdvancedPolynomialFunction(polyFuncs[i].getCoefficients());
+                selectedID[n - 1] = 0;
+            }
+            else {
+                pfs[n - 1] = new AdvancedPolynomialFunction(ppf.polyFuncs[j].getCoefficients());
+                selectedID[n - 1] = 1;
+            }
             if (bounds[i] >= newBounds[n]) ++i;
             if (ppf.bounds[j] >= newBounds[n]) ++j;
         }
         v = bounds[pieces] == Double.POSITIVE_INFINITY ? newBounds[newPiece - 1] + 1 : (newBounds[newPiece - 1] + bounds[pieces]) / 2;
-        pfs[newPiece - 1] = polyFuncs[i].value(v) > ppf.polyFuncs[j].value(v) ?
-                new AdvancedPolynomialFunction(polyFuncs[i].getCoefficients()) :
-                new AdvancedPolynomialFunction(ppf.polyFuncs[j].getCoefficients());
+        if (polyFuncs[i].value(v) > ppf.polyFuncs[j].value(v)) {
+            pfs[newPiece - 1] = new AdvancedPolynomialFunction(polyFuncs[i].getCoefficients());
+            selectedID[newPiece - 1] = 0;
+        }
+        else {
+            pfs[newPiece - 1] = new AdvancedPolynomialFunction(ppf.polyFuncs[j].getCoefficients());
+            selectedID[newPiece - 1] = 1;
+        }
 
         return new PiecewisePolynomialFunction(pfs, newBounds);
     }
