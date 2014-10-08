@@ -76,6 +76,84 @@ public class MDP {
             }
         }
     }
+    public static PiecewisePolynomialFunctionAndSelectedIndices max(PiecewisePolynomialFunction ppf1, PiecewisePolynomialFunction ppf2) {
+        double[] bounds1 = ppf1.getBounds();
+        double[] bounds2 = ppf2.getBounds();
+        int pieces1 = ppf1.getPieceNum();
+        int pieces2 = ppf2.getPieceNum();
+        if (bounds1[0] != bounds2[0] || bounds1[pieces1] != bounds2[pieces2])
+            throw new IllegalArgumentException();
+        double[] newBounds;
+        int newPiece;
+        int n, i, j, k, l;
+        List<Double> tmpBounds = new ArrayList<Double>();
+//        tmpBounds.add(bounds[0]);
+        n = 0; i = 0; j = 0;
+        double lastBound = bounds1[0], nextBound;
+        double[] roots;
+        double v;
+        while (i < pieces1 && j < pieces2) {
+            tmpBounds.add(lastBound);
+            if (bounds1[i + 1] < bounds2[j + 1]) { // System.out.println("<");
+                nextBound = bounds1[i + 1];
+                roots = ppf1.getPolynomialFunction(i).subtract(ppf2.getPolynomialFunction(j)).solve(tmpBounds.get(n), nextBound);
+                ++i;
+            }
+            else if (bounds2[j + 1] < bounds1[i + 1]) { // System.out.println(">");
+                nextBound = bounds2[j + 1];
+                roots = ppf1.getPolynomialFunction(i).subtract(ppf2.getPolynomialFunction(j)).solve(tmpBounds.get(n), nextBound);
+                ++j;
+            } else { // System.out.println("=");
+                nextBound = bounds1[i + 1];
+                roots = ppf1.getPolynomialFunction(i).subtract(ppf2.getPolynomialFunction(j)).solve(tmpBounds.get(n), nextBound);
+                ++i;
+                ++j;
+            }
+            for (double r : roots) {
+                if (r > lastBound && r < nextBound) {
+                    tmpBounds.add(r);
+                    ++n;
+                }
+            }
+            lastBound = nextBound;
+            ++n;
+        }
+//        for (Double b : tmpBounds) {
+//            System.out.println("tmp: " + b);
+//        }
+//        System.out.println(n);
+        newPiece = n;
+        newBounds = new double[n + 1];
+        newBounds[0] = tmpBounds.get(0);
+        newBounds[newPiece] = bounds1[pieces1]; // 'cause bounds[pieces] = ppf.bounds[ppf.pieces]
+        AdvancedPolynomialFunction[] pfs = new AdvancedPolynomialFunction[newPiece];
+        int[] selectedIDs = new int[newPiece];
+        i = 0; j = 0;
+        for (n = 1; n < newPiece; ++n) {
+            newBounds[n] = tmpBounds.get(n);
+            v = (newBounds[n - 1] + tmpBounds.get(n)) / 2;
+            if (ppf1.getPolynomialFunction(i).value(v) > ppf2.getPolynomialFunction(j).value(v)) {
+                pfs[n - 1] = new AdvancedPolynomialFunction(ppf1.getPolynomialFunction(i).getCoefficients());
+                selectedIDs[n - 1] = 0;
+            }
+            else {
+                pfs[n - 1] = new AdvancedPolynomialFunction(ppf2.getPolynomialFunction(j).getCoefficients());
+                selectedIDs[n - 1] = 1;
+            }
+            if (bounds1[i] >= newBounds[n]) ++i;
+            if (bounds2[j] >= newBounds[n]) ++j;
+        }
+        v = bounds1[pieces1] == Double.POSITIVE_INFINITY ? newBounds[newPiece - 1] + 1 : (newBounds[newPiece - 1] + bounds1[pieces1]) / 2;
+        if (ppf1.getPolynomialFunction(i).value(v) > ppf2.getPolynomialFunction(j).value(v)) {
+            pfs[newPiece - 1] = new AdvancedPolynomialFunction(ppf1.getPolynomialFunction(i).getCoefficients());
+            selectedIDs[newPiece - 1] = 0;
+        }
+        else {
+            pfs[newPiece - 1] = new AdvancedPolynomialFunction(ppf2.getPolynomialFunction(j).getCoefficients());
+            selectedIDs[newPiece - 1] = 1;
+        }
+        return new PiecewisePolynomialFunctionAndSelectedIndices(new PiecewisePolynomialFunction(pfs, newBounds), selectedIDs);
+    }
 
     public static PiecewisePolynomialFunction integrationOnXiOfComposition_test(PiecewisePolynomialFunction V, PiecewiseStochasticPolynomialFunction A) {
         // only for calculating: int f(x)*V(A(t)) dx; x:0~1; A(t)=t+g(t); g>0 -> t+g(t)>t
@@ -201,6 +279,24 @@ public class MDP {
 
         public double[] getBounds() {
             return bounds;
+        }
+    }
+
+    private static class PiecewisePolynomialFunctionAndSelectedIndices {
+        private PiecewisePolynomialFunction ppf;
+        private int[] ids;
+
+        public PiecewisePolynomialFunctionAndSelectedIndices(PiecewisePolynomialFunction ppf, int[] selectedIDs) {
+            this.ppf = ppf;
+            this.ids = selectedIDs;
+        }
+
+        public PiecewisePolynomialFunction getPiecewisePolynomialFunction() {
+            return ppf;
+        }
+
+        public int[] getSelectedIDs() {
+            return ids;
         }
     }
 }
