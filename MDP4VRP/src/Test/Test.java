@@ -3,6 +3,7 @@ package Test;
 import functional.AdvancedPolynomialFunction;
 import functional.PiecewisePolynomialFunction;
 import mdp.Arc;
+import mdp.MDP;
 import mdp.Move;
 import mdp.State;
 import vrp.Node;
@@ -63,8 +64,7 @@ public class Test {
         c[2] = -1;
         apf[0] = new AdvancedPolynomialFunction(c);
         PiecewisePolynomialFunction ppf2 = new PiecewisePolynomialFunction(apf, b);
-        int[] ids = null;
-        PiecewisePolynomialFunction result = ppf1.max(ppf2, ids);
+        PiecewisePolynomialFunction result = MDP.max(ppf1, ppf2).getPiecewisePolynomialFunction();
 
         System.out.println("f1(x)=" + ppf1.toString());
         System.out.println("f2(x)=" + ppf2.toString());

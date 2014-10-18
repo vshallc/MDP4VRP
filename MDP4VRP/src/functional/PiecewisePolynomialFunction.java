@@ -16,7 +16,7 @@ public class PiecewisePolynomialFunction {
 
     public PiecewisePolynomialFunction(AdvancedPolynomialFunction[] polyFuncs, double[] bounds) {
         this.polyFuncs = Arrays.copyOf(polyFuncs, polyFuncs.length);
-        this.bounds = bounds;
+        System.arraycopy(bounds, 0, this.bounds, 0, bounds.length);
         pieces = polyFuncs.length;
     }
 

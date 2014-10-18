@@ -60,16 +60,16 @@ public class MDP {
     }
 
     public void assignValueFunction() {
-        Queue<State> checkingQueue = new LinkedList<State>();
+        Stack<State> checkingStack = new Stack<State>();
         Set<State> checkedStates = new HashSet<State>();
-        checkingQueue.add(endState);
+        checkingStack.push(endState);
         Map<State, Set<Arc>> checkedArcs = new HashMap<State, Set<Arc>>();
         Map<State, PiecewisePolynomialFunction> currentBestValueFunction = new HashMap<State, PiecewisePolynomialFunction>();
         checkedArcs.put(endState, new HashSet<Arc>());
         currentBestValueFunction.put(endState, terminatedValueFunction);
 
-        while (!checkingQueue.isEmpty()) {
-            State currentState = checkingQueue.poll();
+        while (!checkingStack.empty()) {
+            State currentState = checkingStack.pop();
             for (Arc arc : incomingArcs.get(currentState)) {
                 State preState = arc.getStartState();
                 //
@@ -282,7 +282,7 @@ public class MDP {
         }
     }
 
-    private static class PiecewisePolynomialFunctionAndSelectedIndices {
+    public static class PiecewisePolynomialFunctionAndSelectedIndices {
         private PiecewisePolynomialFunction ppf;
         private int[] ids;
 
