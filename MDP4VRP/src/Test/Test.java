@@ -2,10 +2,7 @@ package Test;
 
 import functional.AdvancedPolynomialFunction;
 import functional.PiecewisePolynomialFunction;
-import mdp.Arc;
-import mdp.MDP;
-import mdp.Move;
-import mdp.State;
+import mdp.*;
 import vrp.Node;
 import vrp.Task;
 
@@ -32,9 +29,9 @@ public class Test {
 //        State s3 = new State(n2, ts2);
 //        System.out.println("hc: " + s3.hashCode());
 
-        double[] c = new double[3];
-        AdvancedPolynomialFunction[] apf = new AdvancedPolynomialFunction[1];
-        double[] b = new double[2];
+//        double[] c = new double[3];
+//        AdvancedPolynomialFunction[] apf = new AdvancedPolynomialFunction[1];
+//        double[] b = new double[2];
 //        // f(x) = 5 + 4x + 3x^2 + 2x^3
 //        c[0] = 5;
 //        c[1] = 4;
@@ -51,25 +48,67 @@ public class Test {
 //        System.out.println(apf_shift.value(0));
 //        System.out.println(s2.value(0));
 
-        c[0] = 5;
-        c[1] = -4;
-        c[2] = 1;
-        apf[0] = new AdvancedPolynomialFunction(c);
-        b[0] = 0;
-        b[1] = Double.POSITIVE_INFINITY;
-        PiecewisePolynomialFunction ppf1 = new PiecewisePolynomialFunction(apf, b);
+//        c[0] = 5;
+//        c[1] = -4;
+//        c[2] = 1;
+//        apf[0] = new AdvancedPolynomialFunction(c);
+//        b[0] = 0;
+//        b[1] = Double.POSITIVE_INFINITY;
+//        PiecewisePolynomialFunction ppf1 = new PiecewisePolynomialFunction(apf, b);
+//
+//        c[0] = 0;
+//        c[1] = 4;
+//        c[2] = -1;
+//        apf[0] = new AdvancedPolynomialFunction(c);
+//        PiecewisePolynomialFunction ppf2 = new PiecewisePolynomialFunction(apf, b);
+//        PiecewisePolynomialFunction result = MDP.max(ppf1, ppf2).getPiecewisePolynomialFunction();
+//
+//        System.out.println("f1(x)=" + ppf1.toString());
+//        System.out.println("f2(x)=" + ppf2.toString());
+//        System.out.println(result.toString());
 
-        c[0] = 0;
-        c[1] = 4;
-        c[2] = -1;
-        apf[0] = new AdvancedPolynomialFunction(c);
-        PiecewisePolynomialFunction ppf2 = new PiecewisePolynomialFunction(apf, b);
-        PiecewisePolynomialFunction result = MDP.max(ppf1, ppf2).getPiecewisePolynomialFunction();
 
-        System.out.println("f1(x)=" + ppf1.toString());
-        System.out.println("f2(x)=" + ppf2.toString());
-        System.out.println(result.toString());
+        Action[] actions1 = new Action[1];
+        double[] bounds1 = new double[2];
+        actions1[0] = new DoNothing(0);
+//        actions1[1] = new DoNothing(1);
+//        actions1[2] = new DoNothing(2);
+        bounds1[0] = 0.0;
+//        bounds1[1] = 100.0;
+//        bounds1[2] = 200.0;
+        bounds1[1] = Double.POSITIVE_INFINITY;
 
+        Action[] actions2 = new Action[1];
+        double[] bounds2 = new double[2];
+        actions2[0] = new DoNothing(3);
+//        actions2[1] = new DoNothing(4);
+        bounds2[0] = 0;
+//        bounds2[1] = 150;
+        bounds2[1] = Double.POSITIVE_INFINITY;
+
+
+        Policy p1 = new Policy(actions1, bounds1);
+        Policy p2 = new Policy(actions2, bounds2);
+        double[] ubounds = new double[3];
+        int[] id = new int[2];
+        ubounds[0] = 0;
+        ubounds[1] = 150;
+        ubounds[2] = Double.POSITIVE_INFINITY;
+        id[0] = 0;
+        id[1] = 1;
+
+        Policy pu = Policy.union(p1, p2, ubounds, id);
+        System.out.println("actions:");
+        for (Action a : pu.getActions()) {
+            System.out.print(((DoNothing) a).getId() + ", ");
+        }
+        System.out.println();
+
+        System.out.println("bounds:");
+        for (double d : pu.getBounds()) {
+            System.out.print(d + ", ");
+        }
+        System.out.println();
     }
 
     public static void main(String[] args) {

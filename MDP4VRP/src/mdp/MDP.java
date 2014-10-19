@@ -65,18 +65,29 @@ public class MDP {
         checkingStack.push(endState);
         Map<State, Set<Arc>> checkedArcs = new HashMap<State, Set<Arc>>();
         Map<State, PiecewisePolynomialFunction> currentBestValueFunction = new HashMap<State, PiecewisePolynomialFunction>();
+        Map<State, Policy> currentBestPolicy = new HashMap<State, Policy>();
         checkedArcs.put(endState, new HashSet<Arc>());
         currentBestValueFunction.put(endState, terminatedValueFunction);
+        currentBestPolicy.put(endState, null);
 
         while (!checkingStack.empty()) {
             State currentState = checkingStack.pop();
             for (Arc arc : incomingArcs.get(currentState)) {
                 State preState = arc.getStartState();
-                //
+                PiecewisePolynomialFunction preValueFunc = arc.getAction().preValueFunc(currentBestValueFunction.get(currentState));
+                Policy prePolicy = Policy.SimplePolicy(arc.getAction());
+                if (currentBestValueFunction.containsKey(preState)) {
+                    PiecewisePolynomialFunctionAndPolicy ppfap = max(preValueFunc, currentBestValueFunction.get(preState), prePolicy, currentBestPolicy.get(preState));
+                    currentBestValueFunction.put(preState, ppfap.getPiecewisePolynomialFunction());
+                    currentBestPolicy.put(preState, ppfap.getPolicy() );
+                } else {
+                    currentBestValueFunction.put(preState, preValueFunc);
+                    currentBestPolicy.put(preState, prePolicy);
+                }
             }
         }
     }
-    public static PiecewisePolynomialFunctionAndSelectedIndices max(PiecewisePolynomialFunction ppf1, PiecewisePolynomialFunction ppf2) {
+    public static PiecewisePolynomialFunctionAndPolicy max(PiecewisePolynomialFunction ppf1, PiecewisePolynomialFunction ppf2, Policy policy1, Policy policy2) {
         double[] bounds1 = ppf1.getBounds();
         double[] bounds2 = ppf2.getBounds();
         int pieces1 = ppf1.getPieceNum();
@@ -85,9 +96,8 @@ public class MDP {
             throw new IllegalArgumentException();
         double[] newBounds;
         int newPiece;
-        int n, i, j, k, l;
+        int n, i, j;
         List<Double> tmpBounds = new ArrayList<Double>();
-//        tmpBounds.add(bounds[0]);
         n = 0; i = 0; j = 0;
         double lastBound = bounds1[0], nextBound;
         double[] roots;
@@ -118,10 +128,6 @@ public class MDP {
             lastBound = nextBound;
             ++n;
         }
-//        for (Double b : tmpBounds) {
-//            System.out.println("tmp: " + b);
-//        }
-//        System.out.println(n);
         newPiece = n;
         newBounds = new double[n + 1];
         newBounds[0] = tmpBounds.get(0);
@@ -152,11 +158,11 @@ public class MDP {
             pfs[newPiece - 1] = new AdvancedPolynomialFunction(ppf2.getPolynomialFunction(j).getCoefficients());
             selectedIDs[newPiece - 1] = 1;
         }
-        return new PiecewisePolynomialFunctionAndSelectedIndices(new PiecewisePolynomialFunction(pfs, newBounds), selectedIDs);
+        return new PiecewisePolynomialFunctionAndPolicy(new PiecewisePolynomialFunction(pfs, newBounds), Policy.union(policy1, policy2, newBounds, selectedIDs));
     }
 
     public static PiecewisePolynomialFunction integrationOnXiOfComposition_test(PiecewisePolynomialFunction V, PiecewiseStochasticPolynomialFunction A) {
-        // only for calculating: int f(x)*V(A(t)) dx; x:0~1; A(t)=t+g(t); g>0 -> t+g(t)>t
+        // only for calculating: Int f(x)*V(A(t)) dx; x:0~1; A(t)=t+g(t); g>0 -> t+g(t)>t
         // A(t) arrive time (start on t)
         // A'(t)>=0
 
@@ -282,21 +288,26 @@ public class MDP {
         }
     }
 
-    public static class PiecewisePolynomialFunctionAndSelectedIndices {
+    public static class PiecewisePolynomialFunctionAndPolicy {
         private PiecewisePolynomialFunction ppf;
-        private int[] ids;
+        private Policy policy;
+//        private int[] ids;
 
-        public PiecewisePolynomialFunctionAndSelectedIndices(PiecewisePolynomialFunction ppf, int[] selectedIDs) {
+        public PiecewisePolynomialFunctionAndPolicy(PiecewisePolynomialFunction ppf, Policy policy) {
             this.ppf = ppf;
-            this.ids = selectedIDs;
+            this.policy = policy;
         }
 
         public PiecewisePolynomialFunction getPiecewisePolynomialFunction() {
             return ppf;
         }
 
-        public int[] getSelectedIDs() {
-            return ids;
+        public Policy getPolicy() {
+            return policy;
         }
+
+//        public int[] getSelectedIDs() {
+//            return ids;
+//        }
     }
 }
