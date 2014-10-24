@@ -60,34 +60,77 @@ public class MDP {
     }
 
     public void assignValueFunction() {
-        Stack<State> checkingStack = new Stack<State>();
+        LinkedList<Arc> checkingList = new LinkedList<Arc>();
+        for (Arc arc : incomingArcs.get(endState)) {
+            checkingList.addLast(arc);
+        }
+
+//        Stack<State> checkingStack = new Stack<State>();
+//        checkingStack.push(endState);
         Set<State> checkedStates = new HashSet<State>();
-        checkingStack.push(endState);
-        Map<State, Set<Arc>> checkedArcs = new HashMap<State, Set<Arc>>();
+        Map<State, Set<Arc>> unCheckedArcs = new HashMap<State, Set<Arc>>(); // Save arcs that have not been moved to checkingList
+        unCheckedArcs.put(endState, new HashSet<Arc>()); // 'Cause arcs to endState have been moved to checkingList
+
         Map<State, PiecewisePolynomialFunction> currentBestValueFunction = new HashMap<State, PiecewisePolynomialFunction>();
         Map<State, Policy> currentBestPolicy = new HashMap<State, Policy>();
-        checkedArcs.put(endState, new HashSet<Arc>());
         currentBestValueFunction.put(endState, terminatedValueFunction);
         currentBestPolicy.put(endState, null);
 
-        while (!checkingStack.empty()) {
-            State currentState = checkingStack.pop();
-            for (Arc arc : incomingArcs.get(currentState)) {
-                State preState = arc.getStartState();
-                PiecewisePolynomialFunction preValueFunc = arc.getAction().preValueFunc(currentBestValueFunction.get(currentState));
-                Policy prePolicy = Policy.SimplePolicy(arc.getAction());
-                if (currentBestValueFunction.containsKey(preState)) {
-                    PiecewisePolynomialFunctionAndPolicy ppfap = max(preValueFunc, currentBestValueFunction.get(preState), prePolicy, currentBestPolicy.get(preState));
-                    currentBestValueFunction.put(preState, ppfap.getPiecewisePolynomialFunction());
-                    currentBestPolicy.put(preState, ppfap.getPolicy() );
-                } else {
-                    currentBestValueFunction.put(preState, preValueFunc);
-                    currentBestPolicy.put(preState, prePolicy);
-                }
+        while (!checkingList.isEmpty()) {
+            Arc arc = checkingList.pollLast();
+//            State currentState = checkingStack.pop();
+//            for (Arc arc : incomingArcs.get(currentState)) {
+            State preState = arc.getStartState();
+            PiecewisePolynomialFunction preValueFunc = arc.getAction().preValueFunc(currentBestValueFunction.get(arc.getEndState()));
+            Policy prePolicy = Policy.SimplePolicy(arc.getAction());
+            if (currentBestValueFunction.containsKey(preState)) {
+                PiecewisePolynomialFunctionAndPolicy ppfap = max(preValueFunc, currentBestValueFunction.get(preState), prePolicy, currentBestPolicy.get(preState));
+                currentBestValueFunction.put(preState, ppfap.getPiecewisePolynomialFunction());
+                currentBestPolicy.put(preState, ppfap.getPolicy());
+            } else {
+                currentBestValueFunction.put(preState, preValueFunc);
+                currentBestPolicy.put(preState, prePolicy);
             }
+//            }
         }
     }
+
+    public static void moduleSolver(Map<State, PiecewisePolynomialFunctionAndPolicy> stateValueFuncMap, ConcurrentMap<State, List<Arc>> incomingArcs) {
+//        State[] states = stateValueFuncMap.keySet().toArray(new State[stateValueFuncMap.size()]);
+        LinkedHashSet<State> iteratorSet = new LinkedHashSet<State>();
+        LinkedHashSet<State> nextIteratorSet = new LinkedHashSet<State>();
+        for (State state : stateValueFuncMap.keySet()) {
+            iteratorSet.add(state);
+        }
+        while (!iteratorSet.isEmpty()) {
+            for (State currentState : iteratorSet) {
+                for (Arc arc : incomingArcs.get(currentState)) {
+                    State preState = arc.getStartState();
+                    PiecewisePolynomialFunctionAndPolicy prePPFAP = stateValueFuncMap.get(preState);
+                    PiecewisePolynomialFunction preValueFunc = arc.getAction().preValueFunc(prePPFAP.getPiecewisePolynomialFunction());
+                    PiecewisePolynomialFunctionAndPolicy maxResult = MDP.max(prePPFAP, new PiecewisePolynomialFunctionAndPolicy(preValueFunc, Policy.SimplePolicy(arc.getAction())));
+                    if (!maxResult.equals(prePPFAP)) {
+                        stateValueFuncMap.put(preState, maxResult);
+                        nextIteratorSet.add(preState);
+                    }
+                }
+            }
+            iteratorSet = nextIteratorSet;
+            nextIteratorSet = new LinkedHashSet<State>();
+        }
+    }
+
+    public static PiecewisePolynomialFunctionAndPolicy max(PiecewisePolynomialFunctionAndPolicy ppfap1, PiecewisePolynomialFunctionAndPolicy ppfap2) {
+        return MDP.max(ppfap1.getPiecewisePolynomialFunction(), ppfap2.getPiecewisePolynomialFunction(), ppfap1.getPolicy(), ppfap2.getPolicy());
+    }
+
     public static PiecewisePolynomialFunctionAndPolicy max(PiecewisePolynomialFunction ppf1, PiecewisePolynomialFunction ppf2, Policy policy1, Policy policy2) {
+        if (ppf1 == null) {
+            return new PiecewisePolynomialFunctionAndPolicy(ppf2, policy2);
+        }
+        if (ppf2 == null) {
+            return new PiecewisePolynomialFunctionAndPolicy(ppf1, policy1);
+        }
         double[] bounds1 = ppf1.getBounds();
         double[] bounds2 = ppf2.getBounds();
         int pieces1 = ppf1.getPieceNum();
@@ -98,7 +141,9 @@ public class MDP {
         int newPiece;
         int n, i, j;
         List<Double> tmpBounds = new ArrayList<Double>();
-        n = 0; i = 0; j = 0;
+        n = 0;
+        i = 0;
+        j = 0;
         double lastBound = bounds1[0], nextBound;
         double[] roots;
         double v;
@@ -108,8 +153,7 @@ public class MDP {
                 nextBound = bounds1[i + 1];
                 roots = ppf1.getPolynomialFunction(i).subtract(ppf2.getPolynomialFunction(j)).solve(tmpBounds.get(n), nextBound);
                 ++i;
-            }
-            else if (bounds2[j + 1] < bounds1[i + 1]) { // System.out.println(">");
+            } else if (bounds2[j + 1] < bounds1[i + 1]) { // System.out.println(">");
                 nextBound = bounds2[j + 1];
                 roots = ppf1.getPolynomialFunction(i).subtract(ppf2.getPolynomialFunction(j)).solve(tmpBounds.get(n), nextBound);
                 ++j;
@@ -134,15 +178,15 @@ public class MDP {
         newBounds[newPiece] = bounds1[pieces1]; // 'cause bounds[pieces] = ppf.bounds[ppf.pieces]
         AdvancedPolynomialFunction[] pfs = new AdvancedPolynomialFunction[newPiece];
         int[] selectedIDs = new int[newPiece];
-        i = 0; j = 0;
+        i = 0;
+        j = 0;
         for (n = 1; n < newPiece; ++n) {
             newBounds[n] = tmpBounds.get(n);
             v = (newBounds[n - 1] + tmpBounds.get(n)) / 2;
             if (ppf1.getPolynomialFunction(i).value(v) > ppf2.getPolynomialFunction(j).value(v)) {
                 pfs[n - 1] = new AdvancedPolynomialFunction(ppf1.getPolynomialFunction(i).getCoefficients());
                 selectedIDs[n - 1] = 0;
-            }
-            else {
+            } else {
                 pfs[n - 1] = new AdvancedPolynomialFunction(ppf2.getPolynomialFunction(j).getCoefficients());
                 selectedIDs[n - 1] = 1;
             }
@@ -153,8 +197,7 @@ public class MDP {
         if (ppf1.getPolynomialFunction(i).value(v) > ppf2.getPolynomialFunction(j).value(v)) {
             pfs[newPiece - 1] = new AdvancedPolynomialFunction(ppf1.getPolynomialFunction(i).getCoefficients());
             selectedIDs[newPiece - 1] = 0;
-        }
-        else {
+        } else {
             pfs[newPiece - 1] = new AdvancedPolynomialFunction(ppf2.getPolynomialFunction(j).getCoefficients());
             selectedIDs[newPiece - 1] = 1;
         }

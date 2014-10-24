@@ -6,10 +6,7 @@ import mdp.*;
 import vrp.Node;
 import vrp.Task;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by Xiaoxi Wang on 7/10/14.
@@ -111,7 +108,57 @@ public class Test {
         System.out.println();
     }
 
+    public Test(int x) {
+        LinkedHashSet<Integer> integers = new LinkedHashSet<Integer>();
+        LinkedHashSet<Integer> integers2 = new LinkedHashSet<Integer>();
+        for (int i = 0; i < 5; ++i) {
+            integers.add(i * x);
+            integers2.add(i * x * 2);
+        }
+
+        for (int i : integers) {
+            System.out.println(i);
+        }
+        System.out.println("==============");
+
+        integers = integers2;
+        integers2 = new LinkedHashSet<Integer>();
+        for (int i = 10; i < 15; ++i) {
+            integers2.add(i * x * 2);
+        }
+        for (int i : integers) {
+            System.out.println(i);
+        }
+    }
+
+    public Test(String s) {
+        Map<Integer, Double> map = new LinkedHashMap<Integer, Double>();
+        for (int i = 0; i < 5; ++i) {
+            map.put(i, i / 10.0);
+        }
+        for (int i : map.keySet()) {
+            System.out.println(i + ":" + map.get(i));
+        }
+        Map<Integer, Double> newMap = testMap(map);
+        System.out.println("========old=======");
+        for (int i : map.keySet()) {
+            System.out.println(i + ":" + map.get(i));
+        }
+        System.out.println("========new=======");
+        for (int i : newMap.keySet()) {
+            System.out.println(i + ":" + newMap.get(i));
+        }
+    }
+
+    public static Map<Integer, Double> testMap(Map<Integer, Double> map) {
+        for (Integer i : map.keySet()) {
+            double d = map.get(i);
+            map.put(i, d * 10);
+        }
+        return map;
+    }
+
     public static void main(String[] args) {
-        new Test();
+        new Test("x");
     }
 }
