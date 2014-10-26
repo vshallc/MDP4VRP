@@ -14,6 +14,10 @@ public class Move implements Action{
     public Move(Edge edge) {
         this.edge = edge;
     }
+
+    public String toString() {
+        return "move(" + edge.getStartNode().getID() + "," + edge.getEndNode().getID() + ")";
+    }
     @Override
     public State perform(State state) {
         if (state.getLocation().equals(edge.getStartNode()))
@@ -23,6 +27,7 @@ public class Move implements Action{
 
     @Override
     public PiecewisePolynomialFunction preValueFunc(PiecewisePolynomialFunction currentValueFunc) {
+//        System.out.println("^^^:\n"+ currentValueFunc.toString());
         return MDP.integrationOnXiOfComposition_test(currentValueFunc, edge.getTimeCostFunction());
     }
 }

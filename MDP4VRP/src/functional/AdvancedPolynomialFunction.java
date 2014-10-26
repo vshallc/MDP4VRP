@@ -481,6 +481,11 @@ public class AdvancedPolynomialFunction extends PolynomialFunction {
         return new AdvancedPolynomialFunction(c);
     }
 
+    public static AdvancedPolynomialFunction N(double n) {
+        double[] c = {n};
+        return new AdvancedPolynomialFunction(c);
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;

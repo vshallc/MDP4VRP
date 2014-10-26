@@ -17,6 +17,10 @@ public class Abandon implements Action{
         this.task = task;
     }
 
+    public String toString() {
+        return "abandon(" + task.getID() + ")";
+    }
+
     @Override
     public State perform(State state) {
         Set<Task> newTaskSet = new HashSet<Task>(state.getTaskSet());

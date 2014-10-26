@@ -13,8 +13,10 @@ import java.util.Set;
  * Created by Xiaoxi Wang on 9/3/14.
  */
 public class State {
+//    private int id;
     private Node location;
     private Set<Task> taskSet = new HashSet<Task>();
+
 
 //    private Set<Arc> incomingArcs = new HashSet<Arc>();
 //    private Set<Arc> outgoingArcs = new HashSet<Arc>();
@@ -22,9 +24,14 @@ public class State {
 //    private boolean isActionsAssigned = false;
 
     public State(Node location, Set<Task> taskSet) {
+//        this.id = id;
         this.location = location;
-        this.taskSet = taskSet;
+        this.taskSet.addAll(taskSet);
     }
+
+//    public int getID() {
+//        return this.id;
+//    }
 
     public List<Action> getPossibleActions() {
         List<Action> possibleActions = new ArrayList<Action>();
@@ -32,7 +39,7 @@ public class State {
         // Move
         for (Edge e : location.getOutgoingEdges()) possibleActions.add(new Move(e));
         // Execute
-        for (Task t : location.getTasks()) possibleActions.add(new Execute(t));
+        for (Task t : location.getTasks()) if (taskSet.contains(t)) possibleActions.add(new Execute(t));
         // Abandon
         for (Task t : taskSet) possibleActions.add(new Abandon(t));
         return possibleActions;
@@ -46,6 +53,26 @@ public class State {
         Set<Task> result = new HashSet<Task>();
         result.addAll(taskSet);
         return result;
+    }
+
+    public String toString() {
+        StringBuilder s = new StringBuilder();
+        s.append('(');
+        s.append(this.location.getID());
+        s.append(',');
+        if (taskSet.isEmpty()) {
+            s.append("null");
+        } else {
+            s.append('{');
+            for (Task task : taskSet) {
+                s.append(task.getID());
+                s.append(',');
+            }
+            s.deleteCharAt(s.length() - 1);
+            s.append('}');
+        }
+        s.append(')');
+        return s.toString();
     }
 
     @Override

@@ -17,6 +17,10 @@ public class Execute implements Action{
         this.task = task;
     }
 
+    public String toString() {
+        return "execute(" + task.getID() + ")";
+    }
+
     @Override
     public State perform(State state) {
         Set<Task> newTaskSet = new HashSet<Task>(state.getTaskSet());

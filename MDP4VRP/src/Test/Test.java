@@ -2,7 +2,10 @@ package Test;
 
 import functional.AdvancedPolynomialFunction;
 import functional.PiecewisePolynomialFunction;
+import functional.PiecewiseStochasticPolynomialFunction;
+import functional.StochasticPolynomialFunction;
 import mdp.*;
+import vrp.Edge;
 import vrp.Node;
 import vrp.Task;
 
@@ -14,6 +17,108 @@ import java.util.*;
 public class Test {
 
     public Test() {
+        // VRP setup
+        Node[] nodes = new Node[3];
+        for (int i = 0; i < 3; ++i) {
+            nodes[i] = new Node(i);
+        }
+        Edge[][] edges = new Edge[3][3];
+        PiecewiseStochasticPolynomialFunction[][] movingTimeCost = new PiecewiseStochasticPolynomialFunction[3][3];
+        StochasticPolynomialFunction[] spf = new StochasticPolynomialFunction[2];
+        double[] bounds;
+        AdvancedPolynomialFunction[] apfs = new AdvancedPolynomialFunction[2];
+        double[] c = new double[2];
+        c[0] = 10;
+        c[1] = 1/3.0;
+        apfs[0] = new AdvancedPolynomialFunction(c); // 1/3t + 10
+        apfs[1] = AdvancedPolynomialFunction.N(20);
+        spf[0] = new StochasticPolynomialFunction(apfs); // 1/3t + 10 + 20xi
+        apfs = new AdvancedPolynomialFunction[2];
+        apfs[0] = AdvancedPolynomialFunction.N(50);
+        apfs[1] = AdvancedPolynomialFunction.N(20);
+        spf[1] = new StochasticPolynomialFunction(apfs); // 50 + 20xi
+        bounds = new double[3];
+        bounds[0] = 0;
+        bounds[1] = 300;
+        bounds[2] = Double.POSITIVE_INFINITY;
+        movingTimeCost[0][1] = new PiecewiseStochasticPolynomialFunction(spf, bounds);
+        movingTimeCost[1][0] = new PiecewiseStochasticPolynomialFunction(spf, bounds);
+
+        spf = new StochasticPolynomialFunction[2];
+        apfs = new AdvancedPolynomialFunction[2];
+        c = new double[2];
+        c[0] = 50;
+        c[1] = -0.25;
+        apfs[0] = new AdvancedPolynomialFunction(c);
+        apfs[1] = AdvancedPolynomialFunction.N(20);
+        spf[0] = new StochasticPolynomialFunction(apfs); // -1/4 + 50 + 20xi
+        apfs = new AdvancedPolynomialFunction[2];
+        apfs[0] = AdvancedPolynomialFunction.N(25);
+        apfs[1] = AdvancedPolynomialFunction.N(20);
+        spf[1] = new StochasticPolynomialFunction(apfs); // 25 + 20xi
+        bounds = new double[3];
+        bounds[0] = 0;
+        bounds[1] = 100;
+        bounds[2] = Double.POSITIVE_INFINITY;
+        movingTimeCost[0][2] = new PiecewiseStochasticPolynomialFunction(spf, bounds);
+        movingTimeCost[2][0] = new PiecewiseStochasticPolynomialFunction(spf, bounds);
+
+        spf = new StochasticPolynomialFunction[1];
+        apfs = new AdvancedPolynomialFunction[2];
+        apfs[0] = AdvancedPolynomialFunction.ZERO();
+        apfs[1] = AdvancedPolynomialFunction.N(40);
+        spf[0] = new StochasticPolynomialFunction(apfs);
+        bounds = new double[2];
+        bounds[0] = 0;
+        bounds[1] = Double.POSITIVE_INFINITY;
+        movingTimeCost[1][2] = new PiecewiseStochasticPolynomialFunction(spf, bounds);
+        movingTimeCost[2][1] = new PiecewiseStochasticPolynomialFunction(spf, bounds);
+
+        for (int i = 0; i < 3; ++i) {
+            for (int j = 0; j < 3; ++j) {
+                if (i == j) continue;
+                edges[i][j] = new Edge(nodes[i], nodes[j], movingTimeCost[i][j]);
+            }
+        }
+
+        int taskNum = 1;
+        Task[] tasks = new Task[taskNum];
+        PiecewisePolynomialFunction[] rewards = new PiecewisePolynomialFunction[taskNum];
+        apfs = new AdvancedPolynomialFunction[2];
+        apfs[0] = AdvancedPolynomialFunction.N(200);
+        apfs[1] = AdvancedPolynomialFunction.N(Double.NEGATIVE_INFINITY);
+        bounds = new double[3];
+        bounds[0] = 0;
+        bounds[1] = 200;
+        bounds[2] = Double.POSITIVE_INFINITY;
+        rewards[0] = new PiecewisePolynomialFunction(apfs, bounds);
+        tasks[0] = new Task(0, nodes[1], rewards[0], 40, -100);
+
+        // MDP setup
+        Set<Task> taskSet = new HashSet<Task>(Arrays.asList(tasks));
+        State startState = new State(nodes[0], taskSet);
+        State endState = new State(nodes[0], new HashSet<Task>());
+        apfs = new AdvancedPolynomialFunction[2];
+        apfs[0] = AdvancedPolynomialFunction.ZERO();
+        apfs[1] = AdvancedPolynomialFunction.N(-1000);
+        bounds = new double[3];
+        bounds[0] = 0;
+        bounds[1] = 300;
+        bounds[2] = Double.POSITIVE_INFINITY;
+        PiecewisePolynomialFunction terminatedValueFunction = new PiecewisePolynomialFunction(apfs, bounds);
+        MDP mdp = new MDP(startState, endState, terminatedValueFunction);
+        System.out.println("-=-=-=-=-=-=-");
+        PiecewisePolynomialFunction testppf = MDP.integrationOnXiOfComposition_test(terminatedValueFunction, movingTimeCost[2][0]);
+        System.out.println(testppf.toString());
+//        System.out.println("=================");
+//        mdp.buildGraph();
+//        System.out.println(mdp.graphToString());
+//        System.out.println("=================");
+//        mdp.assignValueFunction();
+//        System.out.println(mdp.valueFunctionToString());
+
+
+
 //        Node n1 = new Node();
 //        Node n2 = new Node();
 //        Set<Task> ts1 = new HashSet<Task>();
@@ -65,66 +170,61 @@ public class Test {
 //        System.out.println(result.toString());
 
 
-        Action[] actions1 = new Action[1];
-        double[] bounds1 = new double[2];
-        actions1[0] = new DoNothing(0);
-//        actions1[1] = new DoNothing(1);
-//        actions1[2] = new DoNothing(2);
-        bounds1[0] = 0.0;
-//        bounds1[1] = 100.0;
-//        bounds1[2] = 200.0;
-        bounds1[1] = Double.POSITIVE_INFINITY;
-
-        Action[] actions2 = new Action[1];
-        double[] bounds2 = new double[2];
-        actions2[0] = new DoNothing(3);
-//        actions2[1] = new DoNothing(4);
-        bounds2[0] = 0;
-//        bounds2[1] = 150;
-        bounds2[1] = Double.POSITIVE_INFINITY;
-
-
-        Policy p1 = new Policy(actions1, bounds1);
-        Policy p2 = new Policy(actions2, bounds2);
-        double[] ubounds = new double[3];
-        int[] id = new int[2];
-        ubounds[0] = 0;
-        ubounds[1] = 150;
-        ubounds[2] = Double.POSITIVE_INFINITY;
-        id[0] = 0;
-        id[1] = 1;
-
-        Policy pu = Policy.union(p1, p2, ubounds, id);
-        System.out.println("actions:");
-        for (Action a : pu.getActions()) {
-            System.out.print(((DoNothing) a).getId() + ", ");
-        }
-        System.out.println();
-
-        System.out.println("bounds:");
-        for (double d : pu.getBounds()) {
-            System.out.print(d + ", ");
-        }
-        System.out.println();
+//        Action[] actions1 = new Action[1];
+//        double[] bounds1 = new double[2];
+//        actions1[0] = new DoNothing(0);
+////        actions1[1] = new DoNothing(1);
+////        actions1[2] = new DoNothing(2);
+//        bounds1[0] = 0.0;
+////        bounds1[1] = 100.0;
+////        bounds1[2] = 200.0;
+//        bounds1[1] = Double.POSITIVE_INFINITY;
+//
+//        Action[] actions2 = new Action[1];
+//        double[] bounds2 = new double[2];
+//        actions2[0] = new DoNothing(3);
+////        actions2[1] = new DoNothing(4);
+//        bounds2[0] = 0;
+////        bounds2[1] = 150;
+//        bounds2[1] = Double.POSITIVE_INFINITY;
+//
+//
+//        Policy p1 = new Policy(actions1, bounds1);
+//        Policy p2 = new Policy(actions2, bounds2);
+//        double[] ubounds = new double[3];
+//        int[] id = new int[2];
+//        ubounds[0] = 0;
+//        ubounds[1] = 150;
+//        ubounds[2] = Double.POSITIVE_INFINITY;
+//        id[0] = 0;
+//        id[1] = 1;
+//
+//        Policy pu = Policy.union(p1, p2, ubounds, id);
+//        System.out.println("actions:");
+//        for (Action a : pu.getActions()) {
+//            System.out.print(((DoNothing) a).getId() + ", ");
+//        }
+//        System.out.println();
+//
+//        System.out.println("bounds:");
+//        for (double d : pu.getBounds()) {
+//            System.out.print(d + ", ");
+//        }
+//        System.out.println();
     }
 
     public Test(int x) {
         LinkedHashSet<Integer> integers = new LinkedHashSet<Integer>();
-        LinkedHashSet<Integer> integers2 = new LinkedHashSet<Integer>();
         for (int i = 0; i < 5; ++i) {
             integers.add(i * x);
-            integers2.add(i * x * 2);
         }
 
         for (int i : integers) {
             System.out.println(i);
         }
         System.out.println("==============");
-
-        integers = integers2;
-        integers2 = new LinkedHashSet<Integer>();
-        for (int i = 10; i < 15; ++i) {
-            integers2.add(i * x * 2);
+        for (int i = 4; i >=0; --i) {
+            integers.add(i * x);
         }
         for (int i : integers) {
             System.out.println(i);
@@ -159,6 +259,6 @@ public class Test {
     }
 
     public static void main(String[] args) {
-        new Test("x");
+        new Test();
     }
 }

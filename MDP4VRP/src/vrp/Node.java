@@ -7,11 +7,17 @@ import java.util.Set;
  * Created by Xiaoxi Wang on 9/1/14.
  */
 public class Node {
+    private int id;
     private Set<Edge> incomingEdges = new HashSet<Edge>();
     private Set<Edge> outgoingEdges = new HashSet<Edge>();
     private Set<Task> tasks = new HashSet<Task>();
 
-    public Node() {
+    public Node(int id) {
+        this.id = id;
+    }
+
+    public int getID() {
+        return this.id;
     }
 
     public void addIncomingEdge(Edge edge) {

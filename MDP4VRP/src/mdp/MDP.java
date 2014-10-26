@@ -4,8 +4,11 @@ import functional.AdvancedPolynomialFunction;
 import functional.PiecewisePolynomialFunction;
 import functional.PiecewiseStochasticPolynomialFunction;
 import functional.StochasticPolynomialFunction;
+import vrp.Task;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -19,6 +22,10 @@ public class MDP {
     private ConcurrentMap<State, List<Arc>> incomingArcs = new ConcurrentHashMap<State, List<Arc>>();
     private ConcurrentMap<State, List<Arc>> outgoingArcs = new ConcurrentHashMap<State, List<Arc>>();
     private ConcurrentMap<State, List<Action>> possibleActions = new ConcurrentHashMap<State, List<Action>>();
+    private Set<State> stateSet = new LinkedHashSet<State>();
+    private List<ConcurrentMap<Set<Task>, Set<State>>> moduleMapList = new ArrayList<ConcurrentMap<Set<Task>, Set<State>>>();
+    private ConcurrentMap<State, PiecewisePolynomialFunction> valueFuncMap = new ConcurrentHashMap<State, PiecewisePolynomialFunction>();
+    private ConcurrentMap<State, Policy> policyMap = new ConcurrentHashMap<State, Policy>();
 
     public MDP(State startState, State endState, PiecewisePolynomialFunction terminatedValueFunction) {
         this.startState = startState;
@@ -26,22 +33,30 @@ public class MDP {
         this.terminatedValueFunction = terminatedValueFunction;
         incomingArcs.putIfAbsent(startState, new ArrayList<Arc>());
         outgoingArcs.putIfAbsent(startState, new ArrayList<Arc>());
-        possibleActions.putIfAbsent(startState, new ArrayList<Action>());
         incomingArcs.putIfAbsent(endState, new ArrayList<Arc>());
         outgoingArcs.putIfAbsent(endState, new ArrayList<Arc>());
-        possibleActions.putIfAbsent(endState, new ArrayList<Action>());
+        stateSet.add(startState);
+        stateSet.add(endState);
+        for (int i = 0; i <= startState.getTaskSet().size(); ++i) {
+            moduleMapList.add(new ConcurrentHashMap<Set<Task>, Set<State>>());
+        }
     }
 
     public void buildGraph() {
         Queue<State> checkingQueue = new LinkedList<State>();
         Set<State> checkedStates = new HashSet<State>();
         checkingQueue.add(startState);
+        checkedStates.add(startState);
+        checkedStates.add(endState);
+        moduleMapList.get(startState.getTaskSet().size()).putIfAbsent(startState.getTaskSet(), new LinkedHashSet<State>());
+        moduleMapList.get(startState.getTaskSet().size()).get(startState.getTaskSet()).add(startState);
         while (!checkingQueue.isEmpty()) {
             State currentState = checkingQueue.poll();
-            possibleActions.putIfAbsent(currentState, new ArrayList<Action>());
-            if (currentState.equals(endState)) continue;
+            possibleActions.putIfAbsent(currentState, currentState.getPossibleActions());
+//            System.out.println(currentState.toString()+":"+possibleActions.get(currentState).size());
+//            if (currentState.equals(endState)) continue;
             for (Action a : possibleActions.get(currentState)) {
-                State nextState = a.perform(currentState);
+                State nextState = a.perform(currentState); // System.out.println("next state: " + nextState.toString());
                 if (checkedStates.contains(nextState)) {
                     Arc arc = new Arc(currentState, nextState, a);
                     incomingArcs.get(nextState).add(arc);
@@ -54,64 +69,121 @@ public class MDP {
                     outgoingArcs.get(currentState).add(arc);
                     checkingQueue.add(nextState);
                     checkedStates.add(nextState);
+                    stateSet.add(nextState);
+                    moduleMapList.get(nextState.getTaskSet().size()).putIfAbsent(nextState.getTaskSet(), new LinkedHashSet<State>());
+                    moduleMapList.get(nextState.getTaskSet().size()).get(nextState.getTaskSet()).add(nextState);
                 }
             }
         }
+//        System.out.println("size: " + moduleMapList.get(startState.getTaskSet().size()).size());
+    }
+
+    public String graphToString() {
+        StringBuilder s = new StringBuilder();
+//        System.out.println(stateSet.size());
+//        for (State state : stateSet) {
+//            System.out.println(state.toString());
+//        }
+        for (State state : stateSet) {
+//            System.out.println("state: " + state.toString() + " outgoing arc: " + outgoingArcs.get(state).size());
+            for (Arc arc : outgoingArcs.get(state)) {
+                s.append(state.toString());
+                s.append(new char[]{'-', '>'});
+                s.append(arc.getEndState().toString());
+                s.append(':');
+                s.append(arc.getAction().toString());
+                s.append('\n');
+            }
+        }
+        return s.toString();
     }
 
     public void assignValueFunction() {
-        LinkedList<Arc> checkingList = new LinkedList<Arc>();
+        valueFuncMap.put(endState, terminatedValueFunction);
+        System.out.println("++endstate: " + endState + "\nppf:\n" + valueFuncMap.get(endState));
         for (Arc arc : incomingArcs.get(endState)) {
-            checkingList.addLast(arc);
-        }
-
-//        Stack<State> checkingStack = new Stack<State>();
-//        checkingStack.push(endState);
-        Set<State> checkedStates = new HashSet<State>();
-        Map<State, Set<Arc>> unCheckedArcs = new HashMap<State, Set<Arc>>(); // Save arcs that have not been moved to checkingList
-        unCheckedArcs.put(endState, new HashSet<Arc>()); // 'Cause arcs to endState have been moved to checkingList
-
-        Map<State, PiecewisePolynomialFunction> currentBestValueFunction = new HashMap<State, PiecewisePolynomialFunction>();
-        Map<State, Policy> currentBestPolicy = new HashMap<State, Policy>();
-        currentBestValueFunction.put(endState, terminatedValueFunction);
-        currentBestPolicy.put(endState, null);
-
-        while (!checkingList.isEmpty()) {
-            Arc arc = checkingList.pollLast();
-//            State currentState = checkingStack.pop();
-//            for (Arc arc : incomingArcs.get(currentState)) {
-            State preState = arc.getStartState();
-            PiecewisePolynomialFunction preValueFunc = arc.getAction().preValueFunc(currentBestValueFunction.get(arc.getEndState()));
-            Policy prePolicy = Policy.SimplePolicy(arc.getAction());
-            if (currentBestValueFunction.containsKey(preState)) {
-                PiecewisePolynomialFunctionAndPolicy ppfap = max(preValueFunc, currentBestValueFunction.get(preState), prePolicy, currentBestPolicy.get(preState));
-                currentBestValueFunction.put(preState, ppfap.getPiecewisePolynomialFunction());
-                currentBestPolicy.put(preState, ppfap.getPolicy());
-            } else {
-                currentBestValueFunction.put(preState, preValueFunc);
-                currentBestPolicy.put(preState, prePolicy);
+            if (arc.getAction() instanceof Move) {
+                valueFuncMap.put(arc.getStartState(), arc.getAction().preValueFunc(valueFuncMap.get(endState)));
+                policyMap.put(arc.getStartState(), Policy.SimplePolicy(arc.getAction()));
+                System.out.println("++state: " + arc.getStartState() + "\nppf:\n" + valueFuncMap.get(arc.getStartState()));
             }
-//            }
         }
+        for (int level = 0; level < moduleMapList.size(); ++level) {
+            ConcurrentMap<Set<Task>, Set<State>> moduleTaskMap = moduleMapList.get(level);
+            for (Set<Task> set : moduleTaskMap.keySet()) {
+                MDP.moduleSolver(moduleTaskMap.get(set), valueFuncMap, policyMap, incomingArcs, level);
+            }
+        }
+
+
+//        LinkedList<Arc> checkingList = new LinkedList<Arc>();
+//        for (Arc arc : incomingArcs.get(endState)) {
+//            checkingList.addLast(arc);
+//        }
+////        Stack<State> checkingStack = new Stack<State>();
+////        checkingStack.push(endState);
+//        Set<State> checkedStates = new HashSet<State>();
+//        Map<State, Set<Arc>> unCheckedArcs = new HashMap<State, Set<Arc>>(); // Save arcs that have not been moved to checkingList
+//        unCheckedArcs.put(endState, new HashSet<Arc>()); // 'Cause arcs to endState have been moved to checkingList
+//
+//        Map<State, PiecewisePolynomialFunction> currentBestValueFunction = new HashMap<State, PiecewisePolynomialFunction>();
+//        Map<State, Policy> currentBestPolicy = new HashMap<State, Policy>();
+//        currentBestValueFunction.put(endState, terminatedValueFunction);
+//        currentBestPolicy.put(endState, null);
+//
+//        while (!checkingList.isEmpty()) {
+//            Arc arc = checkingList.pollLast();
+////            State currentState = checkingStack.pop();
+////            for (Arc arc : incomingArcs.get(currentState)) {
+//            State preState = arc.getStartState();
+//            PiecewisePolynomialFunction preValueFunc = arc.getAction().preValueFunc(currentBestValueFunction.get(arc.getEndState()));
+//            Policy prePolicy = Policy.SimplePolicy(arc.getAction());
+//            if (currentBestValueFunction.containsKey(preState)) {
+//                PiecewisePolynomialFunctionAndPolicy ppfap = max(preValueFunc, currentBestValueFunction.get(preState), prePolicy, currentBestPolicy.get(preState));
+//                currentBestValueFunction.put(preState, ppfap.getPiecewisePolynomialFunction());
+//                currentBestPolicy.put(preState, ppfap.getPolicy());
+//            } else {
+//                currentBestValueFunction.put(preState, preValueFunc);
+//                currentBestPolicy.put(preState, prePolicy);
+//            }
+////            }
+//        }
     }
 
-    public static void moduleSolver(Map<State, PiecewisePolynomialFunctionAndPolicy> stateValueFuncMap, ConcurrentMap<State, List<Arc>> incomingArcs) {
-//        State[] states = stateValueFuncMap.keySet().toArray(new State[stateValueFuncMap.size()]);
+    public String valueFunctionToString() {
+        StringBuilder s = new StringBuilder();
+        for (State state : stateSet) {
+            s.append(state.toString());
+            s.append('\n');
+            s.append(valueFuncMap.get(state).toString());
+        }
+        return s.toString();
+    }
+
+    public static void moduleSolver(Set<State> module,
+                                    ConcurrentMap<State, PiecewisePolynomialFunction> valueFuncMap,
+                                    ConcurrentMap<State, Policy> policyMap,
+                                    ConcurrentMap<State, List<Arc>> incomingArcs,
+                                    int level) {
+//        State[] states = module.keySet().toArray(new State[module.size()]);
         LinkedHashSet<State> iteratorSet = new LinkedHashSet<State>();
         LinkedHashSet<State> nextIteratorSet = new LinkedHashSet<State>();
-        for (State state : stateValueFuncMap.keySet()) {
-            iteratorSet.add(state);
-        }
+        iteratorSet.addAll(module);
         while (!iteratorSet.isEmpty()) {
             for (State currentState : iteratorSet) {
                 for (Arc arc : incomingArcs.get(currentState)) {
                     State preState = arc.getStartState();
-                    PiecewisePolynomialFunctionAndPolicy prePPFAP = stateValueFuncMap.get(preState);
-                    PiecewisePolynomialFunction preValueFunc = arc.getAction().preValueFunc(prePPFAP.getPiecewisePolynomialFunction());
-                    PiecewisePolynomialFunctionAndPolicy maxResult = MDP.max(prePPFAP, new PiecewisePolynomialFunctionAndPolicy(preValueFunc, Policy.SimplePolicy(arc.getAction())));
-                    if (!maxResult.equals(prePPFAP)) {
-                        stateValueFuncMap.put(preState, maxResult);
-                        nextIteratorSet.add(preState);
+                    PiecewisePolynomialFunction preValueFunc = valueFuncMap.get(preState);
+                    Policy prePolicy = policyMap.get(preState);
+                    PiecewisePolynomialFunction newPreValueFunc = arc.getAction().preValueFunc(valueFuncMap.get(currentState));
+                    System.out.println("***");
+                    System.out.println("prestate: " + preState.toString() + " currentstate: " + currentState);
+                    System.out.println("***");
+                    PiecewisePolynomialFunctionAndPolicy maxResult = MDP.max(preValueFunc, newPreValueFunc, policyMap.get(preState), Policy.SimplePolicy(arc.getAction()));
+                    if (!maxResult.getPiecewisePolynomialFunction().equals(preValueFunc) || !maxResult.getPolicy().equals(prePolicy)) {
+                        valueFuncMap.put(preState, maxResult.getPiecewisePolynomialFunction());
+                        policyMap.put(preState, maxResult.getPolicy());
+                        if (preState.getTaskSet().size() == level) nextIteratorSet.add(preState);
                     }
                 }
             }
@@ -125,18 +197,22 @@ public class MDP {
     }
 
     public static PiecewisePolynomialFunctionAndPolicy max(PiecewisePolynomialFunction ppf1, PiecewisePolynomialFunction ppf2, Policy policy1, Policy policy2) {
-        if (ppf1 == null) {
-            return new PiecewisePolynomialFunctionAndPolicy(ppf2, policy2);
-        }
-        if (ppf2 == null) {
-            return new PiecewisePolynomialFunctionAndPolicy(ppf1, policy1);
-        }
+//        if (ppf1 == null) {
+//            return new PiecewisePolynomialFunctionAndPolicy(ppf2, policy2);
+//        }
+//        if (ppf2 == null) {
+//            return new PiecewisePolynomialFunctionAndPolicy(ppf1, policy1);
+//        }
         double[] bounds1 = ppf1.getBounds();
         double[] bounds2 = ppf2.getBounds();
         int pieces1 = ppf1.getPieceNum();
         int pieces2 = ppf2.getPieceNum();
-        if (bounds1[0] != bounds2[0] || bounds1[pieces1] != bounds2[pieces2])
+        if (bounds1[0] != bounds2[0] || bounds1[pieces1] != bounds2[pieces2]) {
+            System.out.println("***");
+            System.out.println("pff1:\n" + ppf1.toString() + "ppf2:\n" + ppf2.toString());
+            System.out.println("***");
             throw new IllegalArgumentException();
+        }
         double[] newBounds;
         int newPiece;
         int n, i, j;
@@ -223,12 +299,16 @@ public class MDP {
             if (pfp[0].getPolynomialFunction().equals(pfsList.get(pfsList.size() - 1))) {
                 j = 1;
             }
+            System.out.println("i: " + i + " pfp: " + pfp.length);
             for (; j < pfp.length; ++j) {
                 pfsList.add(pfp[j].getPolynomialFunction());
                 boundsList.add(pfp[j].getBounds()[0]);
             }
         }
         boundsList.add(pfp[pfp.length - 1].getBounds()[1]);
+        System.out.println("bounds list: ");
+        for (Double d : boundsList) System.out.print(d + ", ");
+        System.out.println();
         AdvancedPolynomialFunction[] apfs = new AdvancedPolynomialFunction[pfsList.size()];
         double[] bounds = new double[boundsList.size()];
         for (int i = 0; i < apfs.length; ++i) {
@@ -331,7 +411,7 @@ public class MDP {
         }
     }
 
-    public static class PiecewisePolynomialFunctionAndPolicy {
+    private static class PiecewisePolynomialFunctionAndPolicy {
         private PiecewisePolynomialFunction ppf;
         private Policy policy;
 //        private int[] ids;

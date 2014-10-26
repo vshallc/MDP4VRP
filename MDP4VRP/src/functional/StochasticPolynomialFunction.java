@@ -13,7 +13,7 @@ public class StochasticPolynomialFunction{
                                         // for the stochastic parameter ξ, ξ ~ U[0,1]
 //    double sc; // coefficients for the stochastic parameter ξ, ξ ~ U[0,1]
     private final Random random = new Random();
-    StochasticPolynomialFunction(AdvancedPolynomialFunction[] polyfunCoefs)
+    public StochasticPolynomialFunction(AdvancedPolynomialFunction[] polyfunCoefs)
             throws NullArgumentException, NoDataException {
         super();
         MathUtils.checkNotNull(polyfunCoefs);
