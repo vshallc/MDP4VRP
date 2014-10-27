@@ -62,8 +62,10 @@ public class Policy {
         }
         boundsList.add(lastBound);
         boundsList.add(bounds[id.length]);
-        actionList.add(pActions[id.length - 1][pActions[id.length - 1].length - 1]);
-        System.out.println("debug: " + boundsList.size() + " " + actionList.size());
+//        System.out.println("id len: " + id.length + "\npActions.len: " + pActions.length);
+        lastID = id[id.length - 1];
+        actionList.add(pActions[lastID][pActions[lastID].length - 1]);
+//        System.out.println("debug: " + boundsList.size() + " " + actionList.size());
         Action[] newActions = new Action[actionList.size()];
         double[] newBounds = new double[boundsList.size()];
         for (int i = 0; i < newActions.length; ++i) {

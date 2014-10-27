@@ -31,7 +31,7 @@ public class Abandon implements Action{
     }
 
     @Override
-    public PiecewisePolynomialFunction preValueFunc(PiecewisePolynomialFunction currentValueFunc) {
+    public PiecewisePolynomialFunction preValueFunc(PiecewisePolynomialFunction currentValueFunc) {//System.out.println("abandon: " + currentValueFunc.toString());
         // V'(t) = V(t) + p, p < 0
         return currentValueFunc.add(task.getPenalty());
     }

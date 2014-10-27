@@ -100,14 +100,17 @@ public class MDP {
 
     public void assignValueFunction() {
         valueFuncMap.put(endState, terminatedValueFunction);
-        System.out.println("++endstate: " + endState + "\nppf:\n" + valueFuncMap.get(endState));
+//        System.out.println("++endstate: " + endState + "\nppf:\n" + valueFuncMap.get(endState));
         for (Arc arc : incomingArcs.get(endState)) {
             if (arc.getAction() instanceof Move) {
                 valueFuncMap.put(arc.getStartState(), arc.getAction().preValueFunc(valueFuncMap.get(endState)));
                 policyMap.put(arc.getStartState(), Policy.SimplePolicy(arc.getAction()));
-                System.out.println("++state: " + arc.getStartState() + "\nppf:\n" + valueFuncMap.get(arc.getStartState()));
+//                System.out.println("++state: " + arc.getStartState() + "\n" + valueFuncMap.get(arc.getStartState()));
             }
         }
+//        for (State state : valueFuncMap.keySet()) {
+//            System.out.println("state: " + state.toString() + "\n" + valueFuncMap.get(state).toString() + "\n");
+//        }
         for (int level = 0; level < moduleMapList.size(); ++level) {
             ConcurrentMap<Set<Task>, Set<State>> moduleTaskMap = moduleMapList.get(level);
             for (Set<Task> set : moduleTaskMap.keySet()) {
@@ -173,16 +176,25 @@ public class MDP {
             for (State currentState : iteratorSet) {
                 for (Arc arc : incomingArcs.get(currentState)) {
                     State preState = arc.getStartState();
-                    PiecewisePolynomialFunction preValueFunc = valueFuncMap.get(preState);
-                    Policy prePolicy = policyMap.get(preState);
+                    System.out.println("prestate: " + preState.toString() + " action: " + arc.getAction().toString() + " currentstate: " + currentState);
                     PiecewisePolynomialFunction newPreValueFunc = arc.getAction().preValueFunc(valueFuncMap.get(currentState));
-                    System.out.println("***");
-                    System.out.println("prestate: " + preState.toString() + " currentstate: " + currentState);
-                    System.out.println("***");
-                    PiecewisePolynomialFunctionAndPolicy maxResult = MDP.max(preValueFunc, newPreValueFunc, policyMap.get(preState), Policy.SimplePolicy(arc.getAction()));
-                    if (!maxResult.getPiecewisePolynomialFunction().equals(preValueFunc) || !maxResult.getPolicy().equals(prePolicy)) {
-                        valueFuncMap.put(preState, maxResult.getPiecewisePolynomialFunction());
-                        policyMap.put(preState, maxResult.getPolicy());
+                    Policy newPrePolicy = Policy.SimplePolicy(arc.getAction());
+                    if (valueFuncMap.containsKey(preState)) {
+                        PiecewisePolynomialFunction preValueFunc = valueFuncMap.get(preState);
+                        Policy prePolicy = policyMap.get(preState);
+//                        System.out.println("----");
+//                        System.out.println("prestate: " + preState.toString() + " action: " + arc.getAction().toString() + " currentstate: " + currentState);
+//                        System.out.println(preValueFunc.toString());
+//                        System.out.println("----");
+                        PiecewisePolynomialFunctionAndPolicy maxResult = MDP.max(preValueFunc, newPreValueFunc, policyMap.get(preState), newPrePolicy);
+                        if (!maxResult.getPiecewisePolynomialFunction().equals(preValueFunc) || !maxResult.getPolicy().equals(prePolicy)) {
+                            valueFuncMap.put(preState, maxResult.getPiecewisePolynomialFunction());
+                            policyMap.put(preState, maxResult.getPolicy());
+                            if (preState.getTaskSet().size() == level) nextIteratorSet.add(preState);
+                        }
+                    } else {
+                        valueFuncMap.put(preState, newPreValueFunc);
+                        policyMap.put(preState, newPrePolicy);
                         if (preState.getTaskSet().size() == level) nextIteratorSet.add(preState);
                     }
                 }
@@ -209,7 +221,7 @@ public class MDP {
         int pieces2 = ppf2.getPieceNum();
         if (bounds1[0] != bounds2[0] || bounds1[pieces1] != bounds2[pieces2]) {
             System.out.println("***");
-            System.out.println("pff1:\n" + ppf1.toString() + "ppf2:\n" + ppf2.toString());
+            System.out.println("pff1:\n" + ppf1.toString() + "\nppf2:\n" + ppf2.toString());
             System.out.println("***");
             throw new IllegalArgumentException();
         }
@@ -285,6 +297,8 @@ public class MDP {
         // A(t) arrive time (start on t)
         // A'(t)>=0
 
+//        System.out.println("V:\n" + V.toString());
+//        System.out.println("A:\n" + A.toString());
         List<AdvancedPolynomialFunction> pfsList = new ArrayList<AdvancedPolynomialFunction>();
         List<Double> boundsList = new ArrayList<Double>();
 
@@ -293,22 +307,24 @@ public class MDP {
             pfsList.add(p.getPolynomialFunction());
             boundsList.add(p.getBounds()[0]);
         }
+//        System.out.println("pfp: " + pfp[0].getBounds()[0] + " " + pfp[0].getBounds()[1]);
         for (int i = 1; i < A.getPieceNum(); ++i) {
+//            System.out.println("A.getBounds: " + i + " " + A.getBounds()[i] + " " + A.getBounds()[i + 1]);
             pfp = integrationForVOfAOnPieces(V, A.getStochasticPolynomialFunction(i), A.getBounds()[i], A.getBounds()[i + 1]);
             int j = 0;
             if (pfp[0].getPolynomialFunction().equals(pfsList.get(pfsList.size() - 1))) {
                 j = 1;
             }
-            System.out.println("i: " + i + " pfp: " + pfp.length);
+//            System.out.println("i: " + i + " pfp: " + pfp[0].getBounds()[0] + " " + pfp[0].getBounds()[1]);
             for (; j < pfp.length; ++j) {
                 pfsList.add(pfp[j].getPolynomialFunction());
                 boundsList.add(pfp[j].getBounds()[0]);
             }
         }
         boundsList.add(pfp[pfp.length - 1].getBounds()[1]);
-        System.out.println("bounds list: ");
-        for (Double d : boundsList) System.out.print(d + ", ");
-        System.out.println();
+//        System.out.println("bounds list: ");
+//        for (Double d : boundsList) System.out.print(d + ", ");
+//        System.out.println("====");
         AdvancedPolynomialFunction[] apfs = new AdvancedPolynomialFunction[pfsList.size()];
         double[] bounds = new double[boundsList.size()];
         for (int i = 0; i < apfs.length; ++i) {
@@ -319,11 +335,17 @@ public class MDP {
         return new PiecewisePolynomialFunction(apfs, bounds);
     }
 
-    private static PolynomialFunctionPiece[] integrationForVOfAOnPieces(PiecewisePolynomialFunction V, StochasticPolynomialFunction a, double leftDomain, double rightDomain) {
+    private static PolynomialFunctionPiece[] integrationForVOfAOnPieces(PiecewisePolynomialFunction V,
+                                                                        StochasticPolynomialFunction a,
+                                                                        double leftDomain, double rightDomain) {
+//        System.out.println("========== integrationForVOfAOnPieces ==========");
         // xi ~ [0,1]
         AdvancedPolynomialFunction gmin = a.determinize(0);
         AdvancedPolynomialFunction gmax = a.determinize(1);
+//        System.out.println("gmin:\n" + gmin.toString() + "\ngmax:\n" + gmax.toString());
         double[] vBounds = V.getBounds();
+//        System.out.println("vBounds:");
+//        for (double b : vBounds) System.out.println(b);
         TreeSet<Double> innerBounds = new TreeSet<Double>();
         innerBounds.add(leftDomain);
         innerBounds.add(rightDomain);
@@ -335,7 +357,7 @@ public class MDP {
                     if (r > leftDomain && r < rightDomain) innerBounds.add(r);
                 }
                 roots = gmax.solve(vBounds[i], leftDomain, rightDomain);
-                for (double r : roots) {
+                for (double r : roots) {//System.out.println("r: " + r);
                     if (r > leftDomain && r < rightDomain) innerBounds.add(r);
                 }
             }
@@ -363,6 +385,7 @@ public class MDP {
             }
             results[i] = simpleIntegration(V, VStart, VEnd, a, primaryBounds[i], primaryBounds[i + 1]);
         }
+//        System.out.println("=========| integrationForVOfAOnPieces |=========");
         return results;
     }
 

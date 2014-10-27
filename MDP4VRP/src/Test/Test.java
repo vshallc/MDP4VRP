@@ -91,7 +91,7 @@ public class Test {
         bounds[0] = 0;
         bounds[1] = 200;
         bounds[2] = Double.POSITIVE_INFINITY;
-        rewards[0] = new PiecewisePolynomialFunction(apfs, bounds);
+        rewards[0] = new PiecewisePolynomialFunction(apfs, bounds);System.out.println("reward0 : " + rewards[0].toString());
         tasks[0] = new Task(0, nodes[1], rewards[0], 40, -100);
 
         // MDP setup
@@ -107,15 +107,15 @@ public class Test {
         bounds[2] = Double.POSITIVE_INFINITY;
         PiecewisePolynomialFunction terminatedValueFunction = new PiecewisePolynomialFunction(apfs, bounds);
         MDP mdp = new MDP(startState, endState, terminatedValueFunction);
-        System.out.println("-=-=-=-=-=-=-");
-        PiecewisePolynomialFunction testppf = MDP.integrationOnXiOfComposition_test(terminatedValueFunction, movingTimeCost[2][0]);
-        System.out.println(testppf.toString());
-//        System.out.println("=================");
-//        mdp.buildGraph();
+//        System.out.println("-=-=-=-=-=-=-");
+//        PiecewisePolynomialFunction testppf = MDP.integrationOnXiOfComposition_test(terminatedValueFunction, edges[2][0].getArrivalFunction());
+//        System.out.println("testppf: " + testppf.toString());
+        System.out.println("=================");
+        mdp.buildGraph();
 //        System.out.println(mdp.graphToString());
-//        System.out.println("=================");
-//        mdp.assignValueFunction();
-//        System.out.println(mdp.valueFunctionToString());
+        System.out.println("=================");
+        mdp.assignValueFunction();
+        System.out.println(mdp.valueFunctionToString());
 
 
 

@@ -110,11 +110,7 @@ public class StochasticPolynomialFunction{
         AdvancedPolynomialFunction[] newPolyFuncCoefs = new AdvancedPolynomialFunction[polyfunCoefs.length];
         newPolyFuncCoefs[0] = polyfunCoefs[0].add(pf);
         for (int i = 1; i < polyfunCoefs.length; ++i) {
-            double[] pfcs = polyfunCoefs[i].getCoefficients();
-            for (int j = 0; j < pfcs.length; ++j) {
-                pfcs[i] = pfcs[j];
-            }
-            newPolyFuncCoefs[i] = new AdvancedPolynomialFunction(pfcs);
+            newPolyFuncCoefs[i] = new AdvancedPolynomialFunction(polyfunCoefs[i].getCoefficients());
         }
         return new StochasticPolynomialFunction(newPolyFuncCoefs);
     }

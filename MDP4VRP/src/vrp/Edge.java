@@ -1,5 +1,6 @@
 package vrp;
 
+import functional.AdvancedPolynomialFunction;
 import functional.PiecewiseStochasticPolynomialFunction;
 
 /**
@@ -8,6 +9,7 @@ import functional.PiecewiseStochasticPolynomialFunction;
 public class Edge {
     private Node startNode, endNode;
     private PiecewiseStochasticPolynomialFunction timeCostFunc;
+    private PiecewiseStochasticPolynomialFunction arrivalFunc;
 
     public Edge(Node startNode, Node endNode, PiecewiseStochasticPolynomialFunction timeCostFunc) {
         this.startNode = startNode;
@@ -15,6 +17,9 @@ public class Edge {
         this.startNode.addOutgoingEdge(this);
         this.endNode.addIncomingEdge(this);
         this.timeCostFunc = timeCostFunc;
+        double[] c = {0.0, 1.0};
+        AdvancedPolynomialFunction t = new AdvancedPolynomialFunction(c);
+        arrivalFunc = timeCostFunc.add(t);
     }
 
     public Node getStartNode() {
@@ -27,5 +32,9 @@ public class Edge {
 
     public PiecewiseStochasticPolynomialFunction getTimeCostFunction() {
         return timeCostFunc;
+    }
+
+    public PiecewiseStochasticPolynomialFunction getArrivalFunction() {
+        return arrivalFunc;
     }
 }

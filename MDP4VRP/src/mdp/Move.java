@@ -27,7 +27,6 @@ public class Move implements Action{
 
     @Override
     public PiecewisePolynomialFunction preValueFunc(PiecewisePolynomialFunction currentValueFunc) {
-//        System.out.println("^^^:\n"+ currentValueFunc.toString());
-        return MDP.integrationOnXiOfComposition_test(currentValueFunc, edge.getTimeCostFunction());
+        return MDP.integrationOnXiOfComposition_test(currentValueFunc, edge.getArrivalFunction());
     }
 }

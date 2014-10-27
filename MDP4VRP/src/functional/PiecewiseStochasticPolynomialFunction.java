@@ -30,6 +30,15 @@ public class PiecewiseStochasticPolynomialFunction {
 //        domains[1] = rightDomain;
     }
 
+    public PiecewiseStochasticPolynomialFunction add(AdvancedPolynomialFunction pf) {
+        StochasticPolynomialFunction[] newStocPolyFuncs = new StochasticPolynomialFunction[pieces];
+        for (int i = 0; i < pieces; ++i) {
+            newStocPolyFuncs[i] = stocPolyFuncs[i].add(pf);
+        }
+        double[] newBounds = bounds.clone();
+        return new PiecewiseStochasticPolynomialFunction(newStocPolyFuncs, newBounds);
+    }
+
     public StochasticPolynomialFunction getStochasticPolynomialFunction(
             int piece) {
         return stocPolyFuncs[piece];
