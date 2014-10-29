@@ -39,7 +39,7 @@ public class Test {
         spf[1] = new StochasticPolynomialFunction(apfs); // 50 + 20xi
         bounds = new double[3];
         bounds[0] = 0;
-        bounds[1] = 300;
+        bounds[1] = 120;
         bounds[2] = Double.POSITIVE_INFINITY;
         movingTimeCost[0][1] = new PiecewiseStochasticPolynomialFunction(spf, bounds);
         movingTimeCost[1][0] = new PiecewiseStochasticPolynomialFunction(spf, bounds);
@@ -91,7 +91,7 @@ public class Test {
         bounds[0] = 0;
         bounds[1] = 200;
         bounds[2] = Double.POSITIVE_INFINITY;
-        rewards[0] = new PiecewisePolynomialFunction(apfs, bounds);System.out.println("reward0 : " + rewards[0].toString());
+        rewards[0] = new PiecewisePolynomialFunction(apfs, bounds);//System.out.println("reward0 : " + rewards[0].toString());
         tasks[0] = new Task(0, nodes[1], rewards[0], 40, -100);
 
         // MDP setup
@@ -214,21 +214,35 @@ public class Test {
     }
 
     public Test(int x) {
-        LinkedHashSet<Integer> integers = new LinkedHashSet<Integer>();
-        for (int i = 0; i < 5; ++i) {
-            integers.add(i * x);
-        }
+        AdvancedPolynomialFunction[] apfs = new AdvancedPolynomialFunction[3];
+        double[] c = new double[1];
+        c[0] = 0;
+        apfs[0] = new AdvancedPolynomialFunction(c);
+        c = new double[2];
+        c[0] = 12750;
+        c[1] = -50;
+        apfs[1] = new AdvancedPolynomialFunction(c);
+        c = new double[1];
+        c[0] = -1000;
+        apfs[2] = new AdvancedPolynomialFunction(c);
+        double[] bounds = {0.0, 255.0, 275.0, Double.POSITIVE_INFINITY};
+        PiecewisePolynomialFunction ppf = new PiecewisePolynomialFunction(apfs, bounds);
 
-        for (int i : integers) {
-            System.out.println(i);
-        }
-        System.out.println("==============");
-        for (int i = 4; i >=0; --i) {
-            integers.add(i * x);
-        }
-        for (int i : integers) {
-            System.out.println(i);
-        }
+        StochasticPolynomialFunction[] spf = new StochasticPolynomialFunction[1];
+        apfs = new AdvancedPolynomialFunction[2];
+        apfs[0] = AdvancedPolynomialFunction.ZERO();
+        apfs[1] = AdvancedPolynomialFunction.N(40);
+        spf[0] = new StochasticPolynomialFunction(apfs);
+        bounds = new double[2];
+        bounds[0] = 0;
+        bounds[1] = Double.POSITIVE_INFINITY;
+        PiecewiseStochasticPolynomialFunction g = new PiecewiseStochasticPolynomialFunction(spf, bounds);
+        System.out.println("ppf:\n" + ppf.toString());
+//        System.out.println("g:\n" + g.toString());
+        Edge edge = new Edge(new Node(1), new Node(2), g);
+        System.out.println("edge:\n" + edge.getArrivalFunction().toString());
+        PiecewisePolynomialFunction result = MDP.integrationOnXiOfComposition_test(ppf, edge.getArrivalFunction());
+        System.out.println("result:\n" + result);
     }
 
     public Test(String s) {

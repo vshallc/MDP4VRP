@@ -167,6 +167,18 @@ public class StochasticPolynomialFunction{
         return determinizedResult;
     }
 
+    public AdvancedPolynomialFunction determinize(AdvancedPolynomialFunction apf) {
+        AdvancedPolynomialFunction determinizedResult = new AdvancedPolynomialFunction(polyfunCoefs[0].getCoefficients());
+        for (int i = 1; i < polyfunCoefs.length; ++i) {
+            AdvancedPolynomialFunction tmpFuncCoefs = polyfunCoefs[i];
+            for (int p = 0; p < i; ++p) {
+                tmpFuncCoefs = tmpFuncCoefs.multiply(apf);
+            }
+            determinizedResult = determinizedResult.add(tmpFuncCoefs);
+        }
+        return determinizedResult;
+    }
+
     public StochasticPolynomialFunction integrationOnXi() {
         AdvancedPolynomialFunction[] intCoefs = new AdvancedPolynomialFunction[polyfunCoefs.length + 1];
         for (int i = 1; i <= polyfunCoefs.length; ++i) {

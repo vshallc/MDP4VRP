@@ -36,7 +36,7 @@ public class AdvancedPolynomialFunction extends PolynomialFunction {
 //    private double[] extremePoints;
 
     public AdvancedPolynomialFunction(double[] c) throws NullArgumentException, NoDataException {
-        super(c);
+        super(c[0] == Double.POSITIVE_INFINITY ? new double[]{Double.POSITIVE_INFINITY} : c[0] == Double.NEGATIVE_INFINITY ? new double[]{Double.NEGATIVE_INFINITY} : c);
     }
 
     public AdvancedPolynomialFunction add(final AdvancedPolynomialFunction apf) {
@@ -433,12 +433,12 @@ public class AdvancedPolynomialFunction extends PolynomialFunction {
             resPolyFuncCoefs[0] = new AdvancedPolynomialFunction(tmpCoefs);
         }
         for (int i = 1; i <= this.degree(); ++i) {
-            System.out.println("i=" + i);
+//            System.out.println("i=" + i);
             AdvancedPolynomialFunction[] multiplierPolyFuncCoefs = new AdvancedPolynomialFunction[1];
             double[] tmpCoefs = new double[1];
             tmpCoefs[0] = c[i];
             multiplierPolyFuncCoefs[0] = new AdvancedPolynomialFunction(tmpCoefs);
-            System.out.println("Multiplier: " + multiplierPolyFuncCoefs[0].toString());
+//            System.out.println("Multiplier: " + multiplierPolyFuncCoefs[0].toString());
             AdvancedPolynomialFunction[] tmpPolyFuncCoefs = new AdvancedPolynomialFunction[spf.degree() + 1];
             Arrays.fill(tmpPolyFuncCoefs, nilPolyFunc);
             for (int d2 = 0; d2 <= spf.degree(); ++d2) {
