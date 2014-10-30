@@ -103,11 +103,11 @@ public class MDP {
         valueFuncMap.put(endState, terminatedValueFunction);
 //        System.out.println("++endstate: " + endState + "\nppf:\n" + valueFuncMap.get(endState));
         for (Arc arc : incomingArcs.get(endState)) {
-            if (arc.getAction() instanceof Move) {
+//            if (arc.getAction() instanceof Move) {
                 valueFuncMap.put(arc.getStartState(), arc.getAction().preValueFunc(valueFuncMap.get(endState)));
                 policyMap.put(arc.getStartState(), Policy.SimplePolicy(arc.getAction()));
 //                System.out.println("++state: " + arc.getStartState() + "\n" + valueFuncMap.get(arc.getStartState()));
-            }
+//            }
         }
         for (State state : valueFuncMap.keySet()) {
             System.out.println("state: " + state.toString() + "\n" + valueFuncMap.get(state).toString() + "\n");
@@ -117,6 +117,11 @@ public class MDP {
             for (Set<Task> set : moduleTaskMap.keySet()) {
                 MDP.moduleSolver(moduleTaskMap.get(set), valueFuncMap, policyMap, incomingArcs, level);
             }
+            System.out.println("============= LEVEL " + level + " DONE =============");
+            for (State state : valueFuncMap.keySet()) {
+                System.out.println("state: " + state.toString() + "\n" + valueFuncMap.get(state).toString() + "\n");
+            }
+            System.out.println("========================================");
         }
 
 //        LinkedList<Arc> checkingList = new LinkedList<Arc>();
@@ -203,7 +208,6 @@ public class MDP {
                         if (preState.getTaskSet().size() == level) nextIteratorSet.add(preState);
                     }
                 }
-//                break;
             }
             iteratorSet = nextIteratorSet;
             nextIteratorSet = new LinkedHashSet<State>();
@@ -304,9 +308,6 @@ public class MDP {
         // only for calculating: Int f(x)*V(A(t)) dx; x:0~1; A(t)=t+g(t); g>0 -> t+g(t)>t
         // A(t) arrive time (start on t)
         // A'(t)>=0
-
-//        System.out.println("V:\n" + V.toString());
-//        System.out.println("A:\n" + A.toString());
         List<AdvancedPolynomialFunction> pfsList = new ArrayList<AdvancedPolynomialFunction>();
         List<Double> boundsList = new ArrayList<Double>();
 

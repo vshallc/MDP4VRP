@@ -124,6 +124,22 @@ public class PiecewisePolynomialFunction {
     }
 
     @Override
+    public int hashCode() {
+        final int prime = 17;
+        int result = 1;
+        result = prime * result + Arrays.hashCode(bounds);
+        result = prime * result + Arrays.hashCode(polyFuncs);
+        return result;
+    }
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof PiecewisePolynomialFunction)) return false;
+        PiecewisePolynomialFunction other = (PiecewisePolynomialFunction) obj;
+        return Arrays.equals(this.getPolynomialFunctions(), other.getPolynomialFunctions()) && Arrays.equals(this.getBounds(), other.getBounds());
+    }
+
+    @Override
     public String toString() {
         StringBuilder s = new StringBuilder();
         for (int i = 0; i < pieces; ++i) {
