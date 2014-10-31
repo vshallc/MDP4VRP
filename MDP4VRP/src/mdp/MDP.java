@@ -164,6 +164,7 @@ public class MDP {
             s.append(state.toString());
             s.append('\n');
             s.append(valueFuncMap.get(state).toString());
+            s.append('\n');
         }
         return s.toString();
     }
@@ -196,13 +197,14 @@ public class MDP {
                         PiecewisePolynomialFunctionAndPolicy maxResult = MDP.max(preValueFunc, newPreValueFunc, prePolicy, newPrePolicy);
 //                        if (!maxResult.getPiecewisePolynomialFunction().equals(preValueFunc) || !maxResult.getPolicy().equals(prePolicy)) {
                         if (!maxResult.getPiecewisePolynomialFunction().equals(preValueFunc)) {
-                            System.out.println("max:\n" + maxResult.getPiecewisePolynomialFunction().toString());
+                            System.out.println("max:\n" + maxResult.getPiecewisePolynomialFunction());
                             valueFuncMap.put(preState, maxResult.getPiecewisePolynomialFunction());
                             policyMap.put(preState, maxResult.getPolicy());
                             if (preState.getTaskSet().size() == level) nextIteratorSet.add(preState);
                         }
                         System.out.println("----");
                     } else {
+                        System.out.println("put:\n" + newPreValueFunc);
                         valueFuncMap.put(preState, newPreValueFunc);
                         policyMap.put(preState, newPrePolicy);
                         if (preState.getTaskSet().size() == level) nextIteratorSet.add(preState);
@@ -281,7 +283,9 @@ public class MDP {
             if (bounds2[j + 1] <= newBounds[n]) ++j;
 //            System.out.println("n: " + n + " i: " + i + " j: " + j);
             v = (newBounds[n] + newBounds[n + 1]) / 2;
-            if (ppf1.getPolynomialFunction(i).value(v) >= ppf2.getPolynomialFunction(j).value(v)) {
+            precision = ppf1.getPolynomialFunction(i).value(v) - ppf2.getPolynomialFunction(j).value(v);
+//            if (ppf1.getPolynomialFunction(i).value(v) >= ppf2.getPolynomialFunction(j).value(v)) {
+            if (precision >= -COMPARING_PRECISION) {
                 pfs[n] = new AdvancedPolynomialFunction(ppf1.getPolynomialFunction(i).getCoefficients());
                 selectedIDs[n] = 0;
             } else {
@@ -292,7 +296,9 @@ public class MDP {
         if (bounds1[i + 1] <= newBounds[n]) ++i;
         if (bounds2[j + 1] <= newBounds[n]) ++j;
         v = bounds1[pieces1] == Double.POSITIVE_INFINITY ? newBounds[newPiece - 1] + 10000 : (newBounds[newPiece - 1] + bounds1[pieces1]) / 2;
-        if (ppf1.getPolynomialFunction(i).value(v) > ppf2.getPolynomialFunction(j).value(v)) {
+        precision = ppf1.getPolynomialFunction(i).value(v) - ppf2.getPolynomialFunction(j).value(v);
+//        if (ppf1.getPolynomialFunction(i).value(v) >= ppf2.getPolynomialFunction(j).value(v)) {
+        if (precision >= -COMPARING_PRECISION) {
             pfs[newPiece - 1] = new AdvancedPolynomialFunction(ppf1.getPolynomialFunction(i).getCoefficients());
             selectedIDs[newPiece - 1] = 0;
         } else {

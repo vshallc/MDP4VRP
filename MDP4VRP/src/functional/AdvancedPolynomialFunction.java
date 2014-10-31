@@ -131,18 +131,18 @@ public class AdvancedPolynomialFunction extends PolynomialFunction {
         Arrays.fill(newCoefficients, 0);
         newCoefficients[0] = c[0];
         for (int i = 1; i < c.length; ++i) {
-            double[] m = {1, t}, p;
-            for (int j = 1; j < i; ++j) {
-                p = new double[m.length + 1];
-                Arrays.fill(p, 0);
-                for (int k = 0; k < m.length; ++k) {
-                    p[k] += m[k];
-                    p[k + 1] += m[k] * t;
+            double[] p = new double[i + 1];
+            Arrays.fill(p, 0);
+            p[0] = 1;
+            for (int j = 0; j < i; ++j) {
+                for (int k = i; k > 0; --k) {
+                    p[k] += p[k - 1];
+                    p[k - 1] = p[k - 1] * t;
                 }
-                m = p.clone();
+//                System.out.println(Arrays.toString(p));
             }
-            for (int j = 0; j < m.length; ++j) {
-                newCoefficients[j] += m[j] * c[i];
+            for (int j = 0; j < i + 1; ++j) {
+                newCoefficients[j] += p[j] * c[i];
             }
         }
         return new AdvancedPolynomialFunction(newCoefficients);

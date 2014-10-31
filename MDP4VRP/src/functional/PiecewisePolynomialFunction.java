@@ -97,12 +97,29 @@ public class PiecewisePolynomialFunction {
 
     public PiecewisePolynomialFunction shift(final double t) {
         // V(t) -> V(t + t')
-        AdvancedPolynomialFunction[] pfs = new AdvancedPolynomialFunction[pieces];
-        for (int i = 0; i < pieces; ++i) {
-            pfs[i] = polyFuncs[i].shift(t);
+        // keep the first and last bound
+        List<AdvancedPolynomialFunction> pfsList = new ArrayList<AdvancedPolynomialFunction>();
+        List<Double> boundList = new ArrayList<Double>();
+        boundList.add(bounds[0]);
+        for (int i = 0; i < pieces - 1; ++i) {
+            if (bounds[i + 1] - t > bounds[0] && bounds[i + 1] - t <= bounds[pieces]) {
+                pfsList.add(polyFuncs[i].shift(t));
+                boundList.add(bounds[i + 1] - t);
+            }
         }
-        PiecewisePolynomialFunction result = new PiecewisePolynomialFunction(pfs, bounds.clone());
-        result.simplify();
+        if (boundList.get(boundList.size() - 1) < bounds[pieces]) {
+            pfsList.add(polyFuncs[pieces - 1].shift(t));
+            boundList.add(bounds[pieces]);
+        }
+        AdvancedPolynomialFunction[] pfs = new AdvancedPolynomialFunction[pfsList.size()];
+        double[] newBounds = new double[boundList.size()];
+        for (int i = 0; i < pfsList.size(); ++i) {
+            pfs[i] = pfsList.get(i);
+            newBounds[i] = boundList.get(i);
+        }
+        newBounds[newBounds.length - 1] = boundList.get(newBounds.length - 1);
+        PiecewisePolynomialFunction result = new PiecewisePolynomialFunction(pfs, newBounds);
+//        result.simplify();
         return result;
     }
 
