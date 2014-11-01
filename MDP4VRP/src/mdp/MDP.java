@@ -17,6 +17,7 @@ import java.util.concurrent.ConcurrentMap;
  */
 public class MDP {
     private final static double COMPARING_PRECISION = 1e-8;
+//    public final static long PRECISION_FACTOR = (long) Math.pow(10, 6);
     private State startState;
     private State endState;
     private PiecewisePolynomialFunction terminatedValueFunction;
@@ -101,7 +102,6 @@ public class MDP {
 
     public void assignValueFunction() {
         valueFuncMap.put(endState, terminatedValueFunction);
-//        System.out.println("++endstate: " + endState + "\nppf:\n" + valueFuncMap.get(endState));
         for (Arc arc : incomingArcs.get(endState)) {
 //            if (arc.getAction() instanceof Move) {
                 valueFuncMap.put(arc.getStartState(), arc.getAction().preValueFunc(valueFuncMap.get(endState)));
@@ -109,9 +109,9 @@ public class MDP {
 //                System.out.println("++state: " + arc.getStartState() + "\n" + valueFuncMap.get(arc.getStartState()));
 //            }
         }
-        for (State state : valueFuncMap.keySet()) {
-            System.out.println("state: " + state.toString() + "\n" + valueFuncMap.get(state).toString() + "\n");
-        }
+//        for (State state : valueFuncMap.keySet()) {
+//            System.out.println("state: " + state.toString() + "\n" + valueFuncMap.get(state).toString() + "\n");
+//        }
         for (int level = 0; level < moduleMapList.size(); ++level) {
             ConcurrentMap<Set<Task>, Set<State>> moduleTaskMap = moduleMapList.get(level);
             for (Set<Task> set : moduleTaskMap.keySet()) {
@@ -322,7 +322,9 @@ public class MDP {
             pfsList.add(p.getPolynomialFunction());
             boundsList.add(p.getBounds()[0]);
         }
-//        System.out.println("pfp: " + pfp[0].getBounds()[0] + " " + pfp[0].getBounds()[1]);
+//        for (PolynomialFunctionPiece aPfp : pfp) {
+//            System.out.println("pfp: " + aPfp.getBounds()[0] + " " + aPfp.getBounds()[1]);
+//        }
         for (int i = 1; i < A.getPieceNum(); ++i) {
 //            System.out.println("A.getBounds: " + i + " " + A.getBounds()[i] + " " + A.getBounds()[i + 1]);
             pfp = integrationForVOfAOnPieces(V, A.getStochasticPolynomialFunction(i), A.getBounds()[i], A.getBounds()[i + 1]);
@@ -330,7 +332,9 @@ public class MDP {
             if (pfp[0].getPolynomialFunction().equals(pfsList.get(pfsList.size() - 1))) {
                 j = 1;
             }
-//            System.out.println("i: " + i + " pfp: " + pfp[0].getBounds()[0] + " " + pfp[0].getBounds()[1]);
+//            for (PolynomialFunctionPiece aPfp : pfp) {
+//                System.out.println("i: " + i + " pfp: " + aPfp.getBounds()[0] + " " + aPfp.getBounds()[1]);
+//            }
             for (; j < pfp.length; ++j) {
                 pfsList.add(pfp[j].getPolynomialFunction());
                 boundsList.add(pfp[j].getBounds()[0]);
@@ -361,8 +365,7 @@ public class MDP {
         AdvancedPolynomialFunction gmax = a.determinize(1);
 //        System.out.println("gmin:\n" + gmin.toString() + "\ngmax:\n" + gmax.toString());
         double[] vBounds = V.getBounds();
-//        System.out.println("vBounds:");
-//        for (double b : vBounds) System.out.println(b);
+//        System.out.println("vBounds:" + Arrays.toString(vBounds));
         TreeSet<Double> innerBounds = new TreeSet<Double>();
         innerBounds.add(leftDomain);
         innerBounds.add(rightDomain);
@@ -372,10 +375,12 @@ public class MDP {
                 roots = gmin.solve(vBounds[i], leftDomain, rightDomain);
                 for (double r : roots) {
                     if (r > leftDomain && r < rightDomain) innerBounds.add(r);
+//                    if (r > leftDomain + COMPARING_PRECISION && r < rightDomain - COMPARING_PRECISION) innerBounds.add(r);
                 }
                 roots = gmax.solve(vBounds[i], leftDomain, rightDomain);
                 for (double r : roots) {//System.out.println("r: " + r);
                     if (r > leftDomain && r < rightDomain) innerBounds.add(r);
+//                    if (r > leftDomain + COMPARING_PRECISION && r < rightDomain - COMPARING_PRECISION) innerBounds.add(r);
                 }
             }
         }
@@ -387,6 +392,7 @@ public class MDP {
                 ++i;
             }
         }
+//        System.out.println("primary bounds: " + Arrays.toString(primaryBounds));
         PolynomialFunctionPiece[] results = new PolynomialFunctionPiece[primaryBounds.length - 1];
         for (int i = 0; i < primaryBounds.length - 1; ++i) {
             // a(t) = t + g(t) must be an increasing function
@@ -408,10 +414,16 @@ public class MDP {
     }
 
     private static PolynomialFunctionPiece simpleIntegration(PiecewisePolynomialFunction V, int VStart, int VEnd, StochasticPolynomialFunction a, double gLeft, double gRight) {
+//        System.out.println("========== START DOING SIMPLE INTEGRATION ===========");
+//        System.out.println("VStart: " + VStart + " VEnd: " + VEnd + " gLeft: " + gLeft + " gRight: " + gRight);
+//        System.out.println("a:\n" + a);
         StochasticPolynomialFunction spf;
         AdvancedPolynomialFunction apf = AdvancedPolynomialFunction.ZERO();
         AdvancedPolynomialFunction upperBound, lowerBound, uc, lc;
         lowerBound = AdvancedPolynomialFunction.ZERO();
+
+//        AdvancedPolynomialFunction vi;
+//        StochasticPolynomialFunction comp;
 
         double[] vBounds = V.getBounds();
         for (int i = VStart; i < VEnd; ++i) {
@@ -422,23 +434,37 @@ public class MDP {
             }
             upperBound = new AdvancedPolynomialFunction(coefs); // System.out.println("UPPER: " + upperBound);
             spf = V.getPolynomialFunction(i).compose(a).integrationOnXi();
+//            vi = V.getPolynomialFunction(i);
+//            System.out.println("vi:\n" + vi);
+//            comp = vi.compose(a);
+//            System.out.println("comp:\n" + comp);
+//            spf = comp.integrationOnXi();
+//            System.out.println("spf:\n" + spf);
 //            System.out.println("upper:\n" + upperBound);
 //            System.out.println("lower:\n" + lowerBound);
             uc = spf.determinize(upperBound);
             lc = spf.determinize(lowerBound);
 //            System.out.println("V piece: " + i + "\nV== " + V.getPolynomialFunction(i) + "\n==uc: \n" + uc + "\n==lc: \n" + lc);
+//            System.out.println();
             apf = apf.add(uc.subtract(lc));
             lowerBound = upperBound;
         }
         upperBound = AdvancedPolynomialFunction.ONE();
         spf = V.getPolynomialFunction(VEnd).compose(a).integrationOnXi();
+//        vi = V.getPolynomialFunction(VEnd);
+//        System.out.println("vi:\n" + vi);
+//        comp = vi.compose(a);
+//        System.out.println("comp:\n" + comp);
+//        spf = comp.integrationOnXi();
+//        System.out.println("spf:\n" + spf);
 //        System.out.println("upper:\n" + upperBound);
 //        System.out.println("lower:\n" + lowerBound);
 //        System.out.println("integrate: " + V.getPolynomialFunction(VEnd).integrate());
         uc = spf.determinize(upperBound);
         lc = spf.determinize(lowerBound);
 //        System.out.println("V piece: " + VEnd + "\nV== " + V.getPolynomialFunction(VEnd) + "\n==uc: \n" + uc + "\n==lc: \n" + lc);
-        apf = apf.add(uc.subtract(lc)); // System.out.println();
+        apf = apf.add(uc.subtract(lc));
+//        System.out.println("=====================================================");
         return new PolynomialFunctionPiece(apf, gLeft, gRight);
     }
 

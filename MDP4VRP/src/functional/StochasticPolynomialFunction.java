@@ -106,6 +106,20 @@ public class StochasticPolynomialFunction{
         return new StochasticPolynomialFunction(newPolyFuncCoefs);
     }
 
+    public StochasticPolynomialFunction multiply(final StochasticPolynomialFunction spf) {
+//        AdvancedPolynomialFunction[] thisCoefficients = this.getAdvancedPolynomialFunctionCoefficients();
+        AdvancedPolynomialFunction[] newCoefficients = new AdvancedPolynomialFunction[polyfunCoefs.length + spf.getAdvancedPolynomialFunctionCoefficients().length - 1];
+        for (int i = 0; i < newCoefficients.length; ++i) {
+            newCoefficients[i] = AdvancedPolynomialFunction.ZERO();
+            for (int j = FastMath.max(0, i + 1 - spf.getAdvancedPolynomialFunctionCoefficients().length);
+                 j < FastMath.min(polyfunCoefs.length, i + 1);
+                 ++j) {
+                newCoefficients[i] = newCoefficients[i].add(polyfunCoefs[j].multiply(spf.getAdvancedPolynomialFunctionCoefficients()[i-j]));
+            }
+        }
+        return new StochasticPolynomialFunction(newCoefficients);
+    }
+
     public StochasticPolynomialFunction add(final AdvancedPolynomialFunction pf) {
         AdvancedPolynomialFunction[] newPolyFuncCoefs = new AdvancedPolynomialFunction[polyfunCoefs.length];
         newPolyFuncCoefs[0] = polyfunCoefs[0].add(pf);
@@ -126,6 +140,14 @@ public class StochasticPolynomialFunction{
             newPolyFuncCoefs[i] = new AdvancedPolynomialFunction(pfcs);
         }
         return new StochasticPolynomialFunction(newPolyFuncCoefs);
+    }
+
+    public StochasticPolynomialFunction multiply(final double c) {
+        AdvancedPolynomialFunction[] newPolyFunCoefs = new AdvancedPolynomialFunction[polyfunCoefs.length];
+        for (int i = 0; i < polyfunCoefs.length; ++i) {
+            newPolyFunCoefs[i] = polyfunCoefs[i].multiply(c);
+        }
+        return new StochasticPolynomialFunction(newPolyFunCoefs);
     }
 
     public double stochasticValue(double x) {

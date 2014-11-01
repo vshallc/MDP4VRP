@@ -1,6 +1,8 @@
 package functional;
 
 
+import mdp.MDP;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -16,9 +18,13 @@ public class PiecewisePolynomialFunction {
 
     public PiecewisePolynomialFunction(AdvancedPolynomialFunction[] polyFuncs, double[] bounds) {
         this.polyFuncs = Arrays.copyOf(polyFuncs, polyFuncs.length);
-        this.bounds = bounds.clone();
-//        System.arraycopy(bounds, 0, this.bounds, 0, bounds.length);
         pieces = polyFuncs.length;
+        this.bounds = bounds.clone();
+//        this.bounds = new double[bounds.length];
+//        for (int i = 0; i < pieces; ++i) {
+//            this.bounds[i] = (double) Math.round(bounds[i] * MDP.PRECISION_FACTOR) / MDP.PRECISION_FACTOR;
+//        }
+//        this.bounds[pieces] = bounds[pieces];
     }
 
     public void simplify() {

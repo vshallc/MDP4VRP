@@ -33,10 +33,10 @@ public class Execute implements Action{
     @Override
     public PiecewisePolynomialFunction preValueFunc(PiecewisePolynomialFunction currentValueFunc) {
         // V'(t) = V(t + t') + R(t)
-        System.out.println("execute: current: " + currentValueFunc);
-//        return (currentValueFunc.shift(task.getTimeCost())).add(task.getRewardFunc());
-        PiecewisePolynomialFunction shiftresult = currentValueFunc.shift(task.getTimeCost());
-        System.out.println("===============shift:\n" + shiftresult.toString() + "\n===================R(t):\n" + task.getRewardFunc());
-        return shiftresult.add(task.getRewardFunc());
+//        System.out.println("execute: current: " + currentValueFunc);
+        return (currentValueFunc.shift(task.getTimeCost())).add(task.getRewardFunc());
+//        PiecewisePolynomialFunction shiftresult = currentValueFunc.shift(task.getTimeCost());
+//        System.out.println("===============shift:\n" + shiftresult.toString() + "\n===================R(t):\n" + task.getRewardFunc());
+//        return shiftresult.add(task.getRewardFunc());
     }
 }
