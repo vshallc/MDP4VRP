@@ -1,5 +1,6 @@
-a toolkit provides functions for solving time-dependent piecewise polynomial functions and building MDP model.
+MDP4VRP
 ==========================
+A toolkit provides functions for solving time-dependent piecewise polynomial functions and building MDP model.
 
 * Note: this toolkit has not been fully completed, but most functions are ready to use. You can just use it as a package
   for relevant computing works
