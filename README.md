@@ -9,6 +9,14 @@ A toolkit provides functions for solving time-dependent piecewise polynomial fun
 
 Basic function includes:
 
+Build graph for VRPs
+
+Assign time-dependent functions to VRP cost functions
+
+Build MDP model from VRP graph
+
+Solve time-dependent MDPs
+
 Do functional computing on Piecewise Polynomial Functions (PPFs), includes:
 
   For each piece is a determined polynomial function (such as f(x)=c0+c1*x+c2*x^2+...)

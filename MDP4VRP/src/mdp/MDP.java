@@ -84,10 +84,10 @@ public class MDP {
         StringBuilder s = new StringBuilder();
 //        System.out.println(stateSet.size());
 //        for (State state : stateSet) {
-//            System.out.println(state.toString());
+//            System.out.println(state);
 //        }
         for (State state : stateSet) {
-//            System.out.println("state: " + state.toString() + " outgoing arc: " + outgoingArcs.get(state).size());
+//            System.out.println("state: " + state + " outgoing arc: " + outgoingArcs.get(state).size());
             for (Arc arc : outgoingArcs.get(state)) {
                 s.append(state.toString());
                 s.append(new char[]{'-', '>'});
@@ -103,15 +103,9 @@ public class MDP {
     public void assignValueFunction() {
         valueFuncMap.put(endState, terminatedValueFunction);
         for (Arc arc : incomingArcs.get(endState)) {
-//            if (arc.getAction() instanceof Move) {
                 valueFuncMap.put(arc.getStartState(), arc.getAction().preValueFunc(valueFuncMap.get(endState)));
                 policyMap.put(arc.getStartState(), Policy.SimplePolicy(arc.getAction()));
-//                System.out.println("++state: " + arc.getStartState() + "\n" + valueFuncMap.get(arc.getStartState()));
-//            }
         }
-//        for (State state : valueFuncMap.keySet()) {
-//            System.out.println("state: " + state.toString() + "\n" + valueFuncMap.get(state).toString() + "\n");
-//        }
         for (int level = 0; level < moduleMapList.size(); ++level) {
             ConcurrentMap<Set<Task>, Set<State>> moduleTaskMap = moduleMapList.get(level);
             for (Set<Task> set : moduleTaskMap.keySet()) {
@@ -123,39 +117,6 @@ public class MDP {
             }
             System.out.println("========================================");
         }
-
-//        LinkedList<Arc> checkingList = new LinkedList<Arc>();
-//        for (Arc arc : incomingArcs.get(endState)) {
-//            checkingList.addLast(arc);
-//        }
-////        Stack<State> checkingStack = new Stack<State>();
-////        checkingStack.push(endState);
-//        Set<State> checkedStates = new HashSet<State>();
-//        Map<State, Set<Arc>> unCheckedArcs = new HashMap<State, Set<Arc>>(); // Save arcs that have not been moved to checkingList
-//        unCheckedArcs.put(endState, new HashSet<Arc>()); // 'Cause arcs to endState have been moved to checkingList
-//
-//        Map<State, PiecewisePolynomialFunction> currentBestValueFunction = new HashMap<State, PiecewisePolynomialFunction>();
-//        Map<State, Policy> currentBestPolicy = new HashMap<State, Policy>();
-//        currentBestValueFunction.put(endState, terminatedValueFunction);
-//        currentBestPolicy.put(endState, null);
-//
-//        while (!checkingList.isEmpty()) {
-//            Arc arc = checkingList.pollLast();
-////            State currentState = checkingStack.pop();
-////            for (Arc arc : incomingArcs.get(currentState)) {
-//            State preState = arc.getStartState();
-//            PiecewisePolynomialFunction preValueFunc = arc.getAction().preValueFunc(currentBestValueFunction.get(arc.getEndState()));
-//            Policy prePolicy = Policy.SimplePolicy(arc.getAction());
-//            if (currentBestValueFunction.containsKey(preState)) {
-//                PiecewisePolynomialFunctionAndPolicy ppfap = max(preValueFunc, currentBestValueFunction.get(preState), prePolicy, currentBestPolicy.get(preState));
-//                currentBestValueFunction.put(preState, ppfap.getPiecewisePolynomialFunction());
-//                currentBestPolicy.put(preState, ppfap.getPolicy());
-//            } else {
-//                currentBestValueFunction.put(preState, preValueFunc);
-//                currentBestPolicy.put(preState, prePolicy);
-//            }
-////            }
-//        }
     }
 
     public String valueFunctionToString() {
@@ -178,22 +139,20 @@ public class MDP {
         LinkedHashSet<State> iteratorSet = new LinkedHashSet<State>();
         LinkedHashSet<State> nextIteratorSet = new LinkedHashSet<State>();
         iteratorSet.addAll(module);
-        int ccc = 0;
         while (!iteratorSet.isEmpty()) {
             for (State currentState : iteratorSet) {
                 System.out.println(Arrays.toString(iteratorSet.toArray(new State[0])));
                 for (Arc arc : incomingArcs.get(currentState)) {
                     State preState = arc.getStartState();
-                    System.out.println("prestate: " + preState.toString() + " action: " + arc.getAction().toString() + " currentstate: " + currentState);
+                    System.out.println("prestate: " + preState + " action: " + arc.getAction() + " currentstate: " + currentState);
                     PiecewisePolynomialFunction newPreValueFunc = arc.getAction().preValueFunc(valueFuncMap.get(currentState));
                     Policy newPrePolicy = Policy.SimplePolicy(arc.getAction());
                     if (valueFuncMap.containsKey(preState)) {
                         PiecewisePolynomialFunction preValueFunc = valueFuncMap.get(preState);
                         Policy prePolicy = policyMap.get(preState);
                         System.out.println("----");
-//                        System.out.println("prestate: " + preState.toString() + " action: " + arc.getAction().toString() + " currentstate: " + currentState);
-                        System.out.println("pre:\n" + preValueFunc.toString());
-                        System.out.println("new:\n" + newPreValueFunc.toString());
+                        System.out.println("pre:\n" + preValueFunc);
+                        System.out.println("new:\n" + newPreValueFunc);
                         PiecewisePolynomialFunctionAndPolicy maxResult = MDP.max(preValueFunc, newPreValueFunc, prePolicy, newPrePolicy);
 //                        if (!maxResult.getPiecewisePolynomialFunction().equals(preValueFunc) || !maxResult.getPolicy().equals(prePolicy)) {
                         if (!maxResult.getPiecewisePolynomialFunction().equals(preValueFunc)) {
@@ -213,8 +172,6 @@ public class MDP {
             }
             iteratorSet = nextIteratorSet;
             nextIteratorSet = new LinkedHashSet<State>();
-//            ++ccc;
-//            if (ccc>1) break;
         }
     }
 
@@ -316,34 +273,23 @@ public class MDP {
         // A'(t)>=0
         List<AdvancedPolynomialFunction> pfsList = new ArrayList<AdvancedPolynomialFunction>();
         List<Double> boundsList = new ArrayList<Double>();
-
         PolynomialFunctionPiece[] pfp = integrationForVOfAOnPieces(V, A.getStochasticPolynomialFunction(0), A.getBounds()[0], A.getBounds()[1]);
         for (PolynomialFunctionPiece p : pfp) {
             pfsList.add(p.getPolynomialFunction());
             boundsList.add(p.getBounds()[0]);
         }
-//        for (PolynomialFunctionPiece aPfp : pfp) {
-//            System.out.println("pfp: " + aPfp.getBounds()[0] + " " + aPfp.getBounds()[1]);
-//        }
         for (int i = 1; i < A.getPieceNum(); ++i) {
-//            System.out.println("A.getBounds: " + i + " " + A.getBounds()[i] + " " + A.getBounds()[i + 1]);
             pfp = integrationForVOfAOnPieces(V, A.getStochasticPolynomialFunction(i), A.getBounds()[i], A.getBounds()[i + 1]);
             int j = 0;
             if (pfp[0].getPolynomialFunction().equals(pfsList.get(pfsList.size() - 1))) {
                 j = 1;
             }
-//            for (PolynomialFunctionPiece aPfp : pfp) {
-//                System.out.println("i: " + i + " pfp: " + aPfp.getBounds()[0] + " " + aPfp.getBounds()[1]);
-//            }
             for (; j < pfp.length; ++j) {
                 pfsList.add(pfp[j].getPolynomialFunction());
                 boundsList.add(pfp[j].getBounds()[0]);
             }
         }
         boundsList.add(pfp[pfp.length - 1].getBounds()[1]);
-//        System.out.println("bounds list: ");
-//        for (Double d : boundsList) System.out.print(d + ", ");
-//        System.out.println("====");
         AdvancedPolynomialFunction[] apfs = new AdvancedPolynomialFunction[pfsList.size()];
         double[] bounds = new double[boundsList.size()];
         for (int i = 0; i < apfs.length; ++i) {
