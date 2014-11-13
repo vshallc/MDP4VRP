@@ -77,17 +77,11 @@ public class MDP {
                 }
             }
         }
-//        System.out.println("size: " + moduleMapList.get(startState.getTaskSet().size()).size());
     }
 
     public String graphToString() {
         StringBuilder s = new StringBuilder();
-//        System.out.println(stateSet.size());
-//        for (State state : stateSet) {
-//            System.out.println(state);
-//        }
         for (State state : stateSet) {
-//            System.out.println("state: " + state + " outgoing arc: " + outgoingArcs.get(state).size());
             for (Arc arc : outgoingArcs.get(state)) {
                 s.append(state.toString());
                 s.append(new char[]{'-', '>'});
@@ -180,7 +174,37 @@ public class MDP {
     }
 
     public static PiecewisePolynomialFunctionAndPolicy addWait(PiecewisePolynomialFunction ppf, Policy policy) {
-//        for (int p = )
+        double lastMax = Double.NEGATIVE_INFINITY;
+        double waitStart = ppf.getBounds()[ppf.getPieceNum()];
+        double waitEnd = waitStart;
+        AdvancedPolynomialFunction apf;
+        double leftBound, rightBound;
+        double[] extPoints;
+        for (int p = ppf.getPieceNum() - 1; p >= 0; --p) {
+            apf = ppf.getPolynomialFunction(p);
+            leftBound = ppf.getBounds()[p];
+            rightBound = ppf.getBounds()[p + 1];
+            if (lastMax > apf.value(rightBound)) {
+                double[] roots = apf.solveInRange(lastMax, leftBound, rightBound);
+                if (roots.length == 0) continue;
+                waitStart = roots[roots.length - 1];
+                ppf = ppf.replace(AdvancedPolynomialFunction.N(lastMax), waitStart, waitEnd);
+                policy = policy.replace(new Wait(waitEnd), waitStart, waitEnd);
+                waitEnd = waitStart;
+                rightBound = waitStart;
+            } else {
+                lastMax = apf.value(rightBound);
+                waitEnd = rightBound;
+            }
+            extPoints = apf.extremePoints(leftBound, rightBound);
+            for (int i = extPoints.length - 1; i >= 0; --i) {
+                if (apf.value(extPoints[i]) < lastMax) {
+                    //
+                } else {
+                    //
+                }
+            }
+        }
         return null;
     }
 
@@ -312,13 +336,10 @@ public class MDP {
     private static PolynomialFunctionPiece[] integrationForVOfAOnPieces(PiecewisePolynomialFunction V,
                                                                         StochasticPolynomialFunction a,
                                                                         double leftDomain, double rightDomain) {
-//        System.out.println("========== integrationForVOfAOnPieces ==========");
         // xi ~ [0,1]
         AdvancedPolynomialFunction gmin = a.determinize(0);
         AdvancedPolynomialFunction gmax = a.determinize(1);
-//        System.out.println("gmin:\n" + gmin.toString() + "\ngmax:\n" + gmax.toString());
         double[] vBounds = V.getBounds();
-//        System.out.println("vBounds:" + Arrays.toString(vBounds));
         TreeSet<Double> innerBounds = new TreeSet<Double>();
         innerBounds.add(leftDomain);
         innerBounds.add(rightDomain);
@@ -362,7 +383,6 @@ public class MDP {
 //            System.out.println("*****Vstart: " + VStart + " Vend: " + VEnd + " primaryBound:" + primaryBounds[i] + " " + primaryBounds[i + 1]);
             results[i] = simpleIntegration(V, VStart, VEnd, a, primaryBounds[i], primaryBounds[i + 1]);
         }
-//        System.out.println("=========| integrationForVOfAOnPieces |=========");
         return results;
     }
 

@@ -216,15 +216,24 @@ public class Test {
         System.out.println("||||||||||||||||||End|||||||||||||");
     }
 
-    public static Map<Integer, Double> testMap(Map<Integer, Double> map) {
-        for (Integer i : map.keySet()) {
-            double d = map.get(i);
-            map.put(i, d * 10);
+    public Test(String x) {
+        double[] roots = {0, 1, 2, 3, 4};
+        double leftBound = 3.3, rightBound = 2.3;
+        int i = 0, start, end;
+        for (; i < roots.length; ++i) {
+            if (roots[i] >= leftBound) break;
         }
-        return map;
+        start = i;
+        for (; i < roots.length; ++i) {
+            if (roots[i] > rightBound) break;
+        }
+        end = i;
+        double[] rootsInRange = new double[end - start];
+        System.arraycopy(roots, start, rootsInRange, 0, end - start);
+        System.out.println(Arrays.toString(rootsInRange));
     }
 
     public static void main(String[] args) {
-        new Test();
+        new Test("a");
     }
 }
