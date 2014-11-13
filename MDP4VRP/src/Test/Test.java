@@ -115,7 +115,23 @@ public class Test {
 //        System.out.println(mdp.graphToString());
         System.out.println("=================");
         mdp.assignValueFunction();
-        System.out.println("assign done");
+
+        System.out.println("============================== INPUT ==============================");
+        System.out.println("Graph {(0,1),(0,2),(1,2)}");
+        for (int i = 0; i < 2; ++i) {
+            for (int j = i + 1; j < 3; j++) {
+                System.out.println("Edge: (" + i + "," + j + ") time cost function: \n" +edges[i][j].getTimeCostFunction() + "\n");
+            }
+        }
+        System.out.println("Tasks:");
+        for (Task task : tasks) {
+            System.out.println("Location: " + task.getLocation().getID());
+            System.out.println("Reward Function: \n" + task.getRewardFunc());
+            System.out.println("Penalty: " + task.getPenalty());
+            System.out.println();
+        }
+        System.out.println("============================== OUTPUT ==============================");
+        System.out.println("MDP Graph:");
         System.out.println(mdp.valueFunctionToString());
     }
 
@@ -198,25 +214,6 @@ public class Test {
 //        System.out.println(ppf.getPolynomialFunction(1).value(106.66666666666667));
 //        System.out.println(result.getPolynomialFunction(1).value(70.66666666666667));
         System.out.println("||||||||||||||||||End|||||||||||||");
-    }
-
-    public Test(String s) {
-        Map<Integer, Double> map = new LinkedHashMap<Integer, Double>();
-        for (int i = 0; i < 5; ++i) {
-            map.put(i, i / 10.0);
-        }
-        for (int i : map.keySet()) {
-            System.out.println(i + ":" + map.get(i));
-        }
-        Map<Integer, Double> newMap = testMap(map);
-        System.out.println("========old=======");
-        for (int i : map.keySet()) {
-            System.out.println(i + ":" + map.get(i));
-        }
-        System.out.println("========new=======");
-        for (int i : newMap.keySet()) {
-            System.out.println(i + ":" + newMap.get(i));
-        }
     }
 
     public static Map<Integer, Double> testMap(Map<Integer, Double> map) {

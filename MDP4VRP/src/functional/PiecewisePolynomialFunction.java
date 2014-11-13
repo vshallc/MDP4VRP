@@ -129,6 +129,47 @@ public class PiecewisePolynomialFunction {
         return result;
     }
 
+    public PiecewisePolynomialFunction replace(AdvancedPolynomialFunction apf, double leftBound, double rightBound) {
+        int i, start = 0, end = 0;
+        for (i = 1; i < pieces + 1; ++i) {
+            if (leftBound < bounds[i]) {
+                start = i - 1;
+                break;
+            }
+        }
+        for (; i < pieces + 1; ++i) {
+            if (rightBound < bounds[i]) {
+                end = i - 1;
+                break;
+            }
+        }
+        int newPieces = start + pieces - end + leftBound == bounds[start] ? 0 : 1 + rightBound == bounds[end] ? 0 : 1;
+        AdvancedPolynomialFunction[] newPolyFuncs = new AdvancedPolynomialFunction[newPieces];
+        double[] newBounds = new double[newPieces + 1];
+        for (i = 0; i < start; ++i) {
+            newPolyFuncs[i] = polyFuncs[i];
+            newBounds[i] = bounds[i];
+        }
+        if (bounds[start] < leftBound) {
+            newPolyFuncs[i] = polyFuncs[start];
+            newBounds[i] = bounds[start];
+            ++i;
+        }
+        newPolyFuncs[i] = apf;
+        newBounds[i] = leftBound;
+        ++i;
+        if (bounds[end] > rightBound) {
+            newPolyFuncs[i] = polyFuncs[end];
+            newBounds[i] = rightBound;
+            ++i;
+        }
+        for (; i < newPieces; ++i) {
+            newPolyFuncs[i] = polyFuncs[pieces - newPieces + i];
+            newBounds[i] = bounds[pieces - newPieces + i];
+        }
+        newBounds[newPieces] = bounds[pieces];
+        return new PiecewisePolynomialFunction(newPolyFuncs, newBounds);
+    }
 
     public AdvancedPolynomialFunction[] getPolynomialFunctions() {
         return this.polyFuncs;

@@ -26,6 +26,11 @@ public class Move implements Action{
     }
 
     @Override
+    public double timeCost(double currentTime) {
+        return edge.getTimeCostFunction().stochasticValue(currentTime);
+    }
+
+    @Override
     public PiecewisePolynomialFunction preValueFunc(PiecewisePolynomialFunction currentValueFunc) {
         return MDP.integrationOnXiOfComposition_test(currentValueFunc, edge.getArrivalFunction());
     }

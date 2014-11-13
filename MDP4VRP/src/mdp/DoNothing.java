@@ -23,6 +23,11 @@ public class DoNothing implements Action{
     }
 
     @Override
+    public double timeCost(double currentTime) {
+        return 0;
+    }
+
+    @Override
     public PiecewisePolynomialFunction preValueFunc(PiecewisePolynomialFunction currentValueFunc) {
         return null;
     }

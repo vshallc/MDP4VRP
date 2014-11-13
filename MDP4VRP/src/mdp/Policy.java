@@ -27,6 +27,48 @@ public class Policy {
         return bounds.clone();
     }
 
+    public Policy replace(Action action, double leftBound, double rightBound) {
+        int i, start = 0, end = 0;
+        for (i = 1; i < pieces + 1; ++i) {
+            if (leftBound < bounds[i]) {
+                start = i - 1;
+                break;
+            }
+        }
+        for (; i < pieces + 1; ++i) {
+            if (rightBound < bounds[i]) {
+                end = i - 1;
+                break;
+            }
+        }
+        int newPieces = start + pieces - end + leftBound == bounds[start] ? 0 : 1 + rightBound == bounds[end] ? 0 : 1;
+        Action[] newActions = new Action[newPieces];
+        double[] newBounds = new double[newPieces + 1];
+        for (i = 0; i < start; ++i) {
+            newActions[i] = actions[i];
+            newBounds[i] = bounds[i];
+        }
+        if (bounds[start] < leftBound) {
+            newActions[i] = actions[start];
+            newBounds[i] = bounds[start];
+            ++i;
+        }
+        newActions[i] = action;
+        newBounds[i] = leftBound;
+        ++i;
+        if (bounds[end] > rightBound) {
+            newActions[i] = actions[end];
+            newBounds[i] = rightBound;
+            ++i;
+        }
+        for (; i < newPieces; ++i) {
+            newActions[i] = actions[pieces - newPieces + i];
+            newBounds[i] = bounds[pieces - newPieces + i];
+        }
+        newBounds[newPieces] = bounds[pieces];
+        return new Policy(newActions, newBounds);
+    }
+
     public static Policy union(Policy p1, Policy p2, double[] bounds, int[] id) {
         List<Double> boundsList = new ArrayList<Double>();
         List<Action> actionList = new ArrayList<Action>();

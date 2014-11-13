@@ -9,6 +9,8 @@ import functional.PiecewiseStochasticPolynomialFunction;
 public interface Action {
     public State perform(State state);
 
+    public double timeCost(double currentTime);
+
     public PiecewisePolynomialFunction preValueFunc(PiecewisePolynomialFunction currentValueFunc);
 
 //    public String toString();

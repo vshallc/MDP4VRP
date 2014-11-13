@@ -89,6 +89,17 @@ public class PiecewiseStochasticPolynomialFunction {
         return this.pieces;
     }
 
+    public double stochasticValue(double x) {
+        int p = 0;
+        for (int i = 0; i < pieces; ++i) {
+            if (x <= bounds[i]) {
+                p = i - 1;
+                break;
+            }
+        }
+        return stocPolyFuncs[p].stochasticValue(x);
+    }
+
     @Override
     public String toString() {
         StringBuilder s = new StringBuilder();

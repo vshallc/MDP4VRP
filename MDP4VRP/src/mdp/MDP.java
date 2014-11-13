@@ -122,9 +122,12 @@ public class MDP {
     public String valueFunctionToString() {
         StringBuilder s = new StringBuilder();
         for (State state : stateSet) {
+            s.append("State: ");
             s.append(state.toString());
             s.append('\n');
+            s.append("Value Function:\n");
             s.append(valueFuncMap.get(state).toString());
+            s.append('\n');
             s.append('\n');
         }
         return s.toString();
@@ -147,6 +150,7 @@ public class MDP {
                     System.out.println("prestate: " + preState + " action: " + arc.getAction() + " currentstate: " + currentState);
                     PiecewisePolynomialFunction newPreValueFunc = arc.getAction().preValueFunc(valueFuncMap.get(currentState));
                     Policy newPrePolicy = Policy.SimplePolicy(arc.getAction());
+                    // add wait action
                     if (valueFuncMap.containsKey(preState)) {
                         PiecewisePolynomialFunction preValueFunc = valueFuncMap.get(preState);
                         Policy prePolicy = policyMap.get(preState);
@@ -173,6 +177,11 @@ public class MDP {
             iteratorSet = nextIteratorSet;
             nextIteratorSet = new LinkedHashSet<State>();
         }
+    }
+
+    public static PiecewisePolynomialFunctionAndPolicy addWait(PiecewisePolynomialFunction ppf, Policy policy) {
+//        for (int p = )
+        return null;
     }
 
     public static PiecewisePolynomialFunctionAndPolicy max(PiecewisePolynomialFunctionAndPolicy ppfap1, PiecewisePolynomialFunctionAndPolicy ppfap2) {
@@ -233,12 +242,10 @@ public class MDP {
         i = 0;
         j = 0;
         double v;
-//        System.out.println("tmp bounds: " + Arrays.toString(tmpBounds.toArray(new Double[0])));
         for (n = 0; n < newPiece - 1; ++n) {
             newBounds[n + 1] = tmpBounds.get(n + 1);
             if (bounds1[i + 1] <= newBounds[n]) ++i;
             if (bounds2[j + 1] <= newBounds[n]) ++j;
-//            System.out.println("n: " + n + " i: " + i + " j: " + j);
             v = (newBounds[n] + newBounds[n + 1]) / 2;
             precision = ppf1.getPolynomialFunction(i).value(v) - ppf2.getPolynomialFunction(j).value(v);
 //            if (ppf1.getPolynomialFunction(i).value(v) >= ppf2.getPolynomialFunction(j).value(v)) {
