@@ -96,6 +96,7 @@ public class MDP {
 
     public void assignValueFunction() {
         valueFuncMap.put(endState, terminatedValueFunction);
+        policyMap.put(endState, Policy.SimplePolicy(new DoNothing(0)));
         for (Arc arc : incomingArcs.get(endState)) {
                 valueFuncMap.put(arc.getStartState(), arc.getAction().preValueFunc(valueFuncMap.get(endState)));
                 policyMap.put(arc.getStartState(), Policy.SimplePolicy(arc.getAction()));
@@ -127,6 +128,22 @@ public class MDP {
         return s.toString();
     }
 
+    public String policyToString() {
+//        System.out.println("size:" + policyMap.size());
+//        System.out.println(Arrays.toString(policyMap.keySet().toArray(new State[policyMap.size()])));
+        StringBuilder s = new StringBuilder();
+        for (State state : stateSet) {
+            s.append("State: ");
+            s.append(state.toString());
+            s.append('\n');
+            s.append("Policy:\n");
+            s.append(policyMap.get(state).toString());
+            s.append('\n');
+            s.append('\n');
+        }
+        return s.toString();
+    }
+
     public static void moduleSolver(Set<State> module,
                                     ConcurrentMap<State, PiecewisePolynomialFunction> valueFuncMap,
                                     ConcurrentMap<State, Policy> policyMap,
@@ -138,13 +155,15 @@ public class MDP {
         iteratorSet.addAll(module);
         while (!iteratorSet.isEmpty()) {
             for (State currentState : iteratorSet) {
-                System.out.println(Arrays.toString(iteratorSet.toArray(new State[0])));
+                System.out.println(Arrays.toString(iteratorSet.toArray(new State[iteratorSet.size()])));
                 for (Arc arc : incomingArcs.get(currentState)) {
                     State preState = arc.getStartState();
                     System.out.println("prestate: " + preState + " action: " + arc.getAction() + " currentstate: " + currentState);
                     PiecewisePolynomialFunction newPreValueFunc = arc.getAction().preValueFunc(valueFuncMap.get(currentState));
                     Policy newPrePolicy = Policy.SimplePolicy(arc.getAction());
-                    // add wait action
+                    PiecewisePolynomialFunctionAndPolicy addWaitResult = addWait(newPreValueFunc, newPrePolicy); // add wait action
+                    newPreValueFunc = addWaitResult.getPiecewisePolynomialFunction();
+                    newPrePolicy = addWaitResult.getPolicy();
                     if (valueFuncMap.containsKey(preState)) {
                         PiecewisePolynomialFunction preValueFunc = valueFuncMap.get(preState);
                         Policy prePolicy = policyMap.get(preState);
@@ -180,32 +199,67 @@ public class MDP {
         AdvancedPolynomialFunction apf;
         double leftBound, rightBound;
         double[] extPoints;
-        for (int p = ppf.getPieceNum() - 1; p >= 0; --p) {
+        boolean waitFlag = false;
+        pieceLoop:for (int p = ppf.getPieceNum() - 1; p >= 0; --p) {
             apf = ppf.getPolynomialFunction(p);
             leftBound = ppf.getBounds()[p];
             rightBound = ppf.getBounds()[p + 1];
-            if (lastMax > apf.value(rightBound)) {
+            if (lastMax > apf.value(rightBound)) { // if max value on piece p+1 > the value on right bound of piece p
+                waitFlag = true;
                 double[] roots = apf.solveInRange(lastMax, leftBound, rightBound);
-                if (roots.length == 0) continue;
-                waitStart = roots[roots.length - 1];
-                ppf = ppf.replace(AdvancedPolynomialFunction.N(lastMax), waitStart, waitEnd);
-                policy = policy.replace(new Wait(waitEnd), waitStart, waitEnd);
-                waitEnd = waitStart;
-                rightBound = waitStart;
-            } else {
-                lastMax = apf.value(rightBound);
+                if (roots.length == 0) {
+                    waitStart = leftBound;
+                    continue;
+                }else {
+                    waitStart = roots[roots.length - 1];
+                    rightBound = waitStart;
+                }
+//                ppf = ppf.replace(AdvancedPolynomialFunction.N(lastMax), waitStart, waitEnd);
+//                policy = policy.replace(new Wait(waitEnd), waitStart, waitEnd);
+//                waitEnd = waitStart;
+//                rightBound = waitStart;
+//                waitFlag = false;
+            } else { // replace last if have any, then goes to current piece p
+                if (waitFlag) {
+                    ppf = ppf.replace(AdvancedPolynomialFunction.N(lastMax), waitStart, waitEnd);
+                    policy = policy.replace(new Wait(waitEnd), waitStart, waitEnd);
+                    waitFlag = false;
+                }
                 waitEnd = rightBound;
+                lastMax = apf.value(waitEnd);
             }
             extPoints = apf.extremePoints(leftBound, rightBound);
             for (int i = extPoints.length - 1; i >= 0; --i) {
                 if (apf.value(extPoints[i]) < lastMax) {
-                    //
+                    waitFlag = true;
+                    double[] roots = apf.solveInRange(lastMax, leftBound, extPoints[i]);
+                    if (roots.length == 0) {
+                        waitStart = leftBound;
+                        continue pieceLoop;
+                    }
+                    waitStart = roots[roots.length - 1];
+//                    ppf = ppf.replace(AdvancedPolynomialFunction.N(lastMax), waitStart, waitEnd);
+//                    policy = policy.replace(new Wait(waitEnd), waitStart, waitEnd);
+//                    waitEnd = waitStart;
+//                    rightBound = waitStart;
+//                    waitFlag = false;
                 } else {
-                    //
+                    if (waitFlag) {
+                        ppf = ppf.replace(AdvancedPolynomialFunction.N(lastMax), waitStart, waitEnd);
+                        policy = policy.replace(new Wait(waitEnd), waitStart, waitEnd);
+                        waitFlag = false;
+                    }
+                    waitEnd = extPoints[i];
+                    lastMax = apf.value(waitEnd);
                 }
             }
         }
-        return null;
+        if (waitFlag) {
+            ppf = ppf.replace(AdvancedPolynomialFunction.N(lastMax), waitStart, waitEnd);
+            policy = policy.replace(new Wait(waitEnd), waitStart, waitEnd);
+//            waitFlag = false;
+        }
+        return new PiecewisePolynomialFunctionAndPolicy(ppf, policy);
     }
 
     public static PiecewisePolynomialFunctionAndPolicy max(PiecewisePolynomialFunctionAndPolicy ppfap1, PiecewisePolynomialFunctionAndPolicy ppfap2) {

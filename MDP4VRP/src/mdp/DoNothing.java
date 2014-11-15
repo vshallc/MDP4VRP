@@ -31,4 +31,9 @@ public class DoNothing implements Action{
     public PiecewisePolynomialFunction preValueFunc(PiecewisePolynomialFunction currentValueFunc) {
         return null;
     }
+
+    @Override
+    public String toString() {
+        return "DoNothing(" + id + ")";
+    }
 }

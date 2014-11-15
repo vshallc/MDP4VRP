@@ -27,4 +27,9 @@ public class Wait implements Action {
     public PiecewisePolynomialFunction preValueFunc(PiecewisePolynomialFunction currentValueFunc) {
         return currentValueFunc;
     }
+
+    @Override
+    public String toString() {
+        return "waitTo(" + wakeUpTime + ")";
+    }
 }

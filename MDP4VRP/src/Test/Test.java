@@ -91,7 +91,7 @@ public class Test {
         bounds[0] = 0;
         bounds[1] = 200;
         bounds[2] = Double.POSITIVE_INFINITY;
-        rewards[0] = new PiecewisePolynomialFunction(apfs, bounds);//System.out.println("reward0 : " + rewards[0].toString());
+        rewards[0] = new PiecewisePolynomialFunction(apfs, bounds); //System.out.println("reward0 : " + rewards[0].toString());
         tasks[0] = new Task(0, nodes[1], rewards[0], 40, -100);
 
         // MDP setup
@@ -133,6 +133,8 @@ public class Test {
         System.out.println("============================== OUTPUT ==============================");
         System.out.println("MDP Graph:");
         System.out.println(mdp.valueFunctionToString());
+        System.out.println("MDP Policies:");
+        System.out.println(mdp.policyToString());
     }
 
     public Test(int x) {
@@ -217,23 +219,25 @@ public class Test {
     }
 
     public Test(String x) {
-        double[] roots = {0, 1, 2, 3, 4};
-        double leftBound = 3.3, rightBound = 2.3;
-        int i = 0, start, end;
-        for (; i < roots.length; ++i) {
-            if (roots[i] >= leftBound) break;
-        }
-        start = i;
-        for (; i < roots.length; ++i) {
-            if (roots[i] > rightBound) break;
-        }
-        end = i;
-        double[] rootsInRange = new double[end - start];
-        System.arraycopy(roots, start, rootsInRange, 0, end - start);
-        System.out.println(Arrays.toString(rootsInRange));
+        AdvancedPolynomialFunction[] apfs = new AdvancedPolynomialFunction[3];
+        double[] c, bounds;
+        c = new double[]{500};
+        apfs[0] = new AdvancedPolynomialFunction(c);
+        c = new double[]{1000, -6, 0.01};
+//        c = new double[]{300};
+        apfs[1] = new AdvancedPolynomialFunction(c);
+        c = new double[]{800};
+        apfs[2] = new AdvancedPolynomialFunction(c);
+        bounds = new double[]{0.0, 100.0, 400.0, Double.POSITIVE_INFINITY};
+        PiecewisePolynomialFunction ppf = new PiecewisePolynomialFunction(apfs, bounds);
+        Policy policy = Policy.SimplePolicy(new DoNothing(1));
+        MDP.PiecewisePolynomialFunctionAndPolicy ppfap = MDP.addWait(ppf, policy);
+        System.out.println(ppfap.getPiecewisePolynomialFunction());
+        System.out.println(ppfap.getPolicy());
+
     }
 
     public static void main(String[] args) {
-        new Test("a");
+        new Test();
     }
 }

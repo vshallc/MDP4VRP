@@ -124,12 +124,13 @@ public class PiecewisePolynomialFunction {
             newBounds[i] = boundList.get(i);
         }
         newBounds[newBounds.length - 1] = boundList.get(newBounds.length - 1);
-        PiecewisePolynomialFunction result = new PiecewisePolynomialFunction(pfs, newBounds);
-//        result.simplify();
-        return result;
+        //        result.simplify();
+        return new PiecewisePolynomialFunction(pfs, newBounds);
     }
 
     public PiecewisePolynomialFunction replace(AdvancedPolynomialFunction apf, double leftBound, double rightBound) {
+        System.out.println(apf);
+        System.out.println(leftBound + " " + rightBound);
         int i, start = 0, end = 0;
         for (i = 1; i < pieces + 1; ++i) {
             if (leftBound < bounds[i]) {
@@ -138,18 +139,20 @@ public class PiecewisePolynomialFunction {
             }
         }
         for (; i < pieces + 1; ++i) {
-            if (rightBound < bounds[i]) {
+            if (rightBound <= bounds[i]) {
                 end = i - 1;
                 break;
             }
         }
-        int newPieces = start + pieces - end + leftBound == bounds[start] ? 0 : 1 + rightBound == bounds[end] ? 0 : 1;
+        int newPieces = start + pieces - end + (leftBound == bounds[start] ? 0 : 1) + (rightBound == bounds[end + 1] ? 0 : 1);
         AdvancedPolynomialFunction[] newPolyFuncs = new AdvancedPolynomialFunction[newPieces];
         double[] newBounds = new double[newPieces + 1];
         for (i = 0; i < start; ++i) {
             newPolyFuncs[i] = polyFuncs[i];
             newBounds[i] = bounds[i];
         }
+//        System.out.println(this);
+//        System.out.println(pieces + " " + newPieces + " " + " start: " +start + " end: " + end + " left: " + leftBound + " right: " + rightBound + " " + i);
         if (bounds[start] < leftBound) {
             newPolyFuncs[i] = polyFuncs[start];
             newBounds[i] = bounds[start];
@@ -158,7 +161,7 @@ public class PiecewisePolynomialFunction {
         newPolyFuncs[i] = apf;
         newBounds[i] = leftBound;
         ++i;
-        if (bounds[end] > rightBound) {
+        if (bounds[end + 1] > rightBound) {
             newPolyFuncs[i] = polyFuncs[end];
             newBounds[i] = rightBound;
             ++i;

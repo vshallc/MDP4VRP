@@ -16,7 +16,7 @@ public class Policy {
         this.actions = Arrays.copyOf(actions, actions.length);
         this.bounds = new double[bounds.length];
         System.arraycopy(bounds, 0, this.bounds, 0, bounds.length);
-        pieces = bounds.length;
+        pieces = actions.length;
     }
 
     public Action[] getActions() {
@@ -41,13 +41,15 @@ public class Policy {
                 break;
             }
         }
-        int newPieces = start + pieces - end + leftBound == bounds[start] ? 0 : 1 + rightBound == bounds[end] ? 0 : 1;
+        int newPieces = start + pieces - end + (leftBound == bounds[start] ? 0 : 1) + (rightBound == bounds[end + 1] ? 0 : 1);
         Action[] newActions = new Action[newPieces];
         double[] newBounds = new double[newPieces + 1];
         for (i = 0; i < start; ++i) {
             newActions[i] = actions[i];
             newBounds[i] = bounds[i];
         }
+        System.out.println(this);
+        System.out.println(pieces + " " + newPieces + " " + " start: " +start + " end: " + end + " left: " + leftBound + " right: " + rightBound + " " + i);
         if (bounds[start] < leftBound) {
             newActions[i] = actions[start];
             newBounds[i] = bounds[start];
@@ -56,7 +58,7 @@ public class Policy {
         newActions[i] = action;
         newBounds[i] = leftBound;
         ++i;
-        if (bounds[end] > rightBound) {
+        if (bounds[end + 1] > rightBound) {
             newActions[i] = actions[end];
             newBounds[i] = rightBound;
             ++i;
@@ -125,5 +127,21 @@ public class Policy {
         bounds[0] = 0;
         bounds[1] = Double.POSITIVE_INFINITY;
         return new Policy(actions, bounds);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder s = new StringBuilder();
+        for (int i = 0; i < pieces; ++i) {
+            s.append("[");
+            s.append(bounds[i]);
+            s.append(",");
+            s.append(bounds[i + 1]);
+            s.append(")\t");
+            s.append(actions[i].toString());
+            s.append("\n");
+        }
+//        s.deleteCharAt(s.length() - 1);
+        return s.toString().trim();
     }
 }
