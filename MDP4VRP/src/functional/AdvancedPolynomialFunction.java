@@ -29,7 +29,7 @@ public class AdvancedPolynomialFunction extends PolynomialFunction {
      * @throws org.apache.commons.math3.exception.NoDataException       if {@code c} is empty.
      */
 
-    private static final double DEFAULT_ABSOLUTE_ACCURACY = 1e-6;
+    private static final double DEFAULT_ABSOLUTE_ACCURACY = 1e-8;
     private static final int DEFAULT_MAX_EVAL = 100;
 
 //    private boolean isExtremePointCalculated = false;

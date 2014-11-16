@@ -171,34 +171,48 @@ public class MDP {
 //                System.out.println(Arrays.toString(iteratorSet.toArray(new State[iteratorSet.size()])));
                 for (Arc arc : incomingArcs.get(currentState)) {
                     State preState = arc.getStartState();
-//                    System.out.println("prestate: " + preState + " action: " + arc.getAction() + " currentstate: " + currentState);
+                    System.out.println("----");
+                    System.out.println("prestate: " + preState + " action: " + arc.getAction() + " currentstate: " + currentState);
                     PiecewisePolynomialFunction newPreValueFunc = arc.getAction().preValueFunc(valueFuncMap.get(currentState));
 //                    if (arc.getAction() instanceof Move) {
 //                        System.out.println("ppf:\n" + valueFuncMap.get(currentState));
 //                        PiecewisePolynomialFunction result = MDP.integrationOnXiOfComposition_test(valueFuncMap.get(currentState), ((Move) arc.getAction()).getEdge().getArrivalFunction());
 //                        System.out.println("test:\n" + result);
+//                    } else if (arc.getAction() instanceof Execute) {
+//                        System.out.println("ppf:\n" + valueFuncMap.get(currentState));
+//                        System.out.println("new:\n" + newPreValueFunc);
 //                    }
                     Policy newPrePolicy = Policy.SimplePolicy(arc.getAction());
-//                    System.out.println("----");
-//                    System.out.println("before wait:\n" + newPreValueFunc);
-                    PiecewisePolynomialFunctionAndPolicy addWaitResult = addWait(newPreValueFunc, newPrePolicy); // add wait action
-                    newPreValueFunc = addWaitResult.getPiecewisePolynomialFunction();
+                    System.out.println("before wait:\n" + newPreValueFunc);
+                    PiecewisePolynomialFunction noWait = newPreValueFunc;
+//                    if (arc.getAction() instanceof Move) {
+//                        PiecewisePolynomialFunctionAndPolicy decreasingResult = makeDecreasing(newPreValueFunc, newPrePolicy);
+//                        newPreValueFunc = decreasingResult.getPiecewisePolynomialFunction();
+//                        newPrePolicy = decreasingResult.getPolicy();
+//                    } else {
+                        PiecewisePolynomialFunctionAndPolicy addWaitResult = addWait(newPreValueFunc, newPrePolicy); // add wait action
+                        newPreValueFunc = addWaitResult.getPiecewisePolynomialFunction();
+                        newPrePolicy = addWaitResult.getPolicy();
+//                    }
+                    newPreValueFunc.roundTrivial();
                     newPreValueFunc.simplify();
-                    newPrePolicy = addWaitResult.getPolicy();
                     if (valueFuncMap.containsKey(preState)) {
                         PiecewisePolynomialFunction preValueFunc = valueFuncMap.get(preState);
                         Policy prePolicy = policyMap.get(preState);
                         PiecewisePolynomialFunctionAndPolicy maxResult = MDP.max(preValueFunc, newPreValueFunc, prePolicy, newPrePolicy);
+                        System.out.println("pre:\n" + preValueFunc);
+                        System.out.println(prePolicy);
+                        System.out.println("new:\n" + newPreValueFunc);
+                        System.out.println(newPrePolicy);
+                        System.out.println("max:\n" + maxResult.getPiecewisePolynomialFunction());
 //                        if (!maxResult.getPiecewisePolynomialFunction().equals(preValueFunc) || !maxResult.getPolicy().equals(prePolicy)) {
                         if (!maxResult.getPiecewisePolynomialFunction().equals(preValueFunc)) {
-//                            System.out.println("pre:\n" + preValueFunc);
-//                            System.out.println(prePolicy);
-//                            System.out.println("new:\n" + newPreValueFunc);
-//                            System.out.println(newPrePolicy);
-//                            System.out.println("max:\n" + maxResult.getPiecewisePolynomialFunction());
-                            if (maxResult.getPiecewisePolynomialFunction().getPolynomialFunction(maxResult.getPiecewisePolynomialFunction().getPieceNum() - 1).degree() != 0) {
+                            if (preState.getTaskSet().size() == 0 && maxResult.getPiecewisePolynomialFunction().getPolynomialFunction(0).value(0) > 10e10) {
+                                System.out.println("pre:" + preState + " " + arc.getAction() + " current:" + currentState);
                                 System.out.println("pre:\n" + preValueFunc);
 //                                System.out.println(prePolicy);
+                                System.out.println("ppf:\n" + valueFuncMap.get(currentState));
+                                System.out.println("nowait:\n" + noWait);
                                 System.out.println("new:\n" + newPreValueFunc);
 //                                System.out.println(newPrePolicy);
                                 System.out.println("max:\n" + maxResult.getPiecewisePolynomialFunction());
@@ -209,9 +223,27 @@ public class MDP {
                             policyMap.put(preState, maxResult.getPolicy());
                             if (preState.getTaskSet().size() == level) nextIteratorSet.add(preState);
                         }
-//                        System.out.println("----");
+                        System.out.println("----");
                     } else {
-//                        System.out.println("put:\n" + newPreValueFunc);
+                        System.out.println("pre:" + preState + " " + arc.getAction() + " current:" + currentState);
+//                            System.out.println("pre:\n" + preValueFunc);
+                        //                                System.out.println(prePolicy);
+                        System.out.println("ppf:\n" + valueFuncMap.get(currentState));
+                        System.out.println("nowait:\n" + noWait);
+                        System.out.println("new:\n" + newPreValueFunc);
+                        if (preState.getTaskSet().size() == 0 && newPreValueFunc.getPolynomialFunction(0).value(0) > 10e10) {
+                            System.out.println("pre:" + preState + " " + arc.getAction() + " current:" + currentState);
+//                            System.out.println("pre:\n" + preValueFunc);
+    //                                System.out.println(prePolicy);
+                            System.out.println("ppf:\n" + valueFuncMap.get(currentState));
+                            System.out.println("nowait:\n" + noWait);
+                            System.out.println("new:\n" + newPreValueFunc);
+    //                                System.out.println(newPrePolicy);
+//                            System.out.println("max:\n" + maxResult.getPiecewisePolynomialFunction());
+                            System.out.println("!!!!!!!!!!!!!");
+                            System.exit(999);
+                        }
+                        System.out.println("put:\n" + newPreValueFunc);
                         valueFuncMap.put(preState, newPreValueFunc);
                         policyMap.put(preState, newPrePolicy);
                         if (preState.getTaskSet().size() == level) nextIteratorSet.add(preState);
@@ -221,6 +253,92 @@ public class MDP {
             iteratorSet = nextIteratorSet;
             nextIteratorSet = new LinkedHashSet<State>();
         }
+    }
+
+    public static PiecewisePolynomialFunctionAndPolicy makeDecreasing(PiecewisePolynomialFunction ppf, Policy policy) {
+        if (ppf.getPieceNum() == 1) return new PiecewisePolynomialFunctionAndPolicy(ppf, policy);
+        double lastMax = ppf.getPolynomialFunction(0).value(ppf.getBounds()[1]);
+        double[] bounds = ppf.getBounds();
+        double[] pBounds = policy.getBounds();
+        boolean fFlag = false, pFlag = false;
+        for (int i = 1; i < ppf.getPieceNum(); ++i) {
+            AdvancedPolynomialFunction apf = ppf.getPolynomialFunction(i);
+            AdvancedPolynomialFunction apfl = ppf.getPolynomialFunction(i - 1);
+            double v = apf.value(bounds[i]);
+            double resB = bounds[i];
+            if (v > lastMax) {
+                fFlag = true;
+                resB += 1e-8;
+//                double delta1 = 1e-13, delta2 = 1e-13;
+//                double l = bounds[i - 1];
+//                double r = bounds[i + 1];
+//                double v1, v2, m1, m2, b1, b2, d1, d2, dd1, dd2;
+//                int c = 0;
+//                b1 = bounds[i];
+//                b2 = bounds[i];
+//                d1 = v - lastMax;
+//                d2 = v - lastMax;
+//                do {
+//                    b1 += delta1;
+//                    b2 -= delta2;
+//                    v1 = apf.value(b1);
+//                    m1 = apfl.value(b1);
+//                    if (v1 <= m1) {
+//                        resB = b1;
+//                        break;
+//                    } else {
+//                        dd1 = v1 - m1;
+//                        if (dd1 >= d1) {
+//                            delta1 *= 2;
+//                        }
+//                        d1 = dd1;
+//                    }
+//                    v2 = apf.value(b2);
+//                    m2 = apfl.value(b2);
+//                    if (v2 <= m2) {
+//                        resB = b2;
+//                        break;
+//                    } else {
+//                        dd2 = v2 = m2;
+//                        if (dd2 >= d2) {
+//                            delta2 *= 2;
+//                        }
+//                        d2 = dd2;
+//                    }
+//                    if (b1 >= r) {
+//                        delta1 = 0;
+//                        b1 = r;
+//                    }
+//                    if (b2 <= l) {
+//                        delta2 = 0;
+//                        b2 = l;
+//                    }
+//                    System.out.println(apf.degree() + " " + apfl.degree() + " " + (v1-m1) + " " + (v2 - m2));
+//                    ++c;
+//                    if (c > 10000) {
+//                        System.out.println(apf);
+//                        System.out.println(apfl);
+//                        System.out.println("bi:" + bounds[i] + " b1:" + b1 + " b2:" + b2);
+//                        System.exit(999);
+//                    }
+//                } while (b1 < r && b2 > l);
+                for (int j = 0; j < pBounds.length; ++j) {
+                    if (pBounds[j] == bounds[i]) {
+                        pFlag = true;
+                        pBounds[j] = resB;
+                        break;
+                    }
+                }
+                bounds[i] = resB;
+            }
+        }
+        if (fFlag) {
+            ppf = new PiecewisePolynomialFunction(ppf.getPolynomialFunctions(), bounds);
+        }
+        if (pFlag) {
+            policy = new Policy(policy.getActions(), pBounds);
+        }
+        return new PiecewisePolynomialFunctionAndPolicy(ppf, policy);
     }
 
     public static PiecewisePolynomialFunctionAndPolicy addWait(PiecewisePolynomialFunction ppf, Policy policy) {
@@ -330,13 +448,13 @@ public class MDP {
             tmpBounds.add(lastBound);
             precision = bounds1[i + 1] - bounds2[j + 1];
 //            System.out.println("i:" + i + " b1:"+bounds1[i + 1] + " j:" + j + " b2:" + bounds2[j + 1]);
-            if (precision < -COMPARING_PRECISION) {
+            if (precision < -COMPARING_PRECISION*1000) {
                 nextBound = bounds1[i + 1];
 //                System.out.println("bounds1: " + Arrays.toString(bounds1) + " i+1: " + (i + 1));
 //                System.out.println("tmpBounds:" + Arrays.toString(tmpBounds.toArray(new Double[tmpBounds.size()])) + " n: " + n + " next: " + nextBound);
                 roots = ppf1.getPolynomialFunction(i).subtract(ppf2.getPolynomialFunction(j)).solve(tmpBounds.get(n), nextBound);
                 ++i;
-            } else if (precision > COMPARING_PRECISION) {
+            } else if (precision > COMPARING_PRECISION*1000) {
                 nextBound = bounds2[j + 1];
 //                System.out.println("bounds2: " + Arrays.toString(bounds2) + " j+1: " + (j + 1));
 //                System.out.println("tmpBounds:" + Arrays.toString(tmpBounds.toArray(new Double[tmpBounds.size()])) + " n: " + n + " next: " + nextBound);
@@ -417,9 +535,9 @@ public class MDP {
             selectedIDs[newPiece - 1] = 1;
         }
 //        System.out.println("i=" + i + " j=" + j + " ppf1.pieces=" + ppf1.getPieceNum() + " ppf2.pieces=" + ppf2.getPieceNum());
-//        System.out.println("BBBBBBBBBBBB" + Arrays.toString(newBounds));
         PiecewisePolynomialFunction result = new PiecewisePolynomialFunction(pfs, newBounds);
 //        System.out.println("unsim:\n" + result);
+        result.roundTrivial();
         result.simplify();
 //        System.out.println("CCCCCCCCCCCC" + Arrays.toString(result.getBounds()));
         return new PiecewisePolynomialFunctionAndPolicy(result, Policy.union(policy1, policy2, newBounds, selectedIDs));
@@ -438,10 +556,6 @@ public class MDP {
         }
         for (int i = 1; i < A.getPieceNum(); ++i) {
             pfp = integrationForVOfAOnPieces(V, A.getStochasticPolynomialFunction(i), A.getBounds()[i], A.getBounds()[i + 1]);
-//            System.out.println("on piece 1:" + pfp.length);
-//            for (PolynomialFunctionPiece aPfp : pfp) {
-//                System.out.println(aPfp.getPolynomialFunction());
-//            }
             int j = 0;
             if (pfp[0].getPolynomialFunction().equals(pfsList.get(pfsList.size() - 1))) {
                 j = 1;
@@ -514,6 +628,42 @@ public class MDP {
 //            System.out.println("**b**Vstart: " + vBounds[VStart] + " Vend: " + vBounds[VEnd] + " primaryBound:" + primaryBounds[i] + " " + primaryBounds[i + 1]);
             results[i] = simpleIntegration(V, VStart, VEnd, a, primaryBounds[i], primaryBounds[i + 1]);
         }
+//        // then make the result a decreasing function
+//        PolynomialFunctionPiece[] results = new PolynomialFunctionPiece[rawResults.length];
+//        results[0] = rawResults[0];
+//        double startMax = rawResults[0].getPolynomialFunction().value(rawResults[0].getBounds()[1]);
+//        double startValue;
+//        for (int i = 1; i < rawResults.length;++i) {
+//            startValue = rawResults[i].getPolynomialFunction().value(rawResults[i].getBounds()[0]);
+//            double diff = startValue - startMax;
+//            if (diff > 0) {System.out.println("diff:" + diff + " " + startValue + " " + startMax);
+//                results[i] = new PolynomialFunctionPiece(rawResults[i].polyFunc.subtract(diff + 1e-2), rawResults[i].bounds[0], rawResults[i].bounds[1]);
+//            } else {
+//                results[i] = rawResults[i];
+//            }
+//            startMax = results[i].polyFunc.value(results[i].bounds[1]);
+////            if (startValue > startMax) {System.out.println(startValue + " " + startMax);
+////                double newBound = rawResults[i].getBounds()[0];
+////                do {
+////                    newBound += COMPARING_PRECISION*100;
+////                    startMax = rawResults[i - 1].getPolynomialFunction().value(newBound);
+////                    startValue = rawResults[i].getPolynomialFunction().value(newBound);
+////                } while (startValue > startMax);
+////                if (rawResults[i].getBounds()[1] - newBound > COMPARING_PRECISION) {
+////                    tmpResults[n - 1] = new PolynomialFunctionPiece(tmpResults[n - 1].polyFunc, tmpResults[n - 1].bounds[0], newBound);
+////                    tmpResults[n] = new PolynomialFunctionPiece(rawResults[i].polyFunc, newBound, rawResults[i].bounds[1]);
+////                    ++n;
+////                    startMax = rawResults[i].polyFunc.value(rawResults[i].bounds[1]);
+////                } else {
+////                    tmpResults[n - 1] = new PolynomialFunctionPiece(tmpResults[n - 1].polyFunc, tmpResults[n - 1].bounds[0], rawResults[i].bounds[1]);
+////                    startMax = tmpResults[n - 1].polyFunc.value(rawResults[i].bounds[1]);
+////                }
+////            } else {
+////                tmpResults[n] = rawResults[i];
+////                ++n;
+////                startMax = rawResults[i].getPolynomialFunction().value(rawResults[i].getBounds()[1]);
+////            }
+//        }
         return results;
     }
 

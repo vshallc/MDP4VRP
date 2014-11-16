@@ -42,6 +42,8 @@ public class Execute implements Action{
         return (currentValueFunc.shift(task.getTimeCost())).add(task.getRewardFunc());
 //        PiecewisePolynomialFunction shiftresult = currentValueFunc.shift(task.getTimeCost());
 //        System.out.println("===============shift:\n" + shiftresult.toString() + "\n===================R(t):\n" + task.getRewardFunc());
-//        return shiftresult.add(task.getRewardFunc());
+//        PiecewisePolynomialFunction result = shiftresult.add(task.getRewardFunc());
+//        System.out.println("result:\n" + result);
+//        return result;
     }
 }

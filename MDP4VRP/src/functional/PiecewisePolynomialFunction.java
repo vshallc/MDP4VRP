@@ -54,6 +54,33 @@ public class PiecewisePolynomialFunction {
         pieces = n;
     }
 
+    public void roundTrivial() {
+        long lastMax = Math.round(polyFuncs[0].value(0));
+        int deg;
+        for (int i = 0; i < pieces; ++i) {
+            if (polyFuncs[i].degree() == 0) {
+                long v = Math.round(polyFuncs[i].value(bounds[i]));
+                if (v > lastMax) v = lastMax;
+                polyFuncs[i] = AdvancedPolynomialFunction.N(v);
+                lastMax = v;
+            } else {
+                double dl = polyFuncs[i].value(bounds[i]);
+                long vl = Math.round(dl);
+                long vr = Math.round(polyFuncs[i].value(bounds[i + 1]));
+                if (vl <= vr) {
+                    if (vl > lastMax) vl = lastMax;
+                    polyFuncs[i] = AdvancedPolynomialFunction.N(vl);
+                    lastMax = vl;
+                }
+//                else {
+//                    if (dl > lastMax) {
+//                        polyFuncs[i] = polyFuncs[i].subtract(dl - lastMax);
+//                    }
+//                }
+            }
+        }
+    }
+
     public PiecewisePolynomialFunction add(PiecewisePolynomialFunction ppf) {
         double[] newBounds;
         int newPieceNum;
@@ -215,7 +242,7 @@ public class PiecewisePolynomialFunction {
             s.append(",");
             s.append(bounds[i + 1]);
             s.append(")\t");
-            s.append(polyFuncs[i].toString());
+            s.append(polyFuncs[i]);
             s.append("\n");
         }
 //        s.deleteCharAt(s.length() - 1);

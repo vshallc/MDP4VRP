@@ -410,7 +410,7 @@ public class Test {
 //        PiecewiseStochasticPolynomialFunction pspf = VRP.randomMovingCostFunction(4, 4, 0, 2, 100, 1000, 0, 100, 1000);
 //        System.out.println(pspf);
 
-        VRP vrp = VRP.VRPGenerator_MeshMap(2, 2, 1);
+        VRP vrp = VRP.VRPGenerator_MeshMap(2, 2, 10);
         System.out.println(vrp);
         System.out.println("============================== MDP ==============================");
         MDP mdp = new MDP(vrp);
@@ -425,8 +425,6 @@ public class Test {
     }
 
     public static void main(String[] args) {
-        for (int i = 0; i < 100; ++i) {
             new Test("");
-        }
     }
 }

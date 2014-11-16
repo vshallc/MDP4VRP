@@ -104,11 +104,13 @@ public class VRP {
     public static VRP VRPGenerator_MeshMap(int row, int column, int taskNum) {
         int minPieces = 1, maxPieces = 3;
         int minDegree = 0, maxDegree = 1;
-        double minTimeCostOnEdge = 10.0, maxTimeCostOnEdge = 100.0;
-        double minStoc = 0, maxStoc = 20;
-        double startTime = 0, deadline = 1000;
-        double minReward = 100, maxReward = 500;
-        double minPenalty = -20, maxPenalty = -100;
+        double minTimeCostOnEdge = 4.0, maxTimeCostOnEdge = 14.0;
+        double minStoc = 0, maxStoc = 2;
+        double startTime = 0, deadline = 100;
+        double deadlinePenalty = -100e8;
+        double minReward = 10e8, maxReward = 10e8;
+        double minTimeCostOnTask = 0.5, maxTimeCostOnTask = 1.5;
+        double minPenalty = -5e8, maxPenalty = -5e8;
         int nodeNum = row * column;
         Node[] nodes = new Node[nodeNum];
         for (int i = 0; i < row; ++i) {
@@ -150,13 +152,13 @@ public class VRP {
             tasks[i] = new Task(i,
                     nodes[random.nextInt(nodeNum)],
                     randomRewardFunction(startTime, deadline, minReward, maxReward, false),
-                    random.nextDouble() * (deadline / taskNum / nodeNum),
+                    random.nextDouble() * (maxTimeCostOnTask - minTimeCostOnTask) + minTimeCostOnTask,
                     random.nextDouble() * (maxPenalty - minPenalty) + minPenalty);
         }
         Node startAndEndNode = nodes[random.nextInt(nodeNum)];
         AdvancedPolynomialFunction[] apfs = new AdvancedPolynomialFunction[2];
         apfs[0] = AdvancedPolynomialFunction.ZERO();
-        apfs[1] = AdvancedPolynomialFunction.N(-taskNum * maxReward);
+        apfs[1] = AdvancedPolynomialFunction.N(deadlinePenalty);
         double[] bounds = new double[3];
         bounds[0] = startTime;
         bounds[1] = deadline;
@@ -177,7 +179,8 @@ public class VRP {
         double[] bounds = new double[pieces + 1];
         bounds[0] = 0;
         for (int i = 1; i < pieces - 1; ++i) {
-            double b = random.nextDouble() * timeOfConverge;
+//            double b = random.nextDouble() * timeOfConverge;
+            double b = (double)random.nextInt((int)timeOfConverge);
             for (int j = i; j > 0; --j) {
                 if (b > bounds[j - 1]) {
                     System.arraycopy(bounds, j, bounds, j + 1, i - j);
@@ -264,9 +267,9 @@ public class VRP {
             return null;
         } else {
             AdvancedPolynomialFunction[] apfs = new AdvancedPolynomialFunction[3];
-            apfs[0] = AdvancedPolynomialFunction.ZERO();
+            apfs[0] = AdvancedPolynomialFunction.N(-reward);
             apfs[1] = AdvancedPolynomialFunction.N(reward);
-            apfs[2] = AdvancedPolynomialFunction.ZERO();
+            apfs[2] = AdvancedPolynomialFunction.N(-reward);
             double[] bounds = new double[4];
             bounds[0] = 0;
             bounds[1] = startTime;
