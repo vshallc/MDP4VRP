@@ -37,4 +37,9 @@ public class Edge {
     public PiecewiseStochasticPolynomialFunction getArrivalFunction() {
         return arrivalFunc;
     }
+
+    @Override
+    public String toString() {
+        return "edge(" + startNode.getID() + "->" + endNode.getID() + ")";
+    }
 }

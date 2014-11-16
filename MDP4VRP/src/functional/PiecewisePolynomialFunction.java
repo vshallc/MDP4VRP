@@ -129,8 +129,8 @@ public class PiecewisePolynomialFunction {
     }
 
     public PiecewisePolynomialFunction replace(AdvancedPolynomialFunction apf, double leftBound, double rightBound) {
-        System.out.println(apf);
-        System.out.println(leftBound + " " + rightBound);
+//        System.out.println(apf);
+//        System.out.println(leftBound + " " + rightBound);
         int i, start = 0, end = 0;
         for (i = 1; i < pieces + 1; ++i) {
             if (leftBound < bounds[i]) {

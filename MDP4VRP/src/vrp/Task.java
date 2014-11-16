@@ -10,7 +10,7 @@ public class Task {
     private Node location;
     private PiecewisePolynomialFunction rewardFunc;
     private double timeCost;
-    private double penalty;
+    private double penalty; // less than 0
 
     public Task(int id, Node location, PiecewisePolynomialFunction rewardFunc, double timeCost, double penalty) {
         this.id = id;
@@ -39,5 +39,10 @@ public class Task {
 
     public double getPenalty() {
         return penalty;
+    }
+
+    @Override
+    public String toString() {
+        return "task(" + id + ")";
     }
 }

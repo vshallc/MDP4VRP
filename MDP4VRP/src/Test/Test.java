@@ -8,6 +8,7 @@ import mdp.*;
 import vrp.Edge;
 import vrp.Node;
 import vrp.Task;
+import vrp.VRP;
 
 import java.util.*;
 
@@ -138,69 +139,129 @@ public class Test {
     }
 
     public Test(int x) {
-        AdvancedPolynomialFunction[] apfs = new AdvancedPolynomialFunction[10];
+        AdvancedPolynomialFunction[] apfs = new AdvancedPolynomialFunction[3];
         double[] c = new double[1];
-        c[0] = 200;
+        c[0] = 0;
         apfs[0] = new AdvancedPolynomialFunction(c);
-        c = new double[3];
-        c[0] = -17800;
-        c[1] = 300;
-        c[2] = -1.25;
+        c = new double[2];
+        c[0] = 169994.94222630217;
+        c[1] = -173.60402585583728;
         apfs[1] = new AdvancedPolynomialFunction(c);
-        c = new double[3];
-        c[0] = -8034.375;
-        c[1] = 143.75;
-        c[2] = -0.625;
+        c = new double[1];
+        c[0] = -500;
         apfs[2] = new AdvancedPolynomialFunction(c);
-        c = new double[2];
-        c[0] = 2046.25;
-        c[1] = -15;
-        apfs[3] = new AdvancedPolynomialFunction(c);
-        c = new double[4];
-        c[0] = -22336.08333333333;
-        c[1] = 528.8125;
-        c[2] = -4.09375;
-        c[3] = 0.01041666666666667;
-        apfs[4] = new AdvancedPolynomialFunction(c);
-        c = new double[4];
-        c[0] = -10893.374999999996;
-        c[1] = 264.75;
-        c[2] = -2.0625;
-        c[3] = 0.005208333333333335;
-        apfs[5] = new AdvancedPolynomialFunction(c);
-        c = new double[2];
-        c[0] = 1085.625;
-        c[1] = -7.5;
-        apfs[6] = new AdvancedPolynomialFunction(c);
-        c = new double[3];
-        c[0] = 5197.251302083334;
-        c[1] = -63.03125;
-        c[2] = 0.1875;
-        apfs[7] = new AdvancedPolynomialFunction(c);
-        c = new double[1];
-        c[0] = -100;
-        apfs[8] = new AdvancedPolynomialFunction(c);
-        c = new double[1];
-        c[0] = -1100;
-        apfs[9] = new AdvancedPolynomialFunction(c);
-        double[] bounds = {0.0, 120.0, 125.0, 127.0, 128.12819439667624, 130.0, 132.0, 148.08333333333334, 168.08333333333334, 300, Double.POSITIVE_INFINITY};
+//        c = new double[1];
+//        c[0] = 0;
+//        apfs[3] = new AdvancedPolynomialFunction(c);
+//        c = new double[4];
+//        c[0] = 3.241386965271372E8;
+//        c[1] = -1171275.2074975066;
+//        c[2] = 1410.8010206709682;
+//        c[3] = -0.5664366231453438;
+//        apfs[4] = new AdvancedPolynomialFunction(c);
+//        c = new double[1];
+//        c[0] = -3.590997271705419;
+//        apfs[5] = new AdvancedPolynomialFunction(c);
+//        c = new double[3];
+//        c[0] = -2172607.78336789;
+//        c[1] = 5227.982835213337;
+//        c[2] = -3.145047167323087;
+//        apfs[6] = new AdvancedPolynomialFunction(c);
+//        c = new double[1];
+//        c[0] = -128.26387411355972;
+//        apfs[7] = new AdvancedPolynomialFunction(c);
+//        c = new double[4];
+//        c[0] = -3.3492407498029983E8;
+//        c[1] = 1197160.5398220376;
+//        c[2] = -1426.3325814683492;
+//        c[3] = 0.5664366231453438;
+//        apfs[8] = new AdvancedPolynomialFunction(c);
+//        c = new double[1];
+//        c[0] = -209.52998865954578;
+//        apfs[9] = new AdvancedPolynomialFunction(c);
+//        c = new double[3];
+//        c[0] = -8688334.650372097;
+//        c[1] = 20747.636565658493;
+//        c[2] = -12.386513630057562;
+//        apfs[10] = new AdvancedPolynomialFunction(c);
+//        c = new double[2];
+//        c[0] = 38274.618967141425;
+//        c[1] = -45.84940075484897;
+//        apfs[11] = new AdvancedPolynomialFunction(c);
+//        c = new double[1];
+//        c[0] = -290.4700113348663;
+//        apfs[12] = new AdvancedPolynomialFunction(c);
+//        c = new double[3];
+//        c[0] = 8801630.172244098;
+//        c[1] = -20883.068313623775;
+//        c[2] = 12.386513630057562;
+//        apfs[13] = new AdvancedPolynomialFunction(c);
+//        c = new double[1];
+//        c[0] = -371.7361256480217;
+//        apfs[14] = new AdvancedPolynomialFunction(c);
+//        c = new double[3];
+//        c[0] = 2268268.9802467627;
+//        c[1] = -5342.427400038907;
+//        c[2] = 3.145047167323087;
+//        apfs[15] = new AdvancedPolynomialFunction(c);
+//        c = new double[4];
+//        c[0] = 3.481880670811206E8;
+//        c[1] = -1228517.5573635008;
+//        c[2] = 1444.8640109031858;
+//        c[3] = -0.5664366231453438;
+//        apfs[16] = new AdvancedPolynomialFunction(c);
+//        c = new double[1];
+//        c[0] = -500;
+//        apfs[17] = new AdvancedPolynomialFunction(c);
+//        c = new double[1];
+//        c[0] = -500;
+//        apfs[18] = new AdvancedPolynomialFunction(c);
+
+        double[] bounds = {0.0,
+                979.2108298655924,
+                982.090947406272,
+                Double.POSITIVE_INFINITY};
         PiecewisePolynomialFunction ppf = new PiecewisePolynomialFunction(apfs, bounds);
+        Policy policy = Policy.SimplePolicy(new DoNothing(0));
+//        MDP.PiecewisePolynomialFunctionAndPolicy wait = MDP.addWait(ppf, policy);
+//        System.out.println(wait.getPiecewisePolynomialFunction());
 
         StochasticPolynomialFunction[] spf = new StochasticPolynomialFunction[2];
+        double cxi = 9.49957014836607;
+
         apfs = new AdvancedPolynomialFunction[2];
         c = new double[2];
-        c[0] = 50;
-        c[1] = -0.25;
+        c[0] = 73.20558758547824;
+        c[1] = 0.0322662432173596;
         apfs[0] = new AdvancedPolynomialFunction(c);
-        apfs[1] = AdvancedPolynomialFunction.N(20);
-        spf[0] = new StochasticPolynomialFunction(apfs); // -1/4 + 50 + 20xi
+        apfs[1] = AdvancedPolynomialFunction.N(cxi);
+        spf[0] = new StochasticPolynomialFunction(apfs);
+
         apfs = new AdvancedPolynomialFunction[2];
-        apfs[0] = AdvancedPolynomialFunction.N(25);
-        apfs[1] = AdvancedPolynomialFunction.N(20);
-        spf[1] = new StochasticPolynomialFunction(apfs); // 25 + 20xi
+        c = new double[1];
+        c[0] = 92.27223296957851;
+        apfs[0] = new AdvancedPolynomialFunction(c);
+        apfs[1] = AdvancedPolynomialFunction.N(cxi);
+        spf[1] = new StochasticPolynomialFunction(apfs);
+
+//        apfs = new AdvancedPolynomialFunction[2];
+//        c = new double[1];
+//        c[0] = 92.27223296957851;
+//        apfs[0] = new AdvancedPolynomialFunction(c);
+//        apfs[1] = AdvancedPolynomialFunction.N(cxi);
+//        spf[2] = new StochasticPolynomialFunction(apfs);
+
+//        apfs = new AdvancedPolynomialFunction[2];
+//        c = new double[1];
+//        c[0] = 76.69857769240343;
+//        apfs[0] = new AdvancedPolynomialFunction(c);
+//        apfs[1] = AdvancedPolynomialFunction.N(cxi);
+//        spf[3] = new StochasticPolynomialFunction(apfs);
+
         bounds = new double[3];
         bounds[0] = 0;
-        bounds[1] = 100;
+        bounds[1] = 590.9161861719992;
+//        bounds[2] = 1000.0;
         bounds[2] = Double.POSITIVE_INFINITY;
         PiecewiseStochasticPolynomialFunction move = new PiecewiseStochasticPolynomialFunction(spf, bounds);
         Edge edge = new Edge(new Node(2), new Node(0), move);
@@ -213,31 +274,159 @@ public class Test {
         System.out.println();
         System.out.println(result);
         System.out.println();
-//        System.out.println(ppf.getPolynomialFunction(1).value(106.66666666666667));
-//        System.out.println(result.getPolynomialFunction(1).value(70.66666666666667));
         System.out.println("||||||||||||||||||End|||||||||||||");
     }
 
-    public Test(String x) {
-        AdvancedPolynomialFunction[] apfs = new AdvancedPolynomialFunction[3];
-        double[] c, bounds;
-        c = new double[]{500};
+    public Test(int a, int b) {
+        AdvancedPolynomialFunction[] apfs = new AdvancedPolynomialFunction[7];
+        double[] c = new double[1];
+        c[0] = 0;
         apfs[0] = new AdvancedPolynomialFunction(c);
-        c = new double[]{1000, -6, 0.01};
-//        c = new double[]{300};
+        c = new double[1];
+        c[0] = 1.862645149230957E-9;
         apfs[1] = new AdvancedPolynomialFunction(c);
-        c = new double[]{800};
+        c = new double[3];
+        c[0] = -1.2997693732736748E7;
+        c[1] = 28651.754011555513;
+        c[2] = -15.789782110942168;
         apfs[2] = new AdvancedPolynomialFunction(c);
-        bounds = new double[]{0.0, 100.0, 400.0, Double.POSITIVE_INFINITY};
-        PiecewisePolynomialFunction ppf = new PiecewisePolynomialFunction(apfs, bounds);
-        Policy policy = Policy.SimplePolicy(new DoNothing(1));
-        MDP.PiecewisePolynomialFunctionAndPolicy ppfap = MDP.addWait(ppf, policy);
-        System.out.println(ppfap.getPiecewisePolynomialFunction());
-        System.out.println(ppfap.getPolicy());
+        c = new double[2];
+        c[0] = 113542.20575466196;
+        c[1] = -124.87252276457463;
+        apfs[3] = new AdvancedPolynomialFunction(c);
+        c = new double[1];
+        c[0] = -253.1133293658495;
+        apfs[4] = new AdvancedPolynomialFunction(c);
+        c = new double[3];
+        c[0] = 1.322621310472797E7;
+        c[1] = -28903.073744333702;
+        c[2] = 15.789782110942168;
+        apfs[5] = new AdvancedPolynomialFunction(c);
+        c = new double[1];
+        c[0] = -500;
+        apfs[6] = new AdvancedPolynomialFunction(c);
+        double[] bounds = {0.0,
+                887.5997281333204,
+                907.287821017496,
+                911.2420403312013,
+                911.2919044533844,
+                911.2919044533905,
+                915.2461237670958,
+                Double.POSITIVE_INFINITY};
+        PiecewisePolynomialFunction ppf1 = new PiecewisePolynomialFunction(apfs, bounds);
+        Policy policy1 = Policy.SimplePolicy(new DoNothing(1));
+
+        apfs = new AdvancedPolynomialFunction[8];
+        c = new double[1];
+        c[0] = 1.2969970703125E-4;
+        apfs[0] = new AdvancedPolynomialFunction(c);
+        c = new double[5];
+        c[0] = 1.6833614323769566E10;
+        c[1] = -8.461919249586436E7;
+        c[2] = 159511.37113810756;
+        c[3] = -133.63859517437544;
+        c[4] = 0.04198589572193669;
+        apfs[1] = new AdvancedPolynomialFunction(c);
+        c = new double[1];
+        c[0] = 1.862645149230957E-9;
+        apfs[2] = new AdvancedPolynomialFunction(c);
+        c = new double[3];
+        c[0] = -1.2997693732736748E7;
+        c[1] = 28651.754011555513;
+        c[2] = -15.789782110942168;
+        apfs[3] = new AdvancedPolynomialFunction(c);
+        c = new double[2];
+        c[0] = 113542.20575466196;
+        c[1] = -124.87252276457463;
+        apfs[4] = new AdvancedPolynomialFunction(c);
+        c = new double[1];
+        c[0] = -253.1133293658495;
+        apfs[5] = new AdvancedPolynomialFunction(c);
+        c = new double[3];
+        c[0] = 1.322621310472797E7;
+        c[1] = -28903.073744333702;
+        c[2] = 15.789782110942168;
+        apfs[6] = new AdvancedPolynomialFunction(c);
+        c = new double[1];
+        c[0] = -500;
+        apfs[7] = new AdvancedPolynomialFunction(c);
+        bounds = new double[]{0.0,
+                795.7454365408104,
+                795.7455043811476,
+                907.287821017496,
+                911.2420403312013,
+                911.2919044533844,
+                911.2919044533905,
+                915.2461237670958,
+                Double.POSITIVE_INFINITY};
+        PiecewisePolynomialFunction ppf2 = new PiecewisePolynomialFunction(apfs, bounds);
+        Policy policy2 = Policy.SimplePolicy(new DoNothing(2));
+
+        System.out.println("ppf1:\n" + ppf1);
+        System.out.println("ppf2:\n" + ppf2);
+
+        MDP.PiecewisePolynomialFunctionAndPolicy maxResult = MDP.max(ppf1, ppf2, policy1, policy2);
+        PiecewisePolynomialFunction ppf = maxResult.getPiecewisePolynomialFunction();
+        ppf.simplify();
+        System.out.println("max:\n" + ppf);
 
     }
 
+    public Test(String x) {
+//        AdvancedPolynomialFunction[] apfs = new AdvancedPolynomialFunction[3];
+//        double[] c, bounds;
+//        c = new double[]{500};
+//        apfs[0] = new AdvancedPolynomialFunction(c);
+//        c = new double[]{1000, -6, 0.01};
+////        c = new double[]{300};
+//        apfs[1] = new AdvancedPolynomialFunction(c);
+//        c = new double[]{800};
+//        apfs[2] = new AdvancedPolynomialFunction(c);
+//        bounds = new double[]{0.0, 100.0, 400.0, Double.POSITIVE_INFINITY};
+//        PiecewisePolynomialFunction ppf = new PiecewisePolynomialFunction(apfs, bounds);
+//        Policy policy = Policy.SimplePolicy(new DoNothing(1));
+//        MDP.PiecewisePolynomialFunctionAndPolicy ppfap = MDP.addWait(ppf, policy);
+//        System.out.println(ppfap.getPiecewisePolynomialFunction());
+//        System.out.println(ppfap.getPolicy());
+
+//        AdvancedPolynomialFunction[] apfs = new AdvancedPolynomialFunction[11];
+//        double[] bounds = new double[12];
+//        double startValue = 10;
+//        for (int i = 0; i < 10; ++i) {
+//            apfs[i] = VRP.randomPolynomialFunction(5, i*10, (i+1) *10, startValue, 0, 1000.0);
+//            bounds[i] = i * 10;
+//            startValue = apfs[i].value((i + 1) * 10);
+//        }
+//        bounds[10] = 100;
+//        bounds[11] = Double.POSITIVE_INFINITY;
+//        apfs[10] = AdvancedPolynomialFunction.N(startValue);
+//        PiecewisePolynomialFunction ppf = new PiecewisePolynomialFunction(apfs, bounds);
+//        System.out.println(ppf);
+//        System.out.println();
+//        Policy policy = Policy.SimplePolicy(new DoNothing(0));
+//        MDP.PiecewisePolynomialFunctionAndPolicy wait = MDP.addWait(ppf, policy);
+//        System.out.println(wait.getPiecewisePolynomialFunction());
+
+//        PiecewiseStochasticPolynomialFunction pspf = VRP.randomMovingCostFunction(4, 4, 0, 2, 100, 1000, 0, 100, 1000);
+//        System.out.println(pspf);
+
+        VRP vrp = VRP.VRPGenerator_MeshMap(2, 2, 1);
+        System.out.println(vrp);
+        System.out.println("============================== MDP ==============================");
+        MDP mdp = new MDP(vrp);
+        mdp.buildGraph();
+        System.out.println(mdp.graphToString());
+        mdp.assignValueFunction();
+//        System.out.println("============================== OUTPUT ==============================");
+//        System.out.println("MDP Graph:");
+//        System.out.println(mdp.valueFunctionToString());
+//        System.out.println("MDP Policies:");
+//        System.out.println(mdp.policyToString());
+    }
+
     public static void main(String[] args) {
-        new Test();
+        for (int i = 0; i < 100; ++i) {
+            new Test("");
+        }
     }
 }

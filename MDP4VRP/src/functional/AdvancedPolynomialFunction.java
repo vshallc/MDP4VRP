@@ -266,8 +266,13 @@ public class AdvancedPolynomialFunction extends PolynomialFunction {
             double delta = c[1] * c[1] - 4 * c[2] * c[0];
             if (delta > 0) {
                 double[] roots = new double[2];
-                roots[0] = (-c[1] - Math.sqrt(delta)) / (2 * c[2]);
-                roots[1] = (-c[1] + Math.sqrt(delta)) / (2 * c[2]);
+                if (c[2] > 0) {
+                    roots[0] = (-c[1] - Math.sqrt(delta)) / (2 * c[2]);
+                    roots[1] = (-c[1] + Math.sqrt(delta)) / (2 * c[2]);
+                } else {
+                    roots[0] = (-c[1] + Math.sqrt(delta)) / (2 * c[2]);
+                    roots[1] = (-c[1] - Math.sqrt(delta)) / (2 * c[2]);
+                }
                 return roots;
             } else if (delta == 0) {
                 double[] roots = new double[1];

@@ -15,9 +15,15 @@ public class Move implements Action{
         this.edge = edge;
     }
 
+    public Edge getEdge() {
+        return this.edge;
+    }
+
+    @Override
     public String toString() {
         return "move(" + edge.getStartNode().getID() + "," + edge.getEndNode().getID() + ")";
     }
+
     @Override
     public State perform(State state) {
         if (state.getLocation().equals(edge.getStartNode()))

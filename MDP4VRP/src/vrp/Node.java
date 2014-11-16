@@ -43,4 +43,9 @@ public class Node {
     public Set<Task> getTasks() {
         return tasks;
     }
+
+    @Override
+    public String toString() {
+        return "node(" + id + ")";
+    }
 }

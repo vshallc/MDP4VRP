@@ -48,8 +48,8 @@ public class Policy {
             newActions[i] = actions[i];
             newBounds[i] = bounds[i];
         }
-        System.out.println(this);
-        System.out.println(pieces + " " + newPieces + " " + " start: " +start + " end: " + end + " left: " + leftBound + " right: " + rightBound + " " + i);
+//        System.out.println(this);
+//        System.out.println(pieces + " " + newPieces + " " + " start: " +start + " end: " + end + " left: " + leftBound + " right: " + rightBound + " " + i);
         if (bounds[start] < leftBound) {
             newActions[i] = actions[start];
             newBounds[i] = bounds[start];
