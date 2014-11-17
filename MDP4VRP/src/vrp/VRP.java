@@ -186,6 +186,8 @@ public class VRP {
                     System.arraycopy(bounds, j, bounds, j + 1, i - j);
                     bounds[j] = b;
                     break;
+                }else if (b == bounds[j - 1]) {
+                    --i;
                 }
             }
         }

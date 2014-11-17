@@ -14,7 +14,7 @@
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="inheritedJdk" />
-    <orderEntry type="library" name="commons-math3-3.2" level="project" />
+    <orderEntry type="library" exported="" name="commons-math3-3.2" level="project" />
   </component>
 </module>
 

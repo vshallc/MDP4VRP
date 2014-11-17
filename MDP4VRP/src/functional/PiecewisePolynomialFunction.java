@@ -56,7 +56,7 @@ public class PiecewisePolynomialFunction {
 
     public void roundTrivial() {
         long lastMax = Math.round(polyFuncs[0].value(0));
-        int deg;
+//        int deg;
         for (int i = 0; i < pieces; ++i) {
             if (polyFuncs[i].degree() == 0) {
                 long v = Math.round(polyFuncs[i].value(bounds[i]));
@@ -79,6 +79,76 @@ public class PiecewisePolynomialFunction {
 //                }
             }
         }
+    }
+
+    public void linearApproximation(double interval) {
+//        int ppp = pieces;
+//        if (ppp>5)
+//            System.out.println(this);
+        if (pieces < 3) return;
+//        System.out.println("--------");
+//        System.out.println(this);
+        List<AdvancedPolynomialFunction> polyList = new ArrayList<AdvancedPolynomialFunction>();
+        List<Double> boundList = new ArrayList<Double>();
+        double t = bounds[1] - bounds[0];
+        double lastBound = bounds[0];
+        AdvancedPolynomialFunction tmpPoly = polyFuncs[0];
+        for (int i = 1; i < pieces - 1; ++i) {
+//            System.out.println("t:" + t);
+            if (t < interval) {
+                tmpPoly = merge2PolyFuncIntoLinear(tmpPoly, polyFuncs[i], lastBound, bounds[i + 1]);
+                t = bounds[i + 1] - lastBound;
+            } else {
+                polyList.add(tmpPoly);
+                boundList.add(lastBound);
+                tmpPoly = polyFuncs[i];
+                t = bounds[i + 1] - bounds[i];
+                lastBound = bounds[i];
+            }
+        }
+//        polyList.add(tmpPoly);
+//        boundList.add(lastBound);
+//        for (Double d : boundList) {
+//            System.out.print(d + ",");
+//        }
+//        System.out.println(" [" + lastBound + "]");
+        if (bounds[pieces - 1] - bounds[pieces - 2] < interval) {
+            int id = polyList.size() - 1;
+//            tmpPoly = merge2PolyFuncIntoLinear(polyList.get(id), polyFuncs[pieces - 2], boundList.get(id), bounds[pieces - 1]);
+            tmpPoly = merge2PolyFuncIntoLinear(tmpPoly, polyFuncs[pieces - 2], lastBound, bounds[pieces - 1]);
+            polyList.remove(id);
+            polyList.add(tmpPoly);
+        } else {
+            polyList.add(tmpPoly);
+            boundList.add(lastBound);
+            polyList.add(polyFuncs[pieces - 2]);
+            boundList.add(bounds[pieces - 2]);
+        }
+        boundList.add(bounds[pieces - 1]);
+        polyList.add(polyFuncs[pieces - 1]);
+        boundList.add(bounds[pieces]);
+        pieces = polyList.size();
+        polyFuncs = new AdvancedPolynomialFunction[pieces];
+        bounds = new double[pieces + 1];
+        for (int i = 0; i < pieces; ++i) {
+            polyFuncs[i] = polyList.get(i);
+            bounds[i] = boundList.get(i);
+        }
+        bounds[pieces] = boundList.get(pieces);
+//        if (ppp > 5 && pieces != ppp) {
+//            System.out.println(this);
+//            System.exit(999);
+//        }
+//        return new PiecewisePolynomialFunction(polyFuncs, bounds);
+    }
+
+    private AdvancedPolynomialFunction merge2PolyFuncIntoLinear(AdvancedPolynomialFunction apf1, AdvancedPolynomialFunction apf2, double leftBound, double rightBound) {
+        double v1 = apf1.value(leftBound);
+        double v2 = apf2.value(rightBound);
+        if (v1 <= v2) {
+            return AdvancedPolynomialFunction.N(v1);
+        }
+        return AdvancedPolynomialFunction.Linear(leftBound, v1, rightBound, v2);
     }
 
     public PiecewisePolynomialFunction add(PiecewisePolynomialFunction ppf) {

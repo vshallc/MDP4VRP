@@ -458,6 +458,14 @@ public class AdvancedPolynomialFunction extends PolynomialFunction {
         return new AdvancedPolynomialFunction(new double[]{n});
     }
 
+    public static AdvancedPolynomialFunction Linear(double point1, double value1, double point2, double value2) {
+        if (value1 == value2) return AdvancedPolynomialFunction.N(value1);
+        double[] c = new double[2];
+        c[0] = (value2 * point1 - value1 * point2) / (point1 - point2);
+        c[1] = (value1 - value2) / (point1 - point2);
+        return new AdvancedPolynomialFunction(c);
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
