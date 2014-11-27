@@ -19,12 +19,58 @@ public class Policy {
         pieces = actions.length;
     }
 
+    public Action getCurrentAction(double time) {
+        for (int i = 0; i < pieces; ++i) {
+            if (time >= bounds[i] && time < bounds[i + 1]) {
+                return actions[i];
+            }
+        }
+        return actions[pieces - 1];
+    }
+
     public Action[] getActions() {
         return actions.clone();
     }
 
     public double[] getBounds() {
         return bounds.clone();
+    }
+
+    public void removeTrivial(double threshold) {
+        if (pieces > 3) {
+            for (int i = 1; i < pieces - 1; ++i) {
+                if (bounds[i - 1] - bounds[i] < threshold) {
+                    if (actions[i - 1].toString().equals(actions[i + 1].toString())) {
+                        actions[i] = actions[i - 1];
+                    }
+                }
+            }
+        }
+    }
+
+    public void simplify() {
+        Action[] tmpActions = new Action[actions.length];
+        double[] tmpBounds = new double[bounds.length];
+        String lastAction = "", currentAction;
+        int n = 0;
+        for (int i = 0; i < actions.length; ++i) {
+            currentAction = actions[i].toString();
+            if (!currentAction.equals(lastAction)) {
+                tmpActions[n] = actions[i];
+                tmpBounds[n] = bounds[i];
+                ++n;
+                lastAction = currentAction;
+            }
+        }
+        tmpBounds[n] = bounds[bounds.length - 1];
+        actions = new Action[n];
+        bounds = new double[n + 1];
+        for (int i = 0; i < n; ++i) {
+            actions[i] = tmpActions[i];
+            bounds[i] = tmpBounds[i];
+        }
+        bounds[n] = tmpBounds[n];
+        pieces = n;
     }
 
     public Policy replace(Action action, double leftBound, double rightBound) {
@@ -72,44 +118,62 @@ public class Policy {
     }
 
     public static Policy union(Policy p1, Policy p2, double[] bounds, int[] id) {
+//        System.out.println("p1:\n" + p1);
+//        System.out.println("p2:\n" + p2);
+//        System.out.println("bounds:" + Arrays.toString(bounds));
+//        System.out.println("id:" + Arrays.toString(id));
+//        double[] tmpBounds = new double[bounds.length];
         List<Double> boundsList = new ArrayList<Double>();
         List<Action> actionList = new ArrayList<Action>();
-        double[][] pbounds = new double[2][];
+        double[][] pBounds = new double[2][];
         Action[][] pActions = new Action[2][];
-        pbounds[0] = p1.getBounds();
-        pbounds[1] = p2.getBounds();
+        pBounds[0] = p1.getBounds();
+        pBounds[1] = p2.getBounds();
         pActions[0] = p1.getActions();
         pActions[1] = p2.getActions();
-        int[] j = new int[2];
-        j[0] = 0;
-        j[1] = 0;
-        int lastID = id[0];
-        double lastBound = bounds[0];
-        double tmpBound;
-//        actionList.add(pActions[lastID][0]);
-        for (int i = 1; i < id.length; ++i) {
-            if (id[i] != lastID) {
-                boundsList.add(lastBound);
-                tmpBound = lastBound;
-                lastBound = bounds[i];
-//                System.out.println(lastID+" "+boundsList.get(boundsList.size()-1)+" "+lastBound);
-                while (pbounds[lastID][j[id[i]] + 1] <= tmpBound) {
-                    ++j[id[i]];
-                }
-                for (; pbounds[lastID][j[id[i]] + 1] < lastBound; ++j[id[i]]) {
-                    boundsList.add(pbounds[lastID][j[id[i]] + 1]);
-                    actionList.add(pActions[lastID][j[id[i]]]);
-                }
-                actionList.add(pActions[lastID][j[id[i]]]);
-                lastID = id[i];
+        int[] pos = {0, 0};
+
+        for (int i = 0; i < id.length; ++i) {
+            int select = id[i];
+            boundsList.add(bounds[i]);
+//            System.out.println("se" + pos[select]);
+            while (pBounds[select][pos[select] + 1] < bounds[i]) ++pos[select];
+            actionList.add(pActions[select][pos[select]]);
+            while (pBounds[select][pos[select] + 1] < bounds[i + 1]) {
+                ++pos[select];
+                actionList.add(pActions[select][pos[select]]);
+                boundsList.add(pBounds[select][pos[select]]);
             }
         }
-        boundsList.add(lastBound);
-        boundsList.add(bounds[id.length]);
-//        System.out.println("id len: " + id.length + "\npActions.len: " + pActions.length);
-        lastID = id[id.length - 1];
-        actionList.add(pActions[lastID][pActions[lastID].length - 1]);
-//        System.out.println("debug: " + boundsList.size() + " " + actionList.size());
+        boundsList.add(bounds[bounds.length - 1]);
+//        int[] j = {0, 0};
+//        int lastID = id[0];
+//        double lastBound = bounds[0];
+//        double tmpBound;
+//        Action tmpAction;
+//        for (int i = 1; i < id.length; ++i) {
+//            if (id[i] != lastID) {
+//                boundsList.add(lastBound);
+//                tmpBound = lastBound;
+//                lastBound = bounds[i];
+//                while (pBounds[lastID][j[id[i]] + 1] <= tmpBound) {
+//                    ++j[id[i]];
+//                }
+//                for (; pBounds[lastID][j[id[i]] + 1] < lastBound; ++j[id[i]]) {
+//                    boundsList.add(pBounds[lastID][j[id[i]] + 1]);
+//                    tmpAction = pActions[lastID][j[id[i]]];
+//                    actionList.add(tmpAction);
+//                }
+//                actionList.add(pActions[lastID][j[id[i]]]);
+//                lastID = id[i];
+//            }
+//        }
+//        boundsList.add(lastBound);
+//        boundsList.add(bounds[id.length]);
+////        System.out.println("id len: " + id.length + "\npActions.len: " + pActions.length);
+//        lastID = id[id.length - 1];
+//        actionList.add(pActions[lastID][pActions[lastID].length - 1]);
+////        System.out.println("debug: " + boundsList.size() + " " + actionList.size());
         Action[] newActions = new Action[actionList.size()];
         double[] newBounds = new double[boundsList.size()];
         for (int i = 0; i < newActions.length; ++i) {
@@ -117,6 +181,9 @@ public class Policy {
             newBounds[i] = boundsList.get(i);
         }
         newBounds[newActions.length] = boundsList.get(newActions.length);
+//        System.out.println(Arrays.toString(newActions));
+//        System.out.println(Arrays.toString(newBounds));
+//        System.out.println("---------");
         return new Policy(newActions, newBounds);
     }
 

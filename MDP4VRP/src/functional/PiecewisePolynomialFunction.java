@@ -27,6 +27,23 @@ public class PiecewisePolynomialFunction {
 //        this.bounds[pieces] = bounds[pieces];
     }
 
+    public int degree() {
+        int deg = 0;
+        for (AdvancedPolynomialFunction apf : polyFuncs) {
+            if (apf.degree() > deg) deg = apf.degree();
+        }
+        return deg;
+    }
+
+    public double value(double x) {
+        for (int i = 0; i < pieces; ++i) {
+            if (x >= bounds[i] && x < bounds[i + 1]) {
+                return polyFuncs[i].value(x);
+            }
+        }
+        return Double.NaN;
+    }
+
     public void simplify() {
         AdvancedPolynomialFunction[] tmpPolyFuncs = new AdvancedPolynomialFunction[polyFuncs.length];
         double[] tmpBounds = new double[bounds.length];
@@ -85,7 +102,12 @@ public class PiecewisePolynomialFunction {
 //        int ppp = pieces;
 //        if (ppp>5)
 //            System.out.println(this);
-        if (pieces < 3) return;
+        if (pieces < 2) {
+            return;
+        } else if (pieces == 2) {
+            polyFuncs[0] = simpleLinearize(polyFuncs[0], bounds[0], bounds[1]);
+            return;
+        }
 //        System.out.println("--------");
 //        System.out.println(this);
         List<AdvancedPolynomialFunction> polyList = new ArrayList<AdvancedPolynomialFunction>();
@@ -99,6 +121,7 @@ public class PiecewisePolynomialFunction {
                 tmpPoly = merge2PolyFuncIntoLinear(tmpPoly, polyFuncs[i], lastBound, bounds[i + 1]);
                 t = bounds[i + 1] - lastBound;
             } else {
+                tmpPoly = simpleLinearize(tmpPoly, lastBound, bounds[i + 1]);
                 polyList.add(tmpPoly);
                 boundList.add(lastBound);
                 tmpPoly = polyFuncs[i];
@@ -119,9 +142,10 @@ public class PiecewisePolynomialFunction {
             polyList.remove(id);
             polyList.add(tmpPoly);
         } else {
+            tmpPoly = simpleLinearize(tmpPoly, lastBound, bounds[pieces - 1]);
             polyList.add(tmpPoly);
             boundList.add(lastBound);
-            polyList.add(polyFuncs[pieces - 2]);
+            polyList.add(simpleLinearize(polyFuncs[pieces - 2], bounds[pieces - 2], bounds[pieces - 1]));
             boundList.add(bounds[pieces - 2]);
         }
         boundList.add(bounds[pieces - 1]);
@@ -140,6 +164,15 @@ public class PiecewisePolynomialFunction {
 //            System.exit(999);
 //        }
 //        return new PiecewisePolynomialFunction(polyFuncs, bounds);
+    }
+
+    private AdvancedPolynomialFunction simpleLinearize(AdvancedPolynomialFunction apf, double leftBound, double rightBound) {
+        double v1 = apf.value(leftBound);
+        double v2 = apf.value(rightBound);
+        if (v1 <= v2) {
+            return AdvancedPolynomialFunction.N(v1);
+        }
+        return AdvancedPolynomialFunction.Linear(leftBound, v1, rightBound, v2);
     }
 
     private AdvancedPolynomialFunction merge2PolyFuncIntoLinear(AdvancedPolynomialFunction apf1, AdvancedPolynomialFunction apf2, double leftBound, double rightBound) {

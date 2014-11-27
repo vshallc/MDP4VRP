@@ -37,6 +37,11 @@ public class Move implements Action{
     }
 
     @Override
+    public double reward(double currentTime) {
+        return 0;
+    }
+
+    @Override
     public PiecewisePolynomialFunction preValueFunc(PiecewisePolynomialFunction currentValueFunc) {
         return MDP.integrationOnXiOfComposition_test(currentValueFunc, edge.getArrivalFunction());
     }

@@ -90,14 +90,12 @@ public class PiecewiseStochasticPolynomialFunction {
     }
 
     public double stochasticValue(double x) {
-        int p = 0;
         for (int i = 0; i < pieces; ++i) {
-            if (x <= bounds[i]) {
-                p = i - 1;
-                break;
+            if (x >= bounds[i] && x < bounds[i + 1]) {
+                return stocPolyFuncs[i].stochasticValue(x);
             }
         }
-        return stocPolyFuncs[p].stochasticValue(x);
+        return Double.NaN;
     }
 
     @Override

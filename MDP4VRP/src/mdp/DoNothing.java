@@ -28,6 +28,11 @@ public class DoNothing implements Action{
     }
 
     @Override
+    public double reward(double currentTime) {
+        return 0;
+    }
+
+    @Override
     public PiecewisePolynomialFunction preValueFunc(PiecewisePolynomialFunction currentValueFunc) {
         return null;
     }

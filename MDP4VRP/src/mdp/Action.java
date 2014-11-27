@@ -11,6 +11,8 @@ public interface Action {
 
     public double timeCost(double currentTime);
 
+    public double reward(double currentTime);
+
     public PiecewisePolynomialFunction preValueFunc(PiecewisePolynomialFunction currentValueFunc);
 
 //    public String toString();

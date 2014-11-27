@@ -34,6 +34,8 @@ public class MDP {
     private ConcurrentMap<State, Policy> policyMap = new ConcurrentHashMap<State, Policy>();
 //    private ConcurrentMap<State, Set<State>> valueTransferredFlag = new ConcurrentHashMap<State, Set<State>>();
 
+    private double linear_approx = 0;
+
     public MDP(State startState, State endState, PiecewisePolynomialFunction terminatedValueFunction) {
         this.startState = startState;
         this.endState = endState;
@@ -57,6 +59,69 @@ public class MDP {
         this(new State(vrp.getStartNode(), new HashSet<Task>(Arrays.asList(vrp.getTasks()))),
                 new State(vrp.getEndNode(), new HashSet<Task>()),
                 vrp.getTerminatedValueFunction());
+    }
+
+    public MDP(VRP vrp, double linear_approx) {
+        this(vrp);
+        this.linear_approx = linear_approx;
+    }
+
+    public double getAvgPieceNum() {
+        long total = 0;
+        long count = 0;
+        for (State state : valueFuncMap.keySet()) {
+            total += valueFuncMap.get(state).getPieceNum();
+            ++count;
+        }
+        return (double) total / count;
+    }
+
+    public long getMaxPieceNum() {
+        long max = 0, p;
+        for (State state : valueFuncMap.keySet()) {
+            p = valueFuncMap.get(state).getPieceNum();
+            if (p > max) max = p;
+        }
+        return max;
+    }
+
+    public double getAvgDegreeNum() {
+        long total = 0;
+        long count = 0;
+        for (State state : valueFuncMap.keySet()) {
+            total += valueFuncMap.get(state).degree();
+            ++count;
+        }
+        return (double) total / count;
+    }
+
+    public long getMaxDegreeNum() {
+        long max = 0, p;
+        for (State state : valueFuncMap.keySet()) {
+            p = valueFuncMap.get(state).degree();
+            if (p > max) max = p;
+        }
+        return max;
+    }
+
+    public double simulate() {
+        State state = startState;
+        long reward = 0;
+        double time = 0;
+        Action action;
+        while (true) {
+            action = policyMap.get(state).getCurrentAction(time);
+            reward += action.reward(time)/1e8;
+            time += action.timeCost(time);
+            state = action.perform(state);
+            if (state.equals(endState)) {
+                if (time > 100) {
+                    reward -= 100;
+                }
+                break;
+            }
+        }
+        return reward;
     }
 
     public void buildGraph() {
@@ -115,23 +180,30 @@ public class MDP {
 //        valueTransferredFlag.putIfAbsent(endState, new LinkedHashSet<State>());
 //        valueTransferredFlag.get(endState).add(endState);
         initValueFunction(endState); // init value functions to states at level 0
-//        for (Arc arc : incomingArcs.get(endState)) {
-//                valueFuncMap.put(arc.getStartState(), arc.getAction().preValueFunc(valueFuncMap.get(endState)));
-//                policyMap.put(arc.getStartState(), Policy.SimplePolicy(arc.getAction()));
-//        }
+        System.out.println("init done");
         for (int level = 0; level < moduleMapList.size(); ++level) {
             ConcurrentMap<Set<Task>, Set<State>> moduleTaskMap = moduleMapList.get(level);
+            System.out.println("level: " + level + " size: " + moduleTaskMap.size());
             for (Set<Task> set : moduleTaskMap.keySet()) {
 //                MDP.moduleSolver(moduleTaskMap.get(set), valueFuncMap, policyMap, incomingArcs, level);
                 Set<State> module = moduleTaskMap.get(set);
                 solveModule(module);
+                System.out.println("a module done");
                 assignHigherLevelModule(module);
+                System.out.println("send up");
+//                for (State state : stateSet) {
+//                    if (policyMap.containsKey(state)) {
+//                        System.out.println(state);
+//                        System.out.println(policyMap.get(state));
+//                    }
+//                }
+//                System.exit(111);
             }
-            System.out.println("============= LEVEL " + level + " DONE =============");
-            for (State state : valueFuncMap.keySet()) {
-                System.out.println("state: " + state + "\n" + valueFuncMap.get(state) + "\n");
-            }
-            System.out.println("========================================");
+//            System.out.println("============= LEVEL " + level + " DONE =============");
+//            for (State state : valueFuncMap.keySet()) {
+//                System.out.println("state: " + state + "\n" + valueFuncMap.get(state) + "\n");
+//            }
+//            System.out.println("========================================");
         }
     }
 
@@ -154,8 +226,11 @@ public class MDP {
                     newPolicy = maxResult.getPolicy();
                 }
                 newValueFunc.roundTrivial();
-                newValueFunc.linearApproximation(APPROXIMATION_INTERVAL);
+                if (linear_approx > 0)
+                    newValueFunc.linearApproximation(linear_approx);
                 newValueFunc.simplify();
+                newPolicy.removeTrivial(linear_approx);
+                newPolicy.simplify();
                 valueFuncMap.put(preState, newValueFunc);
                 policyMap.put(preState, newPolicy);
                 if (!checkedStates.contains(preState)) {
@@ -179,8 +254,11 @@ public class MDP {
                     newValueFunc = maxResult.getPiecewisePolynomialFunction();
                     newPolicy = maxResult.getPolicy();
                     newValueFunc.roundTrivial();
-                    newValueFunc.linearApproximation(APPROXIMATION_INTERVAL);
+                    if (linear_approx > 0)
+                        newValueFunc.linearApproximation(linear_approx);
                     newValueFunc.simplify();
+                    newPolicy.removeTrivial(linear_approx);
+                    newPolicy.simplify();
                     valueFuncMap.put(preState, newValueFunc);
                     policyMap.put(preState, newPolicy);
                 }
@@ -201,17 +279,27 @@ public class MDP {
                     newValueFunc = maxResult.getPiecewisePolynomialFunction();
                     newPolicy = maxResult.getPolicy();
                 }
-                newValueFunc.roundTrivial();
-                newValueFunc.linearApproximation(APPROXIMATION_INTERVAL);
-                newValueFunc.simplify();
+//                newValueFunc.roundTrivial();
+//                newValueFunc.linearApproximation(APPROXIMATION_INTERVAL);
+//                newValueFunc.simplify();
                 PiecewisePolynomialFunctionAndPolicy waitResult = addWait(newValueFunc, newPolicy);
                 newValueFunc = waitResult.getPiecewisePolynomialFunction();
                 newPolicy = waitResult.getPolicy();
-                newValueFunc.roundTrivial();
-                newValueFunc.linearApproximation(APPROXIMATION_INTERVAL);
+//                newValueFunc.roundTrivial();
+                if (linear_approx > 0)
+                    newValueFunc.linearApproximation(linear_approx);
                 newValueFunc.simplify();
+                newPolicy.removeTrivial(linear_approx);
+                newPolicy.simplify();
                 valueFuncMap.put(preState, newValueFunc);
                 policyMap.put(preState, newPolicy);
+//                if (arc.getAction() instanceof Execute) {
+//                    System.out.println("++ current state: " + currentState);
+//                    System.out.println("++ current value func: \n" + valueFuncMap.get(currentState));
+//                    System.out.println("++ pre state: " + preState);
+//                    System.out.println("++ new value func: \n" + newValueFunc);
+//                    System.out.println("++" + newPolicy);
+//                }
             }
         }
     }
@@ -471,7 +559,7 @@ public class MDP {
             apf = ppf.getPolynomialFunction(p);
             leftBound = ppf.getBounds()[p];
             rightBound = ppf.getBounds()[p + 1];
-            if (lastMax > apf.value(rightBound)) { // if max value on piece p+1 > the value on right bound of piece p
+            if (apf.value(rightBound) < lastMax - COMPARING_PRECISION*1000) { // if max value on piece p+1 > the value on right bound of piece p
                 waitFlag = true;
 //                System.out.println("b solving: " + lastMax + " " + leftBound + " " + rightBound);
                 double[] roots = apf.solveInRange(lastMax, leftBound, rightBound);
@@ -501,7 +589,7 @@ public class MDP {
             }
             extPoints = apf.extremePoints(leftBound, rightBound);
             for (int i = extPoints.length - 1; i >= 0; --i) {
-                if (apf.value(extPoints[i]) < lastMax) {
+                if (apf.value(extPoints[i]) < lastMax - COMPARING_PRECISION*1000) {
                     waitFlag = true;
 //                    System.out.println("e solving: " + lastMax + " " + leftBound + " " + rightBound);
                     double[] roots = apf.solveInRange(lastMax, leftBound, extPoints[i]);
@@ -652,10 +740,6 @@ public class MDP {
             pfs[newPiece - 1] = new AdvancedPolynomialFunction(ppf2.getPolynomialFunction(j).getCoefficients());
             selectedIDs[newPiece - 1] = 1;
         }
-//        PiecewisePolynomialFunction result = new PiecewisePolynomialFunction(pfs, newBounds);
-////        System.out.println("unsim:\n" + result);
-//        result.roundTrivial();
-//        result.simplify();
         return new PiecewisePolynomialFunctionAndPolicy(new PiecewisePolynomialFunction(pfs, newBounds), Policy.union(policy1, policy2, newBounds, selectedIDs));
     }
 

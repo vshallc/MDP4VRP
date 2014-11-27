@@ -37,6 +37,10 @@ public class Task {
         return timeCost;
     }
 
+    public double getReward(double time) {
+        return rewardFunc.value(time);
+    }
+
     public double getPenalty() {
         return penalty;
     }

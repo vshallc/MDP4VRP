@@ -410,22 +410,35 @@ public class Test {
 //        PiecewiseStochasticPolynomialFunction pspf = VRP.randomMovingCostFunction(4, 4, 0, 2, 100, 1000, 0, 100, 1000);
 //        System.out.println(pspf);
 
-        VRP vrp = VRP.VRPGenerator_MeshMap(2, 2, 2);
+        VRP vrp = VRP.VRPGenerator_MeshMap(3, 3, 5);
         System.out.println(vrp);
         System.out.println("============================== MDP ==============================");
-        MDP mdp = new MDP(vrp);
+        MDP mdp = new MDP(vrp,2);
         mdp.buildGraph();
         System.out.println(mdp.graphToString());
         mdp.assignValueFunction();
-//        System.out.println("============================== OUTPUT ==============================");
-//        System.out.println("MDP Graph:");
-//        System.out.println(mdp.valueFunctionToString());
-//        System.out.println("MDP Policies:");
-//        System.out.println(mdp.policyToString());
+        System.out.println("============================== OUTPUT ==============================");
+        System.out.println("MDP Graph:");
+        System.out.println(mdp.valueFunctionToString());
+        System.out.println("MDP Policies:");
+        System.out.println(mdp.policyToString());
+        System.out.println("============================== SIMULATE ==============================");
+        double allres = 0;
+        for (int i = 0; i < 10; ++i) {
+            double result = mdp.simulate();
+            allres += result;
+            System.out.println("Sim " + i + ": " + result);
+        }
+        System.out.println("reward:" + (allres/10));
+        System.out.println("pica:" + mdp.getAvgPieceNum());
+        System.out.println("picm:" + mdp.getMaxPieceNum());
+        System.out.println("dega:" + mdp.getAvgDegreeNum());
+        System.out.println("degm:" + mdp.getMaxDegreeNum());
+
     }
 
     public static void main(String[] args) {
-        for (int i=0;i<10000;++i)
+        for (int i=0;i<1;++i)
             new Test("");
     }
 }

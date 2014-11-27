@@ -104,8 +104,8 @@ public class VRP {
     public static VRP VRPGenerator_MeshMap(int row, int column, int taskNum) {
         int minPieces = 1, maxPieces = 3;
         int minDegree = 0, maxDegree = 1;
-        double minTimeCostOnEdge = 4.0, maxTimeCostOnEdge = 14.0;
-        double minStoc = 0, maxStoc = 2;
+        double minTimeCostOnEdge = 0.0, maxTimeCostOnEdge = 10.0;
+        double minStoc = 0, maxStoc = 10;
         double startTime = 0, deadline = 100;
         double deadlinePenalty = -100e8;
         double minReward = 10e8, maxReward = 10e8;
@@ -151,7 +151,7 @@ public class VRP {
         for (int i = 0; i < taskNum; ++i) {
             tasks[i] = new Task(i,
                     nodes[random.nextInt(nodeNum)],
-                    randomRewardFunction(startTime, deadline, minReward, maxReward, false),
+                    randomRewardFunction(startTime, deadline, minReward, maxReward, false, deadlinePenalty*2),
                     random.nextDouble() * (maxTimeCostOnTask - minTimeCostOnTask) + minTimeCostOnTask,
                     random.nextDouble() * (maxPenalty - minPenalty) + minPenalty);
         }
@@ -251,10 +251,13 @@ public class VRP {
         }
     }
 
-    public static PiecewisePolynomialFunction randomRewardFunction(double leftBound, double rightBound, double minReward, double maxReward, boolean softWindow) {
+    public static PiecewisePolynomialFunction randomRewardFunction(double leftBound, double rightBound, double minReward, double maxReward, boolean softWindow, double outOfTimePenalty) {
         Random random = new Random();
-        double startTime = random.nextDouble() * (rightBound - leftBound) + leftBound;
-        double endTime = random.nextDouble() * (rightBound - leftBound) + leftBound;
+        double startTime, endTime;
+        do {
+            startTime = random.nextDouble() * (rightBound - leftBound) + leftBound;
+            endTime = random.nextDouble() * (rightBound - leftBound) + leftBound;
+        } while (Math.abs(startTime - endTime) < (rightBound - leftBound) / 5);
         {
             if (startTime > endTime) {
                 double tmp = startTime;
@@ -269,9 +272,9 @@ public class VRP {
             return null;
         } else {
             AdvancedPolynomialFunction[] apfs = new AdvancedPolynomialFunction[3];
-            apfs[0] = AdvancedPolynomialFunction.N(-reward);
+            apfs[0] = AdvancedPolynomialFunction.N(outOfTimePenalty);
             apfs[1] = AdvancedPolynomialFunction.N(reward);
-            apfs[2] = AdvancedPolynomialFunction.N(-reward);
+            apfs[2] = AdvancedPolynomialFunction.N(outOfTimePenalty);
             double[] bounds = new double[4];
             bounds[0] = 0;
             bounds[1] = startTime;

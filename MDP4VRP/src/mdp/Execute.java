@@ -36,6 +36,11 @@ public class Execute implements Action{
     }
 
     @Override
+    public double reward(double currentTime) {
+        return task.getReward(currentTime);
+    }
+
+    @Override
     public PiecewisePolynomialFunction preValueFunc(PiecewisePolynomialFunction currentValueFunc) {
         // V'(t) = V(t + t') + R(t)
 //        System.out.println("execute: current: " + currentValueFunc);
